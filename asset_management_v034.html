@@ -217,6 +217,31 @@ async function commitExcelImport(){
  finally{excelImportBusy=false}
 }
 
+function openDeviceTypeMerge(){
+ if(window.currentRole!=='owner')return alert('僅 Owner 可執行');
+ const names=[...new Set(assets.map(a=>String(a.deviceType||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant'));
+ showModal('設備類型批次統一',`<div class="sectionhint">從現有財產類型選擇原名稱與統一後名稱。只修改完全相符的設備類型，跨 Client／Server 生效。</div><div class="formgrid"><div><label>原設備類型</label><select id="mergeFrom" onchange="previewDeviceTypeMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}" ${n==='個人電腦(含周邊設備)'?'selected':''}>${esc(n)}</option>`).join('')}</select></div><div><label>統一為</label><select id="mergeTo" onchange="previewDeviceTypeMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}" ${n==='個人電腦'?'selected':''}>${esc(n)}</option>`).join('')}</select></div></div><div id="mergePreview" class="sectionhint" style="margin-top:12px"></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="button" class="btn primary" id="mergeExecute" onclick="executeDeviceTypeMerge()">確認批次修改</button></div>`);
+ previewDeviceTypeMerge();
+}
+function previewDeviceTypeMerge(){
+ const from=document.getElementById('mergeFrom')?.value||'',to=document.getElementById('mergeTo')?.value||'';
+ const matches=assets.filter(a=>String(a.deviceType||'').trim()===from);
+ const out=document.getElementById('mergePreview'),btn=document.getElementById('mergeExecute');
+ if(btn)btn.disabled=!from||!to||from===to||!matches.length;
+ if(out)out.textContent=!from||!to?'請先選擇原名稱與目標名稱':from===to?'兩個名稱相同，無需修改':`符合原名稱的財產共 ${matches.length} 筆（Client ${matches.filter(a=>a.type==='client').length} 筆、Server ${matches.filter(a=>a.type==='server').length} 筆）。按確認後將逐筆修改並記錄異動。`;
+}
+async function executeDeviceTypeMerge(){
+ if(window.currentRole!=='owner'||!window.cloudMergeDeviceTypes)return alert('批次修改功能尚未準備完成');
+ const from=document.getElementById('mergeFrom')?.value||'',to=document.getElementById('mergeTo')?.value||'';
+ const count=assets.filter(a=>String(a.deviceType||'').trim()===from).length;
+ if(!from||!to||from===to||!count)return;
+ if(!confirm(`確定將 ${count} 筆「${from}」統一改為「${to}」？\\n這會直接修改 Firebase 正式資料，並保留每筆異動紀錄。`))return;
+ const btn=document.getElementById('mergeExecute');if(btn)btn.disabled=true;
+ try{
+  const done=await window.cloudMergeDeviceTypes(from,to,(n,total)=>{const el=document.getElementById('mergePreview');if(el)el.textContent=`已更新 ${n} / ${total} 筆…`});
+  alert(`已完成 ${done} 筆設備類型統一修改。`);closeModal();render();
+ }catch(e){alert('批次修改未完成：'+e.message+'。部分批次可能已成功，請重新查看清冊後再執行。');if(btn)btn.disabled=false}
+}
 function adminPage(){
  if(window.currentRole!=='owner')return '<section class="panel"><h3>無權限存取</h3></section>';
  const profiles=Object.entries(adminProfiles).sort((a,b)=>String(a[1].email||'').localeCompare(String(b[1].email||'')));
@@ -226,7 +251,8 @@ function adminPage(){
  `<section class="panel"><h3>待審核帳號 ${pendingReady?'（'+pendingRequests.filter(r=>r.status==='pending').length+'）':''}</h3>${pendingError?`<p class="note">${esc(pendingError)}</p>`:pendingReady?`<div class="tablewrap"><table><thead><tr><th>Google 帳號／UID</th><th>Google 名稱</th><th>申請時間</th><th>操作</th></tr></thead><tbody>${requests||'<tr><td colspan="4">目前沒有待審核申請</td></tr>'}</tbody></table></div>`:'<p class="muted">申請名單讀取中…</p>'}</section>`+
  `<section class="panel"><h3>已授權帳號</h3>${adminProfilesError?`<p class="note">${esc(adminProfilesError)}</p>`:adminProfilesReady?`<div class="tablewrap"><table><thead><tr><th>Google 帳號／UID</th><th>顯示名稱</th><th>角色</th><th>狀態</th><th>操作</th></tr></thead><tbody>${rows||'<tr><td colspan="5">尚無授權帳號</td></tr>'}</tbody></table></div>`:'<p class="muted">帳號名單讀取中…</p>'}</section>`+
  `<section class="panel"><h3>完整備份</h3><p class="muted">目前僅下載本機展示資料，不包含 Firestore。</p><button class="btn primary" onclick="backup()">下載展示資料 JSON</button></section>`+
- `<section class="panel"><h3>Excel 財產匯入</h3><p class="muted">僅 Owner 可上傳正式 Client／Server 清冊，先預覽再確認寫入。</p><button class="btn primary" onclick="setPage('import')">前往 Excel 匯入 →</button></section>`;
+ `<section class="panel"><h3>設備類型批次統一</h3><p class="muted">只修改財產清冊的「設備類型」，不變更財編、隱藏 ID、型號、維修紀錄。僅 Owner 可執行，並逐筆保留異動歷程。</p><div class="flex"><button class="btn primary" onclick="openDeviceTypeMerge()">開啟批次統一工具 →</button></div></section>`+
+ <section class="panel"><h3>Excel 財產匯入</h3><p class="muted">僅 Owner 可上傳正式 Client／Server 清冊，先預覽再確認寫入。</p><button class="btn primary" onclick="setPage('import')">前往 Excel 匯入 →</button></section>`;
 }
 window.reviewRequest=uid=>{
  if(window.currentRole!=='owner')return;
@@ -448,6 +474,29 @@ try{
   batch.delete(doc(db,'assets',asset.id));
   batch.set(doc(collection(db,'assetAudit')),{assetId:asset.id,action:'刪除財產',actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp:new Date().toISOString(),before:asset,after:null});
   await batch.commit();
+ };
+ window.cloudMergeDeviceTypes=async(from,to,onProgress)=>{
+  const u=auth.currentUser;
+  if(!u||!window.accessGranted||window.currentRole!=='owner')throw new Error('僅 Owner 可以批次修改');
+  if(!from||!to||from===to)throw new Error('設備類型選擇無效');
+  const candidates=assets.filter(a=>String(a.deviceType||'').trim()===from);
+  let done=0;
+  for(let start=0;start<candidates.length;start+=150){
+   if(auth.currentUser?.uid!==u.uid||window.currentRole!=='owner')throw new Error('登入權限已變更');
+   const slice=candidates.slice(start,start+150);
+   const batch=writeBatch(db),timestamp=new Date().toISOString();
+   for(const original of slice){
+    const ref=doc(db,'assets',original.id),snap=await getDoc(ref);
+    if(!snap.exists())throw new Error('資料已刪除，請重新整理：'+original.id);
+    const before=snap.data();
+    if(before.deviceType!==original.deviceType)throw new Error('有設備類型已被其他人修改，請重新整理再試');
+    const after={...before,deviceType:to};
+    batch.set(ref,after);
+    batch.set(doc(collection(db,'assetAudit')),{assetId:original.id,action:'修改財產',actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp,before,after});
+   }
+   await batch.commit();done+=slice.length;if(onProgress)onProgress(done,candidates.length);
+  }
+  return done;
  };
  window.cloudBulkImport=async(items,onProgress)=>{
   const u=auth.currentUser;
