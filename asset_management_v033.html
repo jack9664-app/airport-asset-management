@@ -118,13 +118,13 @@ function repairOverviewPage(){const st=maintenanceStats();return heading('維修
 function openRepairHistory(id){const a=assets.find(x=>x.id===id);if(!a)return;const rows=repairs.filter(r=>r.assetId===id);showModal('設備維修歷程',`<div class="sectionhint">${esc(a.deviceType)} · ${esc(a.model)} · ${esc(a.propertyNo||a.id)}<div>系統建檔維修共 ${rows.length} 次</div></div>${rows.map(r=>`<div class="logitem"><strong>${esc(r.date)} · ${esc(r.status)}</strong><div>${esc(r.reason)}</div></div>`).join('')}`)}
 function historyPage(){return heading('異動歷程','保留每次操作前後的內容；不提供一鍵還原')+`<div class="panel">${logs.length?logs.map(l=>`<div class="logitem"><div class="flex"><strong>${esc(l.action)}</strong><span class="tag">${esc(l.propertyNo)}</span></div><div class="muted">${esc(l.date)} · ${esc(l.actor)} · ${esc(l.id)}</div><details><summary class="muted" style="cursor:pointer;margin-top:8px">檢視修改前後內容</summary><p class="muted">修改前</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px">${esc(l.before||'無')}</pre><p class="muted">修改後</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px">${esc(l.after)}</pre></details></div>`).join(''):'<div class="empty">目前尚無異動紀錄。請先試著新增、編輯或移撥財產。</div>'}</div>`}
 let excelImportRows=[],excelImportWarnings=[],excelImportStats=[],excelImportBusy=false;
-const IMPORT_CLIENT_SHEETS=new Set(CLIENT.filter(x=>x!=='設備刪除暫存區'));
-const IMPORT_SERVER_SHEETS=new Set(SERVER.slice(0,4));
+const IMPORT_CLIENT_SHEETS=new Set(['3851資訊服務科-桃','4900國境事務大隊','4910桃園機場一隊(T1入)','4920桃園機場二隊(T1出)','4930桃園機場三隊','4940桃園機場四隊(T2出)','4950桃園機場五隊(T2入)','4970入出國查驗監控隊','4980特殊勤務隊','4990鑑識調查隊','49B0行政業務隊','49A0國境業務隊']);
+const IMPORT_SERVER_SHEETS=new Set(['T2 主機房','T2 各管道間','T1 機房與各管道間','大隊部4F機房與3F協管室機櫃']);
 function importPage(){
  if(window.currentRole!=='owner')return '<section class="panel"><h3>無權限存取</h3></section>';
  return heading('Excel 財產匯入','V0.33 · 首次正式資料匯入，僅 Owner 可執行')+
- `<section class="panel"><h3>選擇正式清冊</h3><div class="sectionhint">可一次選取 Client、Server 兩份 .xlsx，僅匯入財產清冊工作表。維修、備品、刪除暫存與異動工作表不會匯入。備註 1～3 分別保留；無財編設備不會被排除。</div><input id="excelImportFiles" class="field" type="file" accept=".xlsx" multiple onchange="clearImportPreview()" ${excelImportBusy?'disabled':''}><div class="flex" style="margin-top:12px"><button class="btn primary" onclick="analyzeExcelImport()" ${excelImportBusy?'disabled':''}>分析 Excel 並預覽</button><span class="muted">讀取僅在瀏覽器進行，分析階段不寫入 Firestore。</span></div><p id="importProgress" class="muted" style="margin-top:12px"></p></section>`+
- (excelImportRows.length?`<section class="panel"><h3>匯入預覽 · ${excelImportRows.length} 筆</h3><div class="sectionhint">${excelImportStats.map(x=>`${esc(x.name)}：${x.count} 筆`).join('　／　')}<div style="margin-top:7px">無財編：${excelImportRows.filter(x=>!x.propertyNo).length} 筆；備註 3 有內容：${excelImportRows.filter(x=>x.notes3).length} 筆</div></div>${excelImportWarnings.length?`<details><summary>需注意的資料（${excelImportWarnings.length} 項）</summary><div style="max-height:180px;overflow:auto;font-size:12px">${excelImportWarnings.slice(0,150).map(x=>`<div>${esc(x)}</div>`).join('')}${excelImportWarnings.length>150?'<p>其餘警示未顯示</p>':''}</div></details>`:''}<div class="tablewrap"><table><thead><tr><th>來源</th><th>Excel 列</th><th>財產編號</th><th>設備名稱</th><th>型號</th><th>備註 1</th><th>備註 2</th><th>備註 3</th></tr></thead><tbody>${excelImportRows.slice(0,40).map(a=>`<tr><td>${esc(a.team)}</td><td>${a.sourceRow}</td><td>${esc(a.propertyNo||'（無）')}</td><td>${esc(a.deviceType)}</td><td>${esc(a.model)}</td><td>${esc(a.notes1||a.notes||'')}</td><td>${esc(a.notes2)}</td><td>${esc(a.notes3)}</td></tr>`).join('')}</tbody></table></div><p class="muted">表格僅顯示前 40 筆，確認匯入時會處理所有預覽筆數。原始欄位、換行及備註文字會保留。</p><div class="sectionhint">安全提醒：匯入會新增財產，不會自動刪除測試資料，也不會修改維修紀錄。若資料庫已有同財編、同單位的財產，匯入前會再次檢查並停止，避免重複建立。</div><label style="display:block;margin:12px 0"><input type="checkbox" id="importConfirm" onchange="document.getElementById('importCommitBtn').disabled=!this.checked"> 我已確認匯入來源、筆數及資料內容，確定寫入 Firestore。</label><button id="importCommitBtn" class="btn primary" onclick="commitExcelImport()" disabled>確認匯入 ${excelImportRows.length} 筆財產</button></section>`:'');
+ `<section class="panel"><h3>選擇正式清冊</h3><div class="sectionhint">請選取「2026 資產調查表(client端)-桃機.xlsx」及「2026 資產調查表(機房內)-桃機.xlsx」。只匯入 12 個 Client 單位與 4 個機房清冊工作表；統計、備品、移撥報廢、空白表及舊總表不匯入。來源「備註」寫入備註 1，備註 2、3 留空；無財編設備仍保留。</div><input id="excelImportFiles" class="field" type="file" accept=".xlsx" multiple onchange="clearImportPreview()" ${excelImportBusy?'disabled':''}><div class="flex" style="margin-top:12px"><button class="btn primary" onclick="analyzeExcelImport()" ${excelImportBusy?'disabled':''}>分析 Excel 並預覽</button><span class="muted">讀取僅在瀏覽器進行，分析階段不寫入 Firestore。</span></div><p id="importProgress" class="muted" style="margin-top:12px"></p></section>`+
+ (excelImportRows.length?`<section class="panel"><h3>匯入預覽 · ${excelImportRows.length} 筆</h3><div class="sectionhint">${excelImportStats.map(x=>`${esc(x.name)}：${x.count} 筆`).join('　／　')}<div style="margin-top:7px">無財編：${excelImportRows.filter(x=>!x.propertyNo).length} 筆；備註有內容：${excelImportRows.filter(x=>x.notes1).length} 筆</div></div>${excelImportWarnings.length?`<details><summary>需注意的資料（${excelImportWarnings.length} 項）</summary><div style="max-height:180px;overflow:auto;font-size:12px">${excelImportWarnings.slice(0,150).map(x=>`<div>${esc(x)}</div>`).join('')}${excelImportWarnings.length>150?'<p>其餘警示未顯示</p>':''}</div></details>`:''}<div class="tablewrap"><table><thead><tr><th>來源</th><th>Excel 列</th><th>財產編號</th><th>設備名稱</th><th>型號</th><th>備註 1</th><th>備註 2</th><th>備註 3</th></tr></thead><tbody>${excelImportRows.slice(0,40).map(a=>`<tr><td>${esc(a.team)}</td><td>${a.sourceRow}</td><td>${esc(a.propertyNo||'（無）')}</td><td>${esc(a.deviceType)}</td><td>${esc(a.model)}</td><td>${esc(a.notes1||a.notes||'')}</td><td>${esc(a.notes2)}</td><td>${esc(a.notes3)}</td></tr>`).join('')}</tbody></table></div><p class="muted">表格僅顯示前 40 筆，確認匯入時會處理所有預覽筆數。原始欄位、換行及備註文字會保留。</p><div class="sectionhint">安全提醒：匯入會新增財產，不會自動刪除測試資料，也不會修改維修紀錄。若資料庫已有同財編、同單位的財產，匯入前會再次檢查並停止，避免重複建立。</div><label style="display:block;margin:12px 0"><input type="checkbox" id="importConfirm" onchange="document.getElementById('importCommitBtn').disabled=!this.checked"> 我已確認匯入來源、筆數及資料內容，確定寫入 Firestore。</label><button id="importCommitBtn" class="btn primary" onclick="commitExcelImport()" disabled>確認匯入 ${excelImportRows.length} 筆財產</button></section>`:'');
 }
 function clearImportPreview(){excelImportRows=[];excelImportWarnings=[];excelImportStats=[];const progress=$('importProgress');if(progress)progress.textContent='';}
 function importCell(row,index){const v=row[index];return v==null?'':String(v).trim()}
@@ -139,19 +139,31 @@ async function analyzeExcelImport(){
   const seen=new Set();let matched=0;
   for(const file of files){if(!/\.xlsx$/i.test(file.name))throw new Error('只接受 .xlsx：'+file.name);
    const wb=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:false,raw:true});
-   for(const sheetName of wb.SheetNames){const type=IMPORT_CLIENT_SHEETS.has(sheetName)?'client':IMPORT_SERVER_SHEETS.has(sheetName)?'server':null;if(!type)continue;matched++;
-    const ws=wb.Sheets[sheetName],matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true,blankrows:false});
-    const header=matrix[0]||[];const expect=type==='client'?['財產編號','設備名稱','廠牌型號','IP Address']:['財產編號','序號','設備名稱','廠牌型號','備註1','備註2','備註3'];
-    if(!expect.every(x=>header.some(h=>String(h).trim()===x)))throw new Error(`工作表「${sheetName}」欄位與正式清冊不符，已停止分析`);
+   const fileType=/client端/i.test(file.name)?'client':/機房內/.test(file.name)?'server':null;
+   if(!fileType)throw new Error('請選取指定的 2026 Client／機房內資產調查表：'+file.name);
+   for(const sheetName of wb.SheetNames){
+    const type=fileType==='client'&&IMPORT_CLIENT_SHEETS.has(sheetName)?'client':fileType==='server'&&IMPORT_SERVER_SHEETS.has(sheetName)?'server':null;
+    if(!type)continue;matched++;
+    const ws=wb.Sheets[sheetName],matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true,blankrows:true});
+    const header=matrix[2]||[];
+    const normalized=x=>String(x??'').replace(/\\s+/g,'').toLowerCase();
+    const findColumn=(names)=>header.findIndex(h=>names.some(n=>normalized(h)===normalized(n)));
+    const column=(row,names)=>{const i=findColumn(names);return i<0?'':importCell(row,i)};
+    const required=type==='client'?[['財產編號'],['設備名稱'],['廠牌型號']]:[['財產編號'],['序號'],['設備名稱'],['廠牌型號']];
+    if(required.some(names=>findColumn(names)<0))throw new Error(`工作表「${sheetName}」第 3 列欄位不符合 2026 資產調查表`);
     let count=0;
-    for(let i=1;i<matrix.length;i++){const row=matrix[i]||[];const c=j=>importCell(row,j);
-     const device=type==='client'?c(2):c(3),model=type==='client'?c(3):c(4),property=type==='client'?c(1):c(1),serial=type==='client'?'':c(2);
+    for(let i=3;i<matrix.length;i++){
+     const row=matrix[i]||[],c=names=>column(row,names);
+     const device=c(['設備名稱']),model=c(['廠牌型號']),property=c(['財產編號']);
+     const serial=type==='server'?c(['序號']):'';
      if(!device&&!model&&!property&&!serial)continue;
-     if(!device){excelImportWarnings.push(`${sheetName} 第 ${i+1} 列缺少設備名稱，已略過`);continue;}
-     const a=type==='client'?{type,team:sheetName,propertyNo:property,serialNo:'',deviceType:device,model,ipAddress:c(4),macAddress:c(5),user:c(6),custodian:c(7),location:c(8),notes:c(9),notes1:c(9),notes2:'',notes3:'',contract:c(10),isMaintenance:importMaint(c(11)),lastInventory:importDate(row[12]),lastEditor:c(13)}:
-      {type,team:sheetName,propertyNo:property,serialNo:serial,deviceType:device,model,contract:c(5),ipAddress:c(6),macAddress:c(7),custodian:c(8),isMaintenance:importMaint(c(9)),location:c(10),cabinet:c(11),uSpace:c(12),direction:c(13),project:c(14),notes1:c(15),notes2:c(16),notes3:c(17),lastInventory:importDate(row[18]),lastEditor:c(19)};
+     if(!device){excelImportWarnings.push(`${sheetName} 第 ${i+1} 列沒有設備名稱，已略過`);continue;}
+     const remark=c(['備註','備註1','備註 1']);
+     const a=type==='client'?{type,team:sheetName,propertyNo:property,serialNo:'',deviceType:device,model,ipAddress:c(['IP Address','IPAddress']),macAddress:c(['MAC Address','MACAddress']),user:c(['使用者']),custodian:c(['保管人']),location:c(['地點']),notes:remark,notes1:remark,notes2:'',notes3:'',contract:'',isMaintenance:'',lastInventory:'',lastEditor:''}:
+      {type,team:sheetName,propertyNo:property,serialNo:serial,deviceType:device,model,contract:c(['保單名稱']),ipAddress:c(['IP Address(Server) or Manage']),macAddress:c(['MAC Address(Server)']),custodian:c(['保管人']),isMaintenance:importMaint(c(['是否為本案維護標的','是否為本案大同維護標的'])),location:c(['地點']),cabinet:c(['機櫃']),uSpace:c(['U數']),direction:c(['安裝方向']),project:c(['原專案名稱']),notes:remark,notes1:remark,notes2:'',notes3:'',lastInventory:'',lastEditor:''};
      a.sourceRow=i+1;a.sourceSheet=sheetName;a.sourceFile=file.name;a.id=crypto.randomUUID();
-     const key=[a.type,a.team,a.propertyNo].join('|');if(a.propertyNo){if(seen.has(key))excelImportWarnings.push(`${sheetName} 第 ${i+1} 列財編 ${a.propertyNo} 在匯入檔內重複`);seen.add(key)}
+     const key=[a.type,a.team,a.propertyNo].join('|');
+     if(a.propertyNo){if(seen.has(key))excelImportWarnings.push(`${sheetName} 第 ${i+1} 列財編 ${a.propertyNo} 在匯入檔內重複`);seen.add(key)}
      excelImportRows.push(a);count++;
     }
     excelImportStats.push({name:sheetName,count});
