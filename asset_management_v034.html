@@ -357,7 +357,7 @@ function auditSnapshotRows(record){
 function cloudHistoryPage(){
  const entries=allCloudAudits();
  return heading('異動歷程','新增與刪除顯示紀錄內容；修改僅顯示實際變動欄位')+
- `<div class="sectionhint">雲端財產與維修新增、修改及刪除紀錄。${cloudAuditReady&&repairAuditReady?'':'（雲端歷程載入中）'}</div><div class="panel">`+
+ `<div class="sectionhint">雲端財產與維修新增、修改及刪除紀錄（各顯示最近 100 筆，較早紀錄仍保留於資料庫）。${cloudAuditReady&&repairAuditReady?'':'（雲端歷程載入中）'}</div><div class="panel">`+
  (entries.length?entries.map(l=>{
   const operation=auditOperation(l);
   const isSnapshot=operation!=='update';
@@ -422,7 +422,7 @@ showAuthScreen('Firebase 驗證載入中','正在確認登入狀態及存取權�
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,onAuthStateChanged,signInWithPopup,signInWithRedirect,getRedirectResult,signOut} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
-import {getFirestore,doc,getDoc,setDoc,collection,onSnapshot,writeBatch,updateDoc,deleteDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+import {getFirestore,doc,getDoc,setDoc,collection,query,orderBy,limit,onSnapshot,writeBatch,updateDoc,deleteDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
 const firebaseConfig={apiKey:'AIzaSyBngp2V_mKmPmLrgjAOHrCbL0EMfa39dx0',authDomain:'taoyuancyd-asset-mgmt.firebaseapp.com',projectId:'taoyuancyd-asset-mgmt',storageBucket:'taoyuancyd-asset-mgmt.firebasestorage.app',messagingSenderId:'144237236073',appId:'1:144237236073:web:e2a7230e8a68357e92f7f8'};
 try{
  const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
@@ -592,11 +592,11 @@ try{
    if(['dashboard','repairs','repairOverview','assets'].includes(page))render();
   },err=>{console.error('維修紀錄同步失敗',err);if(['repairs','repairOverview'].includes(page))$('view').innerHTML='<div class="panel"><h3>維修紀錄讀取失敗</h3><p class="muted">'+esc(err.message)+'</p></div>'});
  }
- function startRepairAudit(u){if(stopRepairAudit){stopRepairAudit();stopRepairAudit=null}repairAuditReady=false;stopRepairAudit=onSnapshot(collection(db,'repairAudit'),snap=>{if(auth.currentUser?.uid!==u.uid)return;repairAuditEntries=snap.docs.map(d=>({auditId:d.id,...d.data()}));repairAuditReady=true;if(['dashboard','history'].includes(page))render()},err=>{console.error('維修異動歷程讀取失敗',err);repairAuditReady=false;if(page==='history')render()})}
+ function startRepairAudit(u){if(stopRepairAudit){stopRepairAudit();stopRepairAudit=null}repairAuditReady=false;stopRepairAudit=onSnapshot(query(collection(db,'repairAudit'),orderBy('timestamp','desc'),limit(100)),snap=>{if(auth.currentUser?.uid!==u.uid)return;repairAuditEntries=snap.docs.map(d=>({auditId:d.id,...d.data()}));repairAuditReady=true;if(['dashboard','history'].includes(page))render()},err=>{console.error('維修異動歷程讀取失敗',err);repairAuditReady=false;if(page==='history')render()})}
  window.startCloudAssets=async(db,u)=>{
   window.stopCloudAssets();
   startRepairAudit(u);
-  stopAudit=onSnapshot(collection(db,'assetAudit'),snap=>{
+  stopAudit=onSnapshot(query(collection(db,'assetAudit'),orderBy('timestamp','desc'),limit(100)),snap=>{
    if(auth.currentUser?.uid!==u.uid)return;
    cloudAudit=snap.docs.map(d=>({auditId:d.id,...d.data()}));
    cloudAuditReady=true;
