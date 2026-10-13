@@ -220,11 +220,11 @@ async function commitExcelImport(){
 function openDeviceTypeMerge(){
  if(window.currentRole!=='owner')return alert('僅 Owner 可執行');
  const names=[...new Set(assets.map(a=>String(a.deviceType||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant'));
- showModal('設備類型批次統一',`<div class="sectionhint">從現有財產類型選擇原名稱與統一後名稱。只修改完全相符的設備類型，跨 Client／Server 生效。</div><div class="formgrid"><div><label>原設備類型</label><select id="mergeFrom" onchange="previewDeviceTypeMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}" ${n==='個人電腦(含周邊設備)'?'selected':''}>${esc(n)}</option>`).join('')}</select></div><div><label>統一為</label><select id="mergeTo" onchange="previewDeviceTypeMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}" ${n==='個人電腦'?'selected':''}>${esc(n)}</option>`).join('')}</select></div></div><div id="mergePreview" class="sectionhint" style="margin-top:12px"></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="button" class="btn primary" id="mergeExecute" onclick="executeDeviceTypeMerge()">確認批次修改</button></div>`);
+ showModal('設備類型批次統一',`<div class="sectionhint">從現有財產類型選擇原名稱與統一後名稱。只修改完全相符的設備類型，跨 Client／Server 生效。</div><div class="formgrid"><div><label>原設備類型</label><select id="mergeFrom" onchange="previewDeviceTypeMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}" ${n==='個人電腦(含周邊設備)'?'selected':''}>${esc(n)}</option>`).join('')}</select></div><div><label>統一為</label><input id="mergeTo" list="mergeToOptions" value="${names.includes('個人電腦')?'個人電腦':''}" placeholder="選擇現有名稱或輸入新名稱" oninput="previewDeviceTypeMerge()" onchange="previewDeviceTypeMerge()" autocomplete="off"><datalist id="mergeToOptions">${names.map(n=>`<option value="${esc(n)}"></option>`).join('')}</datalist></div></div><div id="mergePreview" class="sectionhint" style="margin-top:12px"></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="button" class="btn primary" id="mergeExecute" onclick="executeDeviceTypeMerge()">確認批次修改</button></div>`);
  previewDeviceTypeMerge();
 }
 function previewDeviceTypeMerge(){
- const from=document.getElementById('mergeFrom')?.value||'',to=document.getElementById('mergeTo')?.value||'';
+ const from=document.getElementById('mergeFrom')?.value||'',to=document.getElementById('mergeTo')?.value.trim()||'';
  const matches=assets.filter(a=>String(a.deviceType||'').trim()===from);
  const out=document.getElementById('mergePreview'),btn=document.getElementById('mergeExecute');
  if(btn)btn.disabled=!from||!to||from===to||!matches.length;
@@ -232,7 +232,7 @@ function previewDeviceTypeMerge(){
 }
 async function executeDeviceTypeMerge(){
  if(window.currentRole!=='owner'||!window.cloudMergeDeviceTypes)return alert('批次修改功能尚未準備完成');
- const from=document.getElementById('mergeFrom')?.value||'',to=document.getElementById('mergeTo')?.value||'';
+ const from=document.getElementById('mergeFrom')?.value||'',to=document.getElementById('mergeTo')?.value.trim()||'';
  const count=assets.filter(a=>String(a.deviceType||'').trim()===from).length;
  if(!from||!to||from===to||!count)return;
  if(!confirm(`確定將 ${count} 筆「${from}」統一改為「${to}」？\\n這會直接修改 Firebase 正式資料，並保留每筆異動紀錄。`))return;
@@ -245,11 +245,11 @@ async function executeDeviceTypeMerge(){
 function openModelMerge(){
  if(window.currentRole!=='owner')return alert('僅 Owner 可執行');
  const names=[...new Set(assets.map(a=>String(a.model||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant',{numeric:true}));
- showModal('型號批次統一',`<div class="sectionhint">選擇原型號與統一後型號，只修改完全相符的型號，跨 Client／Server 生效。</div><div class="formgrid"><div><label>原型號</label><select id="modelMergeFrom" onchange="previewModelMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></div><div><label>統一為</label><select id="modelMergeTo" onchange="previewModelMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></div></div><div id="modelMergePreview" class="sectionhint" style="margin-top:12px"></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="button" class="btn primary" id="modelMergeExecute" onclick="executeModelMerge()">確認批次修改</button></div>`);
+ showModal('型號批次統一',`<div class="sectionhint">選擇原型號與統一後型號，只修改完全相符的型號，跨 Client／Server 生效。</div><div class="formgrid"><div><label>原型號</label><select id="modelMergeFrom" onchange="previewModelMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></div><div><label>統一為</label><input id="modelMergeTo" list="modelMergeToOptions" placeholder="選擇現有型號或輸入新型號" oninput="previewModelMerge()" onchange="previewModelMerge()" autocomplete="off"><datalist id="modelMergeToOptions">${names.map(n=>`<option value="${esc(n)}"></option>`).join('')}</datalist></div></div><div id="modelMergePreview" class="sectionhint" style="margin-top:12px"></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="button" class="btn primary" id="modelMergeExecute" onclick="executeModelMerge()">確認批次修改</button></div>`);
  previewModelMerge();
 }
 function previewModelMerge(){
- const from=document.getElementById('modelMergeFrom')?.value||'',to=document.getElementById('modelMergeTo')?.value||'';
+ const from=document.getElementById('modelMergeFrom')?.value||'',to=document.getElementById('modelMergeTo')?.value.trim()||'';
  const matches=assets.filter(a=>String(a.model||'').trim()===from);
  const out=document.getElementById('modelMergePreview'),btn=document.getElementById('modelMergeExecute');
  if(btn)btn.disabled=!from||!to||from===to||!matches.length;
@@ -257,7 +257,7 @@ function previewModelMerge(){
 }
 async function executeModelMerge(){
  if(window.currentRole!=='owner'||!window.cloudMergeModels)return alert('批次修改功能尚未準備完成');
- const from=document.getElementById('modelMergeFrom')?.value||'',to=document.getElementById('modelMergeTo')?.value||'';
+ const from=document.getElementById('modelMergeFrom')?.value||'',to=document.getElementById('modelMergeTo')?.value.trim()||'';
  const count=assets.filter(a=>String(a.model||'').trim()===from).length;
  if(!from||!to||from===to||!count)return;
  if(!confirm(`確定將 ${count} 筆型號「${from}」統一為「${to}」？\\n將修改 Firebase 正式資料，並保留每筆異動紀錄。`))return;
