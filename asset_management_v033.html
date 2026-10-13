@@ -146,7 +146,7 @@ async function analyzeExcelImport(){
     if(!type)continue;matched++;
     const ws=wb.Sheets[sheetName],matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true,blankrows:true});
     const header=matrix[2]||[];
-    const normalized=x=>String(x??'').replace(/\\s+/g,'').toLowerCase();
+    const normalized=x=>String(x??'').replace(/\s+/g,'').toLowerCase();
     const findColumn=(names)=>header.findIndex(h=>names.some(n=>normalized(h)===normalized(n)));
     const column=(row,names)=>{const i=findColumn(names);return i<0?'':importCell(row,i)};
     const required=type==='client'?[['財產編號'],['設備名稱'],['廠牌型號']]:[['財產編號'],['序號'],['設備名稱'],['廠牌型號']];
