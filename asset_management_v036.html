@@ -45,10 +45,12 @@ function dashboard(){
  if(!window.dashboardCloudEnabled){
   const pending=handovers.filter(h=>h.status==='待處理');
   const pendingHtml=pending.slice(0,6).map(h=>`<div class="workitem"><div class="flex" style="justify-content:space-between"><strong>${esc(h.title)}</strong><span class="tag gray">待處理</span></div><p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(h.content)}</p><div class="muted">最後更新：${esc(h.updatedAt||h.createdAt)}</div><button class="btn small" style="margin-top:10px" onclick="setPage('handover');openHandover('${h.id}')">查看／編輯 →</button></div>`).join('');
+  const recentItems=allCloudAudits().slice(0,5).map(x=>`<div class="logitem" style="cursor:pointer" data-audit-key="${esc(x._auditKey)}" onclick="openAuditFromDashboard(this.dataset.auditKey)"><strong>${esc(x._auditType)} · ${esc(x.action||'異動')} · ${esc(auditProperty(x))}</strong><div class="muted">${esc(auditSummary(x))}</div><div class="muted">${esc(auditTime(x))} · ${esc(auditActor(x))}</div></div>`).join('');
   return heading('工作總覽','快速掌握交接工作、備品資訊及常用功能；雲端統計依需求載入')+
    `<div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="card" onclick="setPage('handover')" style="text-align:left"><div class="label">待處理交接</div><div class="n">${pending.length}</div></button><button class="card" onclick="setPage('supplies')" style="text-align:left"><div class="label">備品／餘料種類</div><div class="n">${supplies.length}</div></button></div>`+
    `<section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">交接概況 · 待處理</h3><button class="btn small" onclick="setPage('handover')">全部交接 →</button></div><div class="muted" style="margin:10px 0">本機展示資料；不需要下載財產清冊</div>${pendingHtml||'<div class="empty">目前沒有待處理的交接事項</div>'}</section>`+
    `<div class="grid2"><section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">備品餘料概況</h3><button class="btn small" onclick="setPage('supplies')">備品管理 →</button></div><p>目前建檔 <strong>${supplies.length}</strong> 種備品／餘料</p><p class="muted">備品資料目前儲存於本機。</p></section><section class="panel"><h3>雲端財產與維修統計</h3><p class="muted">為節省讀取量，登入時不自動下載全部財產。需要查看維修警示、型號維修率及近期異動時，再載入統計。</p><button class="btn primary" onclick="window.loadDashboardCloud?.()">載入雲端統計</button></section></div>`+
+   `<section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">近期異動 · 最新 5 筆</h3><button class="btn small" onclick="setPage('history')">完整歷程 →</button></div>${recentItems||'<div class="empty">近期沒有異動紀錄，或資料正在同步</div>'}<p class="muted">只同步最新異動預覽，不需載入整份財產清冊。</p></section>`+
    `<section class="panel"><h3>快速操作</h3><div class="flex"><button class="btn primary" onclick="setPage('assets')">財產清冊 →</button>${canModify()?`<button class="btn" onclick="setPage('handover');openHandover()">＋ 新增交接</button>`:''}<button class="btn" onclick="setPage('repairs')">維修紀錄 →</button><button class="btn" onclick="setPage('repairOverview')">維修概況 →</button><button class="btn" onclick="setPage('history')">異動歷程 →</button></div><p class="muted">財產、維修與異動歷程使用 Firestore；交接與備品目前為本機展示資料。</p></section>`;
  }
  const pending=handovers.filter(h=>h.status==='待處理'),stats=maintenanceStats();
@@ -437,7 +439,7 @@ try{
  const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
  provider.setCustomParameters({prompt:'select_account'});
 
- let assetQueryMode=null;let stopAssets=null,stopAudit=null,stopRepairAudit=null,stopRepairs=null,stopAdmins=null,stopRequests=null,stopOwnRequest=null;
+ let previewAuditStops=[];let assetQueryMode=null;let stopAssets=null,stopAudit=null,stopRepairAudit=null,stopRepairs=null,stopAdmins=null,stopRequests=null,stopOwnRequest=null;
  window.cloudSaveAdminName=async(uid,name)=>{
   if(window.currentRole!=='owner')throw new Error('僅系統擁有者可以修改名稱');
   await updateDoc(doc(db,'admins',uid),{displayName:name});
@@ -489,7 +491,7 @@ try{
    },err=>{console.error('管理員名單讀取失敗',err);adminProfilesReady=true;adminProfilesError='帳號名單讀取失敗：'+err.message;if(page==='admin')render()});
   }
  }
- window.stopCloudAssets=()=>{activeCloudUser=null;window.dashboardCloudEnabled=false;if(stopRepairAudit){stopRepairAudit();stopRepairAudit=null}if(stopRepairs){stopRepairs();stopRepairs=null}repairs=[];if(stopAdmins){stopAdmins();stopAdmins=null}if(stopRequests){stopRequests();stopRequests=null}if(stopOwnRequest){stopOwnRequest();stopOwnRequest=null}pendingRequests=[];pendingReady=false;adminProfiles={};adminProfilesReady=false;if(stopAssets){stopAssets();stopAssets=null}assetQueryMode=null;if(stopAudit){stopAudit();stopAudit=null}cloudAssetsReady=false;cloudAuditReady=false;cloudAudit=[];assets=[]};
+ window.stopCloudAssets=()=>{previewAuditStops.forEach(fn=>fn());previewAuditStops=[];activeCloudUser=null;window.dashboardCloudEnabled=false;if(stopRepairAudit){stopRepairAudit();stopRepairAudit=null}if(stopRepairs){stopRepairs();stopRepairs=null}repairs=[];if(stopAdmins){stopAdmins();stopAdmins=null}if(stopRequests){stopRequests();stopRequests=null}if(stopOwnRequest){stopOwnRequest();stopOwnRequest=null}pendingRequests=[];pendingReady=false;adminProfiles={};adminProfilesReady=false;if(stopAssets){stopAssets();stopAssets=null}assetQueryMode=null;if(stopAudit){stopAudit();stopAudit=null}cloudAssetsReady=false;cloudAuditReady=false;cloudAudit=[];assets=[]};
  window.cloudWrite=async(action,asset,before)=>{
   const u=auth.currentUser;
   if(!u||!window.accessGranted)throw new Error('尚未登入');
@@ -626,7 +628,23 @@ try{
   });
  }
 
+ function startDashboardAuditPreview(u){
+  if(previewAuditStops.length)return;
+  const sources=[['assetAudit',items=>{cloudAudit=items;cloudAuditReady=true}],['repairAudit',items=>{repairAuditEntries=items;repairAuditReady=true}]];
+  sources.forEach(([name,assign])=>{
+   const unsub=onSnapshot(query(collection(db,name),orderBy('timestamp','desc'),limit(5)),snap=>{
+    if(auth.currentUser?.uid!==u.uid)return;
+    // 完整歷程監聽已啟用時，避免預覽覆寫其 100 筆資料。
+    if(name==='assetAudit'&&stopAudit)return;
+    if(name==='repairAudit'&&stopRepairAudit)return;
+    assign(snap.docs.map(d=>({auditId:d.id,...d.data()})));
+    if(page==='dashboard')render();
+   },err=>console.error('首頁近期異動預覽讀取失敗',name,err));
+   previewAuditStops.push(unsub);
+  });
+ }
  function startAuditsOnDemand(u){
+  previewAuditStops.forEach(fn=>fn());previewAuditStops=[];
   if(!stopRepairAudit)startRepairAudit(u);
   if(stopAudit)return;
   stopAudit=onSnapshot(query(collection(db,'assetAudit'),orderBy('timestamp','desc'),limit(100)),snap=>{
@@ -645,6 +663,7 @@ try{
    if(!stopRepairs)startCloudRepairs(u);
   }
   if(p==='history'||(p==='dashboard'&&window.dashboardCloudEnabled))startAuditsOnDemand(u);
+  else if(p==='dashboard')startDashboardAuditPreview(u);
  };
  window.loadDashboardCloud=()=>{
   window.dashboardCloudEnabled=true;
