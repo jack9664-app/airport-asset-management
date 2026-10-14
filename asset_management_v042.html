@@ -1,0 +1,837 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>桃機群曜財產管理｜初版展示</title><style>
+:root{--navy:#14263c;--blue:#2f6dca;--bg:#f4f7fb;--line:#e3eaf1;--ink:#203148;--muted:#758397;--green:#138568}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{display:flex;min-height:100vh}.side{width:250px;background:var(--navy);color:#d4e1f0;padding:26px 14px;flex-shrink:0}.brand{font-size:19px;font-weight:800;color:#fff;padding:5px 12px 3px}.subbrand{font-size:12px;color:#91a6bf;padding:0 12px 27px}.nav{display:flex;align-items:center;gap:11px;width:100%;border:0;border-radius:10px;padding:13px 15px;background:transparent;color:inherit;text-align:left;margin:3px 0}.nav:hover,.nav.active{background:#294563;color:white}.sidefoot{font-size:12px;color:#a8bad0;padding:22px 12px}.main{flex:1;min-width:0}.top{background:white;border-bottom:1px solid var(--line);padding:19px 32px;display:flex;justify-content:space-between;align-items:center;gap:12px}.top h1{margin:0;font-size:20px}.pill{font-size:12px;background:#fff4df;color:#8d5a0d;border-radius:30px;padding:6px 11px}.content{max-width:1400px;margin:auto;padding:30px 32px}.intro{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}.intro h2{font-size:24px;margin:0 0 6px}.muted{color:var(--muted);font-size:13px}.btn{border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);padding:10px 14px;font-weight:600}.btn.primary{background:var(--blue);color:white;border-color:var(--blue)}.btn.danger{color:#bd4051}.btn.small{font-size:12px;padding:7px 9px}.btn:disabled{opacity:.5;cursor:not-allowed}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 9px #21324a06}.card{padding:20px}.card .n{font-size:30px;font-weight:800;margin-top:9px}.card .label{font-size:13px;color:var(--muted)}.card .accent{color:var(--blue)}.panel{padding:20px;margin-bottom:20px}.panel h3{margin:0 0 15px;font-size:16px}.flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:17px}.toolbar input{flex:1;min-width:200px}.field,input,select,textarea{border:1px solid #dbe3eb;border-radius:9px;padding:10px 12px;background:#fff;color:var(--ink)}textarea{width:100%;min-height:70px}.field{width:100%}select{max-width:100%}table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#718096;font-weight:650;background:#f8fafc}td,th{padding:13px 12px;border-bottom:1px solid #edf1f5}td{vertical-align:middle}tr:last-child td{border-bottom:0}.tablewrap{overflow-x:auto}.tag{display:inline-block;border-radius:7px;background:#eaf3ff;color:#376eae;padding:4px 8px;font-size:12px}.tag.green{background:#e5f7ef;color:#17805f}.tag.gray{background:#f1f3f6;color:#687687}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.hidden{display:none!important}.empty{text-align:center;color:var(--muted);padding:42px}.rowaction{display:flex;gap:5px;flex-wrap:wrap}.sectionhint{padding:14px;background:#f4f8ff;border:1px solid #dfebff;border-radius:10px;font-size:13px;color:#526d8f;margin-bottom:17px}.modalbg{position:fixed;inset:0;background:#0c1d33a3;display:flex;justify-content:center;align-items:center;padding:18px;z-index:10}.modal{background:white;border-radius:15px;width:min(660px,100%);max-height:92vh;overflow:auto;padding:24px}.modal h3{margin:0 0 18px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.formgrid label{font-size:12px;color:#5d7084;display:block;margin-bottom:5px}.formgrid input,.formgrid select{width:100%}.formgrid .wide{grid-column:1/-1}.actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}.logitem{padding:13px 0;border-bottom:1px solid var(--line)}.logitem:last-child{border-bottom:0}.note{font-size:12px;color:#9a6470}.mobileNav{display:none}@media(max-width:950px){.side{width:205px}.content{padding:20px}.top{padding:16px 20px}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.shell{display:block}.side{display:none}.mobileNav{display:flex;overflow:auto;gap:6px;background:var(--navy);padding:8px}.mobileNav button{white-space:nowrap;background:transparent;color:#dce8f5;border:0;border-radius:8px;padding:10px}.mobileNav button.active{background:#365477}.content{padding:16px}.top{padding:14px 16px}.top h1{font-size:16px}.intro{align-items:flex-start}.intro h2{font-size:21px}.stats{gap:10px}.card{padding:15px}.card .n{font-size:24px}.grid2,.formgrid{grid-template-columns:1fr}.formgrid .wide{grid-column:auto}.panel{padding:15px}.modal{padding:18px}}
+
+@media(max-width:650px){
+.shell{min-height:100dvh}.top{position:sticky;top:0;z-index:5;padding:12px 15px}.top h1{font-size:17px}.top .flex>.muted{display:none}.pill{font-size:11px;padding:5px 8px}
+.mobileNav{position:fixed;bottom:0;left:0;right:0;z-index:8;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;background:#fff;border-top:1px solid #dce4ec;padding:6px 3px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -5px 18px #162a4012;overflow:visible}
+.mobileNav button{min-width:0;color:#697b91;white-space:normal;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 2px;border-radius:9px;font-size:11px;min-height:50px}.mobileNav button.active{background:#eaf2ff;color:#215ca9}
+.content{padding:18px 13px calc(106px + env(safe-area-inset-bottom))}.intro{margin-bottom:16px;gap:9px}.intro h2{font-size:21px}.intro>.btn{white-space:nowrap;padding:11px 10px;font-size:13px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}.card{border-radius:13px}.card .n{font-size:27px}.panel{border-radius:13px;margin-bottom:14px;padding:14px}.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px}.toolbar .btn{min-height:44px}.toolbar input,.toolbar select{grid-column:1/-1;width:100%;min-width:0;max-width:none;min-height:46px;font-size:16px}.toolbar input{grid-row:2}.toolbar select{grid-row:3}
+.tablewrap{overflow:visible}.tablewrap table{display:block}.tablewrap thead{display:none}.tablewrap tbody{display:grid;gap:12px}.tablewrap tr{display:block;border:1px solid #e3eaf1;border-radius:13px;background:#fff;padding:13px;box-shadow:0 2px 7px #1a304308}.tablewrap td{display:block;border:0;padding:6px 0;overflow-wrap:anywhere}.tablewrap td:first-child{font-size:16px;color:#265f9d;font-weight:700}.tablewrap td:nth-child(2){font-weight:700}.tablewrap td:nth-child(3):before{content:'單位／機房　';font-size:12px;color:#8a97a8;font-weight:400}.tablewrap td:nth-child(4):before{content:'位置　';font-size:12px;color:#8a97a8;font-weight:400}.tablewrap td:nth-child(5):before{content:'盤點　';font-size:12px;color:#8a97a8;font-weight:400}.tablewrap td:last-child{border-top:1px solid #e8edf3;margin-top:8px;padding-top:12px}.rowaction{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.rowaction .btn{min-height:44px;background:#f4f8fd;color:#2e5d96;border-color:#e2ebf5}.btn{min-height:42px}input,select,textarea{font-size:16px}
+.modalbg{align-items:flex-end;padding:0}.modal{border-radius:18px 18px 0 0;width:100%;max-height:90dvh;padding:22px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -6px 24px #0b203334}.modal h3{font-size:19px}.formgrid{gap:12px}.formgrid label{font-size:13px}.formgrid input,.formgrid select{min-height:44px}.actions{position:sticky;bottom:0;background:#fff;padding-top:12px}.actions .btn{flex:1}.sectionhint{line-height:1.6}
+}
+@media(max-width:650px){
+.top .flex .muted{display:none}.top .pill{font-size:10px;padding:5px 8px}.content{padding-bottom:96px}
+.intro{flex-wrap:wrap}.intro>.btn{width:100%;min-height:44px}
+.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px}.toolbar input,.toolbar select{grid-column:1/-1;width:100%;min-width:0}.toolbar .btn{min-height:44px}
+.repairTable table{min-width:480px}.modal input,.modal select,.modal textarea{font-size:16px}
+.modal .actions{position:sticky;bottom:-18px;background:#fff;padding:12px 0 4px}.modal .actions .btn{min-height:44px}
+}
+/* 新增工作模組 */
+.modulegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:20px}.modulecard{display:block;text-align:left;width:100%;padding:20px;border:1px solid var(--line);background:white;border-radius:14px;box-shadow:0 2px 9px #21324a06}.modulecard:hover{border-color:#92b6e9;background:#fbfdff}.modulecard strong{display:block;font-size:17px;margin-bottom:8px}.modulecard .muted{line-height:1.6}.metric{font-size:24px;font-weight:800;color:var(--blue);margin:9px 0}.unitgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px}.unitcard{border:1px solid var(--line);border-radius:11px;background:#fff;padding:13px;text-align:left;color:var(--ink)}.unitcard.selected{border-color:var(--blue);background:#edf5ff}.unitcard .number{display:block;font-size:20px;font-weight:800;color:var(--blue);margin-top:6px}.workitem{border-bottom:1px solid var(--line);padding:15px 0}.workitem:last-child{border-bottom:0}.workitem .muted{line-height:1.6}.statusselect{padding:7px 9px;font-size:13px}.fieldrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.fieldrow>*{max-width:100%}@media(max-width:950px){.modulegrid,.unitgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.modulegrid,.unitgrid{grid-template-columns:1fr}.modulecard{padding:16px}.workitem .fieldrow{align-items:stretch}.workitem .fieldrow .btn{flex:1}.mobileNav{display:flex;overflow-x:auto;justify-content:flex-start;gap:4px}.mobileNav button{flex:0 0 88px;font-size:11px;min-height:45px;padding:5px 3px}}
+</style><script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script></head><body><div class="shell"><aside class="side"><div class="brand">◈ 桃機群曜</div><div class="subbrand">財產管理系統</div><div id="sidebar"></div><div class="sidefoot">Firebase Google 登入驗證<br>財產與維修資料儲存於 Firestore</div></aside><main class="main"><header class="top"><h1 id="pagetitle">總覽儀表板</h1><div class="flex"><span class="pill">● V0.36 分類讀取</span><span class="muted"><span id="authUser">驗證中</span> <button class="btn small" id="logoutBtn" onclick="signOutUser()" style="display:none">登出</button></span></div></header><nav class="mobileNav" id="mobileNav"></nav><div class="content" id="view"><div class="panel"><h3>展示頁面載入中</h3><p class="muted">如果此訊息持續顯示，請確認瀏覽器已允許執行 JavaScript。</p></div></div></main></div><div id="overlay"></div><script>
+'use strict';
+const CLIENT=['3851資訊服務科-桃','4900國境事務大隊','4910桃園機場一隊(T1入)','4920桃園機場二隊(T1出)','4930桃園機場三隊','4940桃園機場四隊(T2出)','4950桃園機場五隊(T2入)','4970入出國查驗監控隊','4980特殊勤務隊','4990鑑識調查隊','49B0行政業務隊','49A0國境業務隊','設備刪除暫存區'];
+const SERVER=['T2 主機房','T2 各管道間','T1 機房與各管道間','大隊部4F機房與3F協管室機櫃','T1、T2 異動、移撥&報廢','公司備品'];
+let assets=[
+{id:'AST-0001',type:'client',team:CLIENT[0],propertyNo:'C-2026-001',serialNo:'',deviceType:'桌上型電腦',model:'示範型號 A',ipAddress:'192.0.2.10',macAddress:'',user:'示範使用者',custodian:'',location:'示範辦公區',notes:'',contract:'',isMaintenance:'是',lastInventory:'2026-09-12'},
+{id:'AST-0002',type:'client',team:CLIENT[1],propertyNo:'',serialNo:'',deviceType:'螢幕',model:'示範型號 B',ipAddress:'',macAddress:'',user:'',custodian:'',location:'示範櫃位',notes:'無財編示範',contract:'',isMaintenance:'是',lastInventory:''},
+{id:'AST-0003',type:'server',team:SERVER[0],propertyNo:'S-2026-101',serialNo:'SN-DEMO-101',deviceType:'伺服器',model:'示範機型 C',ipAddress:'192.0.2.20',macAddress:'',custodian:'',location:'示範機房',cabinet:'R01',uSpace:'10U',direction:'',project:'',notes1:'',notes2:'',notes3:'',contract:'',isMaintenance:'是',lastInventory:'2026-08-25'},
+{id:'AST-0004',type:'server',team:SERVER[2],propertyNo:'',serialNo:'SN-DEMO-102',deviceType:'網路交換器',model:'示範機型 D',ipAddress:'192.0.2.30',macAddress:'',custodian:'',location:'示範管道間',cabinet:'R02',uSpace:'2U',direction:'',project:'',notes1:'',notes2:'',notes3:'',contract:'',isMaintenance:'是',lastInventory:''}
+];let repairs=[];let logs=[];let categories={client:[...CLIENT],server:[...SERVER]};let page='dashboard',tab='client',query='',teamFilter='all',nextId=5;let handovers=[],supplies=[];let handoverFilter='all';const DEMO_KEY='airport_asset_demo_v04';
+try {let saved=JSON.parse(localStorage.getItem(DEMO_KEY)||'null');if(saved&&Array.isArray(saved.assets)&&Array.isArray(saved.repairs)&&Array.isArray(saved.logs)){assets=[];logs=saved.logs;categories=saved.categories||categories;nextId=saved.nextId||nextId;handovers=Array.isArray(saved.handovers)?saved.handovers:[];supplies=Array.isArray(saved.supplies)?saved.supplies:[];handovers.forEach(h=>{if(h.status==='處理中')h.status='待處理'})}}catch(e){}
+function persist(){try{localStorage.setItem(DEMO_KEY,JSON.stringify({assets:[],repairs,logs,categories,nextId,handovers,supplies}))}catch(e){console.warn('展示資料無法保存',e)}}
+function resetDemo(){if(!confirm('確定清除目前瀏覽器內的展示操作紀錄？頁面將恢復預設展示資料。'))return;try{localStorage.removeItem(DEMO_KEY)}catch(e){}location.reload()}
+const nav=[['dashboard','▦','總覽儀表板'],['handover','☷','工作交接'],['assets','▤','財產清冊'],['repairs','⚒','維修紀錄'],['repairOverview','◉','維修概況'],['supplies','▣','備品餘料'],['history','◷','異動歷程'],['admin','⚙','系統管理']];const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const now=()=>new Date().toLocaleString('zh-TW',{hour12:false});function log(action,a,before){logs.unshift({date:now(),actor:'展示管理員',action,id:a.id,propertyNo:a.propertyNo||'（無財編）',before:before?JSON.stringify(before):'',after:JSON.stringify(a)});persist()}function canModify(){return window.accessGranted && (window.currentRole==='owner'||window.currentRole==='editor')}function denyViewer(){if(!canModify()){alert('檢視者僅能查詢，不可新增或修改資料');return true}return false}function setPage(p){if(!window.accessGranted)return;if(window.currentRole==='viewer'&&p==='handover')return;if((p==='admin'||p==='import')&&window.currentRole!=='owner'){if(page==='admin'||page==='import'){page='dashboard';render()}return}page=p;query='';teamFilter='all';window.ensurePageCloudData?.(p);render()}function navHtml(mobile=false){return nav.filter(([id])=>(id!=='admin'&&id!=='import'||window.currentRole==='owner')&&(id!=='handover'||window.currentRole!=='viewer')).map(([id,ico,name])=>`<button class="${mobile?'':'nav '}${page===id?'active':''}" onclick="setPage('${id}')">${ico} ${name}</button>`).join('')}function render(){if(!window.accessGranted)return;if(((page==='admin'||page==='import')&&window.currentRole!=='owner')||(page==='handover'&&window.currentRole==='viewer'))page='dashboard'; $('sidebar').innerHTML=navHtml();$('mobileNav').innerHTML=navHtml(true);$('pagetitle').textContent=page==='import'?'Excel 財產匯入':(nav.find(x=>x[0]===page)?.[2]||'系統管理');let out={dashboard:dashboard,assets:assetPage,repairs:repairPage,handover:handoverPage,supplies:supplyPage,repairOverview:repairOverviewPage,history:historyPage,import:importPage,admin:adminPage}[page]();$('view').innerHTML=out}
+function heading(title,desc,action=''){return `<div class="intro"><div><h2>${title}</h2><div class="muted">${desc}</div></div>${action}</div>`}
+function maintenanceStats(){
+ const valid=repairs.filter(r=>assets.some(a=>a.id===r.assetId));
+ const counts=new Map();valid.forEach(r=>counts.set(r.assetId,(counts.get(r.assetId)||0)+1));
+ const alerts=assets.filter(a=>(counts.get(a.id)||0)>=3).map(a=>({asset:a,count:counts.get(a.id)})).sort((a,b)=>b.count-a.count);
+ const groups=new Map();assets.forEach(a=>{const type=(a.deviceType||'未分類').trim(),model=(a.model||'未填型號').trim(),key=JSON.stringify([type,model]);if(!groups.has(key))groups.set(key,{type,model,total:0,repaired:0,visits:0});const g=groups.get(key);g.total++;const n=counts.get(a.id)||0;if(n)g.repaired++;g.visits+=n});
+ const models=[...groups.values()].map(g=>({...g,rate:g.total?g.repaired/g.total*100:0})).sort((a,b)=>b.rate-a.rate||b.visits-a.visits);
+ return {alerts,models,open:repairs.filter(r=>r.status!=='已完成')};
+}
+function dashboard(){
+ if(!window.dashboardCloudEnabled){
+  const pending=handovers.filter(h=>h.status==='待處理');
+  const pendingHtml=pending.slice(0,6).map(h=>`<div class="workitem"><div class="flex" style="justify-content:space-between"><strong>${esc(h.title)}</strong><span class="tag gray">待處理</span></div><p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(h.content)}</p><div class="muted">最後更新：${esc(h.updatedAt||h.createdAt)}</div><button class="btn small" style="margin-top:10px" onclick="setPage('handover');openHandover('${h.id}')">查看／編輯 →</button></div>`).join('');
+  const recentItems=allCloudAudits().slice(0,5).map(x=>`<div class="logitem" style="cursor:pointer" data-audit-key="${esc(x._auditKey)}" onclick="openAuditFromDashboard(this.dataset.auditKey)"><strong>${esc(x._auditType)} · ${esc(x.action||'異動')} · ${esc(auditProperty(x))}</strong><div class="muted">${esc(auditSummary(x))}</div><div class="muted">${esc(auditTime(x))} · ${esc(auditActor(x))}</div></div>`).join('');
+  return heading('工作總覽','快速掌握交接工作、備品資訊及常用功能；雲端統計依需求載入')+
+   `<div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="card" onclick="setPage('handover')" style="text-align:left"><div class="label">待處理交接</div><div class="n">${pending.length}</div></button><button class="card" onclick="setPage('supplies')" style="text-align:left"><div class="label">備品／餘料種類</div><div class="n">${supplies.length}</div></button></div>`+
+   `<section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">交接概況 · 待處理</h3><button class="btn small" onclick="setPage('handover')">全部交接 →</button></div><div class="muted" style="margin:10px 0">本機展示資料；不需要下載財產清冊</div>${pendingHtml||'<div class="empty">目前沒有待處理的交接事項</div>'}</section>`+
+   `<div class="grid2"><section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">備品餘料概況</h3><button class="btn small" onclick="setPage('supplies')">備品管理 →</button></div><p>目前建檔 <strong>${supplies.length}</strong> 種備品／餘料</p><p class="muted">備品資料目前儲存於本機。</p></section><section class="panel"><h3>雲端財產與維修統計</h3><p class="muted">為節省讀取量，登入時不自動下載全部財產。需要查看維修警示、型號維修率及近期異動時，再載入統計。</p><button class="btn primary" onclick="window.loadDashboardCloud?.()">載入雲端統計</button></section></div>`+
+   `<section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">近期異動 · 最新 5 筆</h3><button class="btn small" onclick="setPage('history')">完整歷程 →</button></div>${recentItems||'<div class="empty">近期沒有異動紀錄，或資料正在同步</div>'}<p class="muted">只同步最新異動預覽，不需載入整份財產清冊。</p></section>`+
+   `<section class="panel"><h3>快速操作</h3><div class="flex"><button class="btn primary" onclick="setPage('assets')">財產清冊 →</button>${canModify()?`<button class="btn" onclick="setPage('handover');openHandover()">＋ 新增交接</button>`:''}<button class="btn" onclick="setPage('repairs')">維修紀錄 →</button><button class="btn" onclick="setPage('repairOverview')">維修概況 →</button><button class="btn" onclick="setPage('history')">異動歷程 →</button></div><p class="muted">財產、維修與異動歷程使用 Firestore；交接與備品目前為本機展示資料。</p></section>`;
+ }
+ const pending=handovers.filter(h=>h.status==='待處理'),stats=maintenanceStats();
+ const oldItems=allCloudAudits().slice(0,5).map(x=>`<div class="logitem" style="cursor:pointer" data-audit-key="${esc(x._auditKey)}" onclick="openAuditFromDashboard(this.dataset.auditKey)"><strong>${esc(x._auditType)} · ${esc(x.action||'異動')} · ${esc(auditProperty(x))}</strong><div class="muted">${esc(auditSummary(x))}</div><div class="muted">${esc(auditTime(x))} · ${esc(auditActor(x))}</div></div>`).join('');
+ const pendingHtml=pending.map(h=>`<div class="workitem"><div class="flex" style="justify-content:space-between"><strong>${esc(h.title)}</strong><span class="tag gray">待處理</span></div><p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(h.content)}</p><div class="muted">最後更新：${esc(h.updatedAt||h.createdAt)}</div><button class="btn small" style="margin-top:10px" onclick="setPage('handover');openHandover('${h.id}')">查看／編輯 →</button></div>`).join('');
+ const alertsHtml=stats.alerts.slice(0,5).map(x=>`<div class="logitem"><strong>${esc(x.asset.deviceType||'設備')} · ${esc(x.asset.model||'未填型號')}</strong><div class="muted">${esc(x.asset.propertyNo||x.asset.id)} · ${esc(x.asset.team)} · 累積 ${x.count} 次維修</div></div>`).join('');
+ const modelsHtml=stats.models.filter(x=>x.repaired>0).slice(0,5).map(x=>`<div class="logitem"><div class="flex" style="justify-content:space-between"><strong>${esc(x.type)} · ${esc(x.model)}</strong><strong>${x.rate.toFixed(1)}%</strong></div><div class="muted">曾維修 ${x.repaired} / ${x.total} 台 · 累積 ${x.visits} 次維修</div></div>`).join('');
+ return heading('工作總覽','登入後快速掌握待交接工作、維修異常及備品資訊（展示資料）')+
+ `<div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))"><button class="card" onclick="setPage('handover')" style="text-align:left"><div class="label">待處理交接</div><div class="n">${pending.length}</div></button><button class="card" onclick="setPage('repairOverview')" style="text-align:left"><div class="label">未完成維修</div><div class="n">${stats.open.length}</div></button><button class="card" onclick="setPage('repairOverview')" style="text-align:left"><div class="label">警示設備（維修 ≥ 3 次）</div><div class="n">${stats.alerts.length}</div></button><button class="card" onclick="setPage('repairs')" style="text-align:left"><div class="label">維修紀錄總數</div><div class="n">${repairs.length}</div></button></div>`+
+ `<section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">交接概況 · 待處理</h3><button class="btn small" onclick="setPage('handover')">全部交接 →</button></div><div class="muted" style="margin:10px 0">僅顯示待處理；資訊備註與已完成不列入</div>${pendingHtml||'<div class="empty">目前沒有待處理的交接事項</div>'}</section>`+
+ `<div class="grid2"><section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">維修概況 · 重複維修警示</h3><button class="btn small" onclick="setPage('repairOverview')">查看詳情 →</button></div>${alertsHtml||'<div class="empty">目前沒有累積維修達 3 次的設備</div>'}</section><section class="panel"><h3>設備型號維修率排行</h3>${modelsHtml||'<div class="empty">目前沒有可統計的維修資料</div>'}<p class="muted">維修率＝同型號曾維修設備數 ÷ 該型號設備總數；僅計算本系統已建檔紀錄。</p></section></div>`+
+ `<div class="grid2"><section class="panel"><div class="flex" style="justify-content:space-between"><h3 style="margin:0">備品餘料概況</h3><button class="btn small" onclick="setPage('supplies')">備品管理 →</button></div><p>目前建檔 <strong>${supplies.length}</strong> 種備品／餘料</p><p class="muted">不設定低庫存提醒，避免單件備品反覆告警。</p></section><section class="panel"><h3>近期異動</h3>${oldItems||(cloudAuditReady?'<div class="empty">目前沒有雲端財產異動紀錄</div>':'<div class="empty">雲端異動紀錄載入中…</div>')}</section></div>`+
+ `<section class="panel"><h3>快速操作</h3><div class="flex"><button class="btn primary" onclick="setPage('assets')">財產清冊 →</button>${canModify()?`<button class="btn" onclick="setPage('handover');openHandover()">＋ 新增交接</button>`:''}<button class="btn" onclick="setPage('repairs')">維修紀錄 →</button></div><p class="muted">財產清冊、維修紀錄與財產異動歷程已連接 Firestore；工作交接、備品餘料仍為本機展示資料。</p></section>`;
+}
+function filtered(){return assets.filter(a=>a.type===tab&&(teamFilter==='all'||a.team===teamFilter)&&(!query||[a.propertyNo,a.serialNo,a.deviceType,a.model,a.location,a.team,a.ipAddress].some(v=>String(v||'').toLowerCase().includes(query.toLowerCase()))))}
+function assetPage(){if(!cloudAssetsReady)return heading('財產清冊','依目前選擇的 Client／Server 類型同步雲端資料')+'<div class="panel"><h3>正在載入'+(tab==='client'?'Client':'Server')+' 財產</h3><p class="muted">僅讀取目前類型的財產，請稍候。首次切換才載入另一類資料；已載入的分類會保持同步，切回不會重新訂閱。</p><div class="flex"><button class="btn '+(tab==='client'?'primary':'')+'" onclick="switchTab(\'client\')">Client 端</button><button class="btn '+(tab==='server'?'primary':'')+'" onclick="switchTab(\'server\')">Server 端</button></div></div>';let arr=filtered();let unitCards=`<div class="unitgrid">${categories[tab].map(t=>`<button class="unitcard ${teamFilter===t?'selected':''}" onclick="chooseTeam(${JSON.stringify(t).replace(/"/g,'&quot;')})"><span>${esc(t)}</span><span class="number">${assets.filter(a=>a.type===tab&&a.team===t).length} 筆</span></button>`).join('')}</div>`;return heading('財產清冊','Firestore 雲端財產資料 · 跨裝置同步；無財編亦可建檔',(canModify()?`<button class="btn primary" onclick="openEdit()">＋ 新增財產</button>`:''))+`<div class="sectionhint">此頁財產資料儲存在 Firestore；其他模組目前仍為本機展示。測試時請勿輸入正式或敏感財產資料。</div><div class="panel"><h3>各單位／機房財產數量</h3>${unitCards}<div class="toolbar"><button class="btn ${tab==='client'?'primary':''}" onclick="switchTab('client')">Client 端</button><button class="btn ${tab==='server'?'primary':''}" onclick="switchTab('server')">Server 端</button><input id="search" placeholder="搜尋財編、序號、設備名稱、型號、IP、位置…" value="${esc(query)}" oninput="query=this.value;refreshTable()"><select id="teamFilter" onchange="teamFilter=this.value;refreshTable()"><option value="all">全部單位／機房</option>${categories[tab].map(t=>`<option value="${esc(t)}" ${teamFilter===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div><div class="muted" style="margin-bottom:10px">目前顯示 <strong id="count">${arr.length}</strong> 筆財產</div><div class="tablewrap" id="assetTable">${tableHtml(arr)}</div></div>`}
+function tableHtml(arr){return arr.length?`<table><thead><tr><th>財產編號</th><th>設備類型／型號</th><th>${tab==='client'?'單位':'機房'}</th><th>IP 位址</th><th>位置</th><th>盤點日期</th><th>操作</th></tr></thead><tbody>${arr.map(a=>`<tr><td><strong>${esc(a.propertyNo||'—')}</strong><div class="muted">${esc(a.serialNo||'')}</div></td><td>${esc(a.deviceType)}<div class="muted">${esc(a.model)}</div></td><td>${esc(a.team)}</td><td>${esc(a.ipAddress||'—')}</td><td>${esc(a.location)}</td><td>${a.lastInventory?`<span class="tag green">${esc(a.lastInventory)}</span>`:'<span class="tag gray">未紀錄</span>'}</td><td><div class="rowaction"><button class="btn small" onclick="openDetail('${a.id}')">詳細</button>${canModify()?`<button class="btn small" onclick="openEdit('${a.id}')">編輯</button><button class="btn small" onclick="openTransfer('${a.id}')">移撥</button>`:''}${window.currentRole==='owner'? `<button class="btn small danger" onclick="deleteAsset('${a.id}')">刪除</button>`:''}</div></td></tr>`).join('')}</tbody></table>`:'<div class="empty">沒有符合條件的財產</div>'}
+function refreshTable(){if(page!=='assets')return;let arr=filtered();$('count').textContent=arr.length;$('assetTable').innerHTML=tableHtml(arr)}
+function chooseTeam(t){teamFilter=t;render()}
+function switchTab(t){if(t===tab)return;tab=t;query='';teamFilter='all';window.ensurePageCloudData?.('assets');render()}
+const clientFields=[['propertyNo','財產編號'],['deviceType','設備類型'],['model','型號'],['ipAddress','IP 位址'],['macAddress','MAC 位址'],['user','使用人'],['custodian','保管人'],['location','位置'],['contract','合約'],['isMaintenance','維護狀態'],['notes','備註']];
+const serverFields=[['propertyNo','財產編號'],['serialNo','序號'],['deviceType','設備類型'],['model','型號'],['ipAddress','IP 位址'],['macAddress','MAC 位址'],['custodian','保管人'],['location','位置'],['cabinet','機櫃'],['uSpace','U 數'],['direction','方向'],['project','專案'],['contract','合約'],['isMaintenance','維護狀態'],['notes1','備註 1'],['notes2','備註 2'],['notes3','備註 3']];
+function showModal(title,content,footer=''){ $('overlay').innerHTML=`<div class="modalbg"><div class="modal"><h3>${title}</h3>${content}${footer}</div></div>`}
+function closeModal(){$('overlay').innerHTML=''}
+function openEdit(id){if(denyViewer())return;let a=assets.find(x=>x.id===id),type=a?.type||tab,fields=type==='client'?clientFields:serverFields;showModal(a?'編輯財產':'新增財產',`<form id="assetForm" onsubmit="saveAsset(event,'${id||''}','${type}')"><div class="formgrid"><div><label>分類</label><input value="${type==='client'?'Client 端':'Server 端'}" disabled></div><div><label>單位／機房</label><select name="team">${categories[type].map(t=>`<option ${a?.team===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>${fields.map(([key,label])=>`<div class="${key.startsWith('notes')?'wide':''}"><label>${label}</label>${key==='isMaintenance'?`<select name="isMaintenance"><option value="" ${!a?.isMaintenance?'selected':''}>請選擇</option>${['維護標的','非維護標的','非合約但我司維護'].map(v=>`<option value="${v}" ${a?.isMaintenance===v?'selected':''}>${v}</option>`).join('')}${a?.isMaintenance&&!['維護標的','非維護標的','非合約但我司維護'].includes(a.isMaintenance)?`<option value="${esc(a.isMaintenance)}" selected>原資料：${esc(a.isMaintenance)}（請重新選擇）</option>`:''}</select>`:`<input name="${key}" value="${esc(a?.[key]||'')}">`}</div>`).join('')}</div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary" type="submit">儲存</button></div></form>`)}
+function saveAsset(e,id,type){e.preventDefault();let old=assets.find(x=>x.id===id),before=old?{...old}:null;let a=old||{id:'AST-'+String(nextId++).padStart(4,'0'),type,lastInventory:''};new FormData(e.target).forEach((v,k)=>a[k]=String(v));if(!a.deviceType.trim()){alert('請填寫設備類型');return}if(!old)assets.unshift(a);log(old?'修改財產':'新增財產',a,before);closeModal();render()}
+function openDetail(id){let a=assets.find(x=>x.id===id);if(!a)return;let fields=a.type==='client'?clientFields:serverFields;showModal('財產詳細資料',`<div class="tablewrap"><table><tbody><tr><th>單位／機房</th><td>${esc(a.team)}</td></tr>${fields.map(([k,v])=>`<tr><th>${v}</th><td>${esc(a[k]||'—')}</td></tr>`).join('')}<tr><th>最後盤點</th><td>${esc(a.lastInventory||'尚無紀錄')}</td></tr></tbody></table></div><div class="actions"><button class="btn" onclick="closeModal()">關閉</button>${canModify()?`<button class="btn" onclick="openTransfer('${id}')">移撥</button><button class="btn" onclick="inventory('${id}')">更新盤點日期</button><button class="btn primary" onclick="openEdit('${id}')">編輯</button>`:''}</div>`)}
+async function deleteAsset(id){
+ if(window.currentRole!=='owner')return alert('只有 Owner 可以刪除財產');
+ const a=assets.find(x=>x.id===id);if(!a)return alert('找不到財產資料');
+ const linked=repairs.filter(r=>r.assetId===id);
+ if(linked.length)return alert('這筆財產已關聯 '+linked.length+' 筆維修紀錄，為避免破壞關聯，禁止直接刪除。請先確認維修紀錄或後續使用封存功能。');
+ if(!confirm('確定永久刪除這筆財產？\\n財編：'+(a.propertyNo||'（無）')+'\\n設備：'+a.deviceType+'\\n單位：'+a.team+'\\n隱藏 ID：'+a.id+'\\n\\n刪除後將保留異動歷程，但財產本身無法還原。'))return;
+ try{
+  if(!window.cloudDeleteAsset)throw new Error('雲端刪除功能尚未就緒');
+  await window.cloudDeleteAsset(a);
+  closeModal();
+ }catch(e){alert('刪除失敗：'+e.message)}
+}
+function inventory(id){if(denyViewer())return;let a=assets.find(x=>x.id===id);if(!a||!confirm('確認更新此筆財產的盤點日期？'))return;let b={...a};a.lastInventory=new Date().toLocaleDateString('sv-SE');log('更新盤點',a,b);closeModal();render()}
+function openTransfer(id){if(denyViewer())return;let a=assets.find(x=>x.id===id);if(!a)return;showModal('財產移撥／暫存',`<p class="muted">移撥後會同步更新 Firestore 並記錄操作歷程。</p><div><label class="muted">目前位置</label><p><strong>${esc(a.team)}</strong></p><label class="muted">移至</label><select id="target" class="field">${categories[a.type].filter(t=>t!==a.team).map(t=>`<option>${esc(t)}</option>`).join('')}</select></div><div class="actions"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="transfer('${id}')">確認移撥</button></div>`)}
+function transfer(id){if(denyViewer())return;let a=assets.find(x=>x.id===id),b={...a},target=$('target').value;if(!confirm(`確定將財產移至「${target}」？`))return;a.team=target;log('財產移撥',a,b);closeModal();render()}
+
+function repairPage(){return heading('維修紀錄','送修至收件為同一筆紀錄；可分階段補登資料',canModify()?'<button class="btn primary" onclick="openRepair()">＋ 新增維修紀錄</button>':'')+
+'<div class="panel tablewrap repairTable"><table><thead><tr><th>日期</th><th>財產編號／設備</th><th>報修人員</th><th>送修原因</th><th>送修／收件</th><th>狀態</th><th>操作</th></tr></thead><tbody>'+
+repairs.map(r=>{const a=assets.find(x=>x.id===r.assetId);return '<tr><td>'+esc(r.date||'')+'</td><td>'+esc(r.propertyNo||a?.propertyNo||r.serialNo||'未填')+'<div class="muted">'+esc(r.deviceName||a?.deviceType||'')+'</div></td><td>'+esc(r.reporter||'—')+'</td><td>'+esc(r.reason||'')+'</td><td>'+esc(r.shipDate||'—')+' / '+esc(r.receiveDate||'—')+'</td><td><span class="tag">'+esc(r.status||'處理中')+'</span></td><td><button class="btn small" data-repair-id="'+esc(r.id)+'" onclick="openRepairDetail(this.dataset.repairId)">查看</button> '+(canModify()?'<button class="btn small" data-repair-id="'+esc(r.id)+'" onclick="openRepair(this.dataset.repairId)">編輯</button> ':'')+(window.currentRole==='owner'?'<button class="btn small" data-repair-id="'+esc(r.id)+'" onclick="deleteRepair(this.dataset.repairId)">刪除</button>':'')+'</td></tr>'}).join('')+'</tbody></table></div>'}
+function repairPeopleOptions(value){const names=[...new Set(Object.values(adminProfiles).filter(p=>p.active!==false&&p.displayName).map(p=>p.displayName))];if(value&&!names.includes(value))names.unshift(value);return '<datalist id="repairPeople">'+names.map(n=>'<option value="'+esc(n)+'"></option>').join('')+'</datalist>'}
+function repairClearLinkedOnInput(){const form=document.getElementById('repairEntryForm');if(form)form.elements.assetId.value=''}
+function repairSearchAssets(input){const panel=document.getElementById('repairAssetResults');if(!panel)return;const q=input.value.trim().toLocaleLowerCase();if(!q){panel.innerHTML='<div class="muted" style="padding:10px">輸入財產編號、設備名稱、型號、序號或單位開始搜尋</div>';panel.style.display='block';return}const found=assets.filter(a=>[a.propertyNo,a.deviceType,a.model,a.serialNo,a.team,a.id].some(v=>String(v||'').toLocaleLowerCase().includes(q))).slice(0,30);panel.innerHTML=found.map(a=>'<button type="button" class="btn" style="display:block;width:100%;text-align:left;margin:3px 0;white-space:normal" data-asset-id="'+esc(a.id)+'" onclick="repairSelectAsset(this.dataset.assetId)">'+esc(a.propertyNo||a.id)+' · '+esc(a.deviceType||'設備')+' · '+esc(a.model||'')+' · '+esc(a.team||'')+'</button>').join('')||'<div class="muted" style="padding:10px">找不到符合的設備，可直接手動輸入</div>';panel.style.display='block'}
+function repairSelectAsset(id){const a=assets.find(x=>x.id===id);if(!a)return;const form=document.getElementById('repairEntryForm');if(!form)return;form.elements.assetId.value=a.id;document.getElementById('repairAssetSearch').value=[a.propertyNo||a.id,a.deviceType||'',a.team||''].filter(Boolean).join(' · ');document.getElementById('repairAssetResults').style.display='none';repairFillAsset({form,value:a.id})}
+function repairClearAsset(){const form=document.getElementById('repairEntryForm');if(!form)return;form.elements.assetId.value='';document.getElementById('repairAssetSearch').value='';document.getElementById('repairAssetResults').style.display='none'}
+function repairFillAsset(sel){const form=sel.form;if(!form)return;const a=assets.find(x=>x.id===sel.value);if(!a)return;for(const [k,v] of Object.entries({propertyNo:a.propertyNo||'',serialNo:a.serialNo||'',deviceName:a.deviceType||'',brandModel:a.model||''})){if(form.elements[k])form.elements[k].value=v}}
+function repairTerminalChanged(sel){const f=sel.form;if(f&&f.elements.terminalOther)f.elements.terminalOther.style.display=sel.value==='其他'?'block':'none'}
+function openRepair(id=''){if(denyViewer())return;const r=repairs.find(x=>x.id===id)||{},a=assets.find(x=>x.id===r.assetId),v=k=>esc(r[k]||''),day=new Date().toLocaleDateString('sv-SE');
+const selectedAssetLabel=a?[a.propertyNo||a.id,a.deviceType||'',a.team||''].filter(Boolean).join(' · '):'';
+const person=k=>'<input name="'+k+'" list="repairPeople" value="'+v(k)+'" '+(k==='reporter'?'required':'')+'>';
+const terminal=r.terminal||'第一航廈';const custom=!['第一航廈','第二航廈'].includes(terminal);
+showModal(id?'編輯維修紀錄':'新增維修紀錄','<form id="repairEntryForm" onsubmit="saveRepair(event,this.dataset.repairId||\'\')" data-repair-id="'+esc(id)+'">'+repairPeopleOptions(r.reporter)+
+'<div class="formgrid"><div class="wide"><label>關聯財產（可不選）</label><input type="hidden" name="assetId" value="'+esc(r.assetId||'')+'"><div style="display:flex;gap:8px"><input id="repairAssetSearch" style="flex:1;min-width:0" autocomplete="off" placeholder="搜尋財產編號、設備名稱、型號、序號、單位" value="'+esc(selectedAssetLabel)+'" oninput="repairClearLinkedOnInput();repairSearchAssets(this)" onfocus="repairSearchAssets(this)"><button type="button" class="btn" onclick="repairClearAsset()">手動輸入</button></div><div id="repairAssetResults" style="display:none;max-height:240px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px;background:white"></div><div class="muted">最多顯示前 30 筆符合結果，請輸入更多關鍵字縮小範圍。</div></div>'+
+'<div><label>日期 *</label><input name="date" type="date" required value="'+esc(r.date||day)+'"></div><div><label>維修狀態</label><select name="status"><option '+(r.status!=='已完成'?'selected':'')+'>處理中</option><option '+(r.status==='已完成'?'selected':'')+'>已完成</option></select></div>'+
+'<div><label>財產編號</label><input name="propertyNo" value="'+esc(r.propertyNo||a?.propertyNo||'')+'"></div><div><label>設備序號</label><input name="serialNo" value="'+esc(r.serialNo||a?.serialNo||'')+'"></div>'+
+'<div><label>設備名稱</label><input name="deviceName" value="'+esc(r.deviceName||a?.deviceType||'')+'"></div><div><label>廠牌型號</label><input name="brandModel" value="'+esc(r.brandModel||a?.model||'')+'"></div>'+
+'<div><label>航廈</label><select name="terminal" onchange="repairTerminalChanged(this)"><option '+(!custom&&terminal==='第一航廈'?'selected':'')+'>第一航廈</option><option '+(!custom&&terminal==='第二航廈'?'selected':'')+'>第二航廈</option><option '+(custom?'selected':'')+'>其他</option></select><input name="terminalOther" style="margin-top:7px;display:'+(custom?'block':'none')+'" placeholder="請輸入其他地點" value="'+(custom?esc(terminal):'')+'"></div>'+
+'<div><label>報修位置</label><input name="repairLocation" value="'+v('repairLocation')+'"></div>'+
+'<div><label>報修人員 *</label>'+person('reporter')+'</div><div></div>'+
+'<div class="wide"><label>送修原因 *</label><textarea name="reason" required rows="3">'+v('reason')+'</textarea></div>'+
+'<div class="wide"><label>更換設備名稱財編</label><textarea name="replacement" rows="2">'+v('replacement')+'</textarea></div>'+
+'<div class="wide"><label>備註</label><textarea name="notes" rows="2">'+v('notes')+'</textarea></div>'+
+'<div><label>送修人員</label>'+person('shipper')+'</div><div><label>收件人員</label>'+person('receiver')+'</div>'+
+'<div><label>送修日期</label><input name="shipDate" type="date" value="'+v('shipDate')+'"></div><div><label>收件日期</label><input name="receiveDate" type="date" value="'+v('receiveDate')+'"></div></div>'+
+'<p class="muted">* 必填：日期、財產編號或設備識別資訊、報修人員、送修原因。選擇清冊設備後仍可修改本單資料，不會改動清冊。</p>'+
+'<div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary" type="submit">儲存維修紀錄</button></div></form>')}
+function openRepairDetail(id){const r=repairs.find(x=>x.id===id);if(!r)return;const fields=[['date','日期'],['propertyNo','財產編號'],['serialNo','設備序號'],['deviceName','設備名稱'],['brandModel','廠牌型號'],['terminal','航廈'],['repairLocation','報修位置'],['reporter','報修人員'],['reason','送修原因'],['replacement','更換設備名稱財編'],['notes','備註'],['shipDate','送修日期'],['shipper','送修人員'],['receiveDate','收件日期'],['receiver','收件人員'],['status','狀態']];showModal('維修紀錄詳細資料','<div class="tablewrap"><table><tbody>'+fields.map(([k,l])=>'<tr><th>'+l+'</th><td style="white-space:pre-wrap">'+esc(r[k]||'—')+'</td></tr>').join('')+'</tbody></table></div><div class="actions"><button class="btn" onclick="closeModal()">關閉</button>'+(canModify()?'<button class="btn primary" data-repair-id="'+esc(id)+'" onclick="openRepair(this.dataset.repairId)">編輯</button>':'')+'</div>')}
+async function saveRepair(e,id=''){e.preventDefault();if(denyViewer())return;const f=Object.fromEntries(new FormData(e.target));f.terminal=f.terminal==='其他'?(f.terminalOther.trim()||'其他'):f.terminal;delete f.terminalOther;if(!f.date||!f.reporter?.trim()||!f.reason?.trim()||!(f.assetId||f.propertyNo?.trim()||f.serialNo?.trim()||f.deviceName?.trim()))return alert('請填寫日期、設備識別資訊、報修人員及送修原因');const btn=e.target.querySelector('[type=submit]');btn.disabled=true;try{await window.cloudSaveRepair(f,id);closeModal();render()}catch(err){alert('維修紀錄儲存失敗：'+err.message)}finally{btn.disabled=false}}
+async function deleteRepair(id){if(window.currentRole!=='owner')return alert('只有 Owner 可以刪除');if(!confirm('確定刪除這筆維修紀錄？刪除後將影響維修次數統計，但保留稽核資料。'))return;try{await window.cloudDeleteRepair(id)}catch(e){alert('刪除失敗：'+e.message)}}
+function workLog(action,item,before){logs.unshift({date:now(),actor:'展示管理員',action,id:item.id,propertyNo:item.title||item.name||'',before:before?JSON.stringify(before):'',after:JSON.stringify(item)});persist()}
+function handoverPage(){let list=handovers.filter(h=>handoverFilter==='all'||h.status===handoverFilter);return heading('工作交接','依需要自由新增；可持續更新標題、內容、狀態與修改歷程',(canModify()?`<button class="btn primary" onclick="openHandover()">＋ 新增交接</button>`:''))+`<div class="panel"><div class="toolbar"><select onchange="handoverFilter=this.value;render()"><option value="all" ${handoverFilter==='all'?'selected':''}>全部狀態</option>${['待處理','已完成','資訊備註'].map(v=>`<option ${handoverFilter===v?'selected':''}>${v}</option>`).join('')}</select></div>${list.length?list.map(h=>`<div class="workitem"><div class="flex"><strong>${esc(h.title)}</strong><span class="tag ${h.status==='已完成'?'green':h.status==='待處理'?'gray':''}">${esc(h.status)}</span></div><p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(h.content)}</p><div class="muted">更新時間：${esc(h.updatedAt||h.createdAt)}</div>${canModify()?`<div class="fieldrow" style="margin-top:10px"><button class="btn small" onclick="openHandover('${h.id}')">編輯內容</button><select class="statusselect" aria-label="更新交接狀態" onchange="changeHandoverStatus('${h.id}',this.value)">${['待處理','已完成','資訊備註'].map(v=>`<option ${h.status===v?'selected':''}>${v}</option>`).join('')}</select><button class="btn small" onclick="showHandoverHistory('${h.id}')">修改歷程</button></div>`:``}</div>`).join(''):'<div class="empty">目前沒有符合條件的交接事項，可自由新增。</div>'}</div>`}
+function openHandover(id){if(denyViewer())return;let h=handovers.find(x=>x.id===id);showModal(h?'編輯工作交接':'新增工作交接',`<form onsubmit="saveHandover(event,'${id||''}')"><div class="formgrid"><div class="wide"><label>交接標題</label><input name="title" required maxlength="120" value="${esc(h?.title||'')}"></div><div class="wide"><label>交接內容</label><textarea name="content" style="min-height:145px" required>${esc(h?.content||'')}</textarea></div><div class="wide"><label>處理狀態</label><select name="status">${['待處理','已完成','資訊備註'].map(v=>`<option ${h?.status===v?'selected':''}>${v}</option>`).join('')}</select></div></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary" type="submit">儲存</button></div></form>`)}
+function saveHandover(e,id){if(denyViewer())return;e.preventDefault();let h=handovers.find(x=>x.id===id),before=h?{...h}:null,d=Object.fromEntries(new FormData(e.target));if(!d.title.trim()||!d.content.trim()){alert('請填寫標題與內容');return}if(!h){h={id:'HND-'+Date.now(),createdAt:now(),history:[]};handovers.unshift(h)}Object.assign(h,{title:d.title.trim(),content:d.content.trim(),status:d.status,updatedAt:now()});h.history.push({date:now(),actor:'展示管理員',before,after:{title:h.title,content:h.content,status:h.status}});workLog(before?'修改工作交接':'新增工作交接',h,before);closeModal();render()}
+function changeHandoverStatus(id,status){if(denyViewer())return;let h=handovers.find(x=>x.id===id);if(!h||h.status===status)return;let before={...h};h.status=status;h.updatedAt=now();h.history.push({date:now(),actor:'展示管理員',before:{status:before.status},after:{status}});workLog('更新交接狀態',h,before);render()}
+function showHandoverHistory(id){let h=handovers.find(x=>x.id===id);if(!h)return;showModal('交接修改歷程',`<div class="sectionhint">${esc(h.title)} · 每次修改均保留紀錄</div>${(h.history||[]).slice().reverse().map(x=>`<div class="logitem"><div class="muted">${esc(x.date)} · ${esc(x.actor)}</div><details><summary style="cursor:pointer;margin-top:6px">檢視修改前後</summary><p class="muted">修改前</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(JSON.stringify(x.before||{},null,2))}</pre><p class="muted">修改後</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(JSON.stringify(x.after,null,2))}</pre></details></div>`).join('')}`)}
+function supplyPage(){return heading('備品餘料','備品與剩餘材料清單（展示版基本框架）',(canModify()?`<button class="btn primary" onclick="openSupply()">＋ 新增品項</button>`:''))+`<div class="panel"><div class="tablewrap"><table><thead><tr><th>品項</th><th>規格／備註</th><th>目前數量</th><th>單位</th><th>操作</th></tr></thead><tbody>${supplies.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.spec||'—')}</td><td>${esc(s.quantity)}</td><td>${esc(s.unit)}</td><td><button class="btn small" onclick="openSupply('${s.id}')">編輯</button></td></tr>`).join('')}</tbody></table>${supplies.length?'':'<div class="empty">目前沒有備品餘料資料，請新增品項。</div>'}</div></div>`}
+function openSupply(id){if(denyViewer())return;let s=supplies.find(x=>x.id===id);showModal(s?'編輯備品餘料':'新增備品餘料',`<form onsubmit="saveSupply(event,'${id||''}')"><div class="formgrid"><div class="wide"><label>品項名稱</label><input name="name" required value="${esc(s?.name||'')}"></div><div class="wide"><label>規格／備註</label><input name="spec" value="${esc(s?.spec||'')}"></div><div><label>目前數量</label><input name="quantity" type="number" min="0" step="1" required value="${esc(s?.quantity??0)}"></div><div><label>單位</label><input name="unit" required value="${esc(s?.unit||'個')}"></div></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary">儲存</button></div></form>`)}
+function saveSupply(e,id){if(denyViewer())return;e.preventDefault();let s=supplies.find(x=>x.id===id),before=s?{...s}:null,d=Object.fromEntries(new FormData(e.target));if(!d.name.trim()||!Number.isSafeInteger(Number(d.quantity))||Number(d.quantity)<0){alert('請填寫正確的品項與數量');return}if(!s){s={id:'SUP-'+Date.now()};supplies.unshift(s)}Object.assign(s,{name:d.name.trim(),spec:d.spec,quantity:Number(d.quantity),unit:d.unit.trim()||'個'});workLog(before?'修改備品餘料':'新增備品餘料',s,before);closeModal();render()}
+let repairOverviewSortKey='rate',repairOverviewSortDirection='desc';
+function sortRepairOverview(key){
+ if(repairOverviewSortKey===key)repairOverviewSortDirection=repairOverviewSortDirection==='asc'?'desc':'asc';
+ else{repairOverviewSortKey=key;repairOverviewSortDirection=['type','model'].includes(key)?'asc':'desc'}
+ render();
+}
+function sortedRepairModels(models){
+ const key=repairOverviewSortKey,dir=repairOverviewSortDirection==='asc'?1:-1;
+ return [...models].sort((a,b)=>{
+  const x=a[key],y=b[key];
+  const n=['total','repaired','visits','rate'].includes(key)?Number(x)-Number(y):String(x??'').localeCompare(String(y??''),'zh-Hant',{numeric:true,sensitivity:'base'});
+  return n*dir||String(a.type).localeCompare(String(b.type),'zh-Hant')||String(a.model).localeCompare(String(b.model),'zh-Hant');
+ });
+}
+function repairSortHeader(key,label){
+ const active=repairOverviewSortKey===key;
+ return `<th><button type="button" onclick="sortRepairOverview('${key}')" style="border:0;background:transparent;color:inherit;font:inherit;font-weight:inherit;cursor:pointer;padding:3px 0;text-align:left;white-space:nowrap" title="按${label}排序">${label} <span aria-hidden="true">${active?(repairOverviewSortDirection==='asc'?'▲':'▼'):'↕'}</span></button></th>`;
+}
+function repairOverviewPage(){if(!cloudAssetsReady)return heading('維修概況','正在同步 Client 與 Server 財產資料')+'<section class="panel"><h3>正在載入維修概況</h3><p class="muted">等待兩類財產完成同步，避免顯示不完整統計。</p></section>';const st=maintenanceStats();return heading('維修概況','從新系統開始建檔的維修紀錄統計；不追溯舊系統資料')+
+ `<div class="grid2"><section class="panel"><h3>未完成維修 · ${st.open.length} 件</h3>${st.open.map(r=>{let a=assets.find(x=>x.id===r.assetId);return `<div class="logitem"><strong>${esc(r.reason)}</strong><div class="muted">${esc(r.date)} · ${esc(a?.deviceType||'未關聯設備')} · ${esc(a?.team||'')} · ${esc(r.status)}</div></div>`}).join('')||'<div class="empty">目前沒有未完成維修</div>'}</section><section class="panel"><h3>警示設備 · ${st.alerts.length} 台</h3><p class="muted">同一設備累積維修達 3 次（含）即列入，移撥不重置。</p>${st.alerts.map(x=>`<div class="logitem"><strong>${esc(x.asset.deviceType)} · ${esc(x.asset.model)}</strong><div class="muted">${esc(x.asset.propertyNo||x.asset.id)} · ${esc(x.asset.team)} · ${x.count} 次維修</div><button class="btn small" onclick="openRepairHistory('${x.asset.id}')">查看維修歷程</button></div>`).join('')||'<div class="empty">目前沒有警示設備</div>'}</section></div>`+
+ `<section class="panel"><h3>設備類型／型號維修率 · 前 5 名</h3><p class="muted">只顯示維修率大於 0% 的設備，依維修率由高至低排列。維修率＝曾維修的設備台數 ÷ 同類型同型號的建檔設備總台數；同一台重複維修只算一台，維修總次數另外列示。</p><div class="tablewrap"><table><thead><tr>${repairSortHeader('type','設備類型')}${repairSortHeader('model','型號')}${repairSortHeader('total','建檔台數')}${repairSortHeader('repaired','曾維修台數')}${repairSortHeader('visits','累積維修次數')}${repairSortHeader('rate','維修率')}</tr></thead><tbody>${st.models.filter(g=>g.rate>0).sort((a,b)=>b.rate-a.rate||b.repaired-a.repaired||b.visits-a.visits).slice(0,5).map(g=>`<tr><td>${esc(g.type)}</td><td>${esc(g.model)}</td><td>${g.total}</td><td>${g.repaired}</td><td>${g.visits}</td><td>${g.rate.toFixed(1)}%</td></tr>`).join('')||'<tr><td colspan="6" class="muted" style="text-align:center;padding:22px">目前尚無曾維修的設備</td></tr>'}</tbody></table></div><div class="flex" style="margin-top:14px"><button class="btn primary" onclick="setPage('repairs')">查看維修紀錄 →</button></div></section>`}
+function openRepairHistory(id){const a=assets.find(x=>x.id===id);if(!a)return;const rows=repairs.filter(r=>r.assetId===id);showModal('設備維修歷程',`<div class="sectionhint">${esc(a.deviceType)} · ${esc(a.model)} · ${esc(a.propertyNo||a.id)}<div>系統建檔維修共 ${rows.length} 次</div></div>${rows.map(r=>`<div class="logitem"><strong>${esc(r.date)} · ${esc(r.status)}</strong><div>${esc(r.reason)}</div></div>`).join('')}`)}
+function historyPage(){return heading('異動歷程','保留每次操作前後的內容；不提供一鍵還原')+`<div class="panel">${logs.length?logs.map(l=>`<div class="logitem"><div class="flex"><strong>${esc(l.action)}</strong><span class="tag">${esc(l.propertyNo)}</span></div><div class="muted">${esc(l.date)} · ${esc(l.actor)} · ${esc(l.id)}</div><details><summary class="muted" style="cursor:pointer;margin-top:8px">檢視修改前後內容</summary><p class="muted">修改前</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px">${esc(l.before||'無')}</pre><p class="muted">修改後</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px">${esc(l.after)}</pre></details></div>`).join(''):'<div class="empty">目前尚無異動紀錄。請先試著新增、編輯或移撥財產。</div>'}</div>`}
+let excelImportRows=[],excelImportWarnings=[],excelImportStats=[],excelImportBusy=false;
+const IMPORT_CLIENT_SHEETS=new Set(['3851資訊服務科-桃','4900國境事務大隊','4910桃園機場一隊(T1入)','4920桃園機場二隊(T1出)','4930桃園機場三隊','4940桃園機場四隊(T2出)','4950桃園機場五隊(T2入)','4970入出國查驗監控隊','4980特殊勤務隊','4990鑑識調查隊','49B0行政業務隊','49A0國境業務隊']);
+const IMPORT_SERVER_SHEETS=new Set(['T2 主機房','T2 各管道間','T1 機房與各管道間','大隊部4F機房與3F協管室機櫃']);
+function importPage(){
+ if(!cloudAssetsReady)return heading('Excel 財產匯入','正在同步完整財產清冊')+'<section class="panel"><h3>正在載入完整財產資料</h3><p class="muted">等待 Client 與 Server 完成同步後再開放匯入。</p></section>';
+ if(window.currentRole!=='owner')return '<section class="panel"><h3>無權限存取</h3></section>';
+ return heading('Excel 財產匯入','V0.34 · 首次正式資料匯入，僅 Owner 可執行')+
+ `<section class="panel"><h3>選擇正式清冊</h3><div class="sectionhint">請選取「2026 資產調查表(client端)-桃機.xlsx」及「2026 資產調查表(機房內)-桃機.xlsx」。只匯入 12 個 Client 單位與 4 個機房清冊工作表；統計、備品、移撥報廢、空白表及舊總表不匯入。來源「備註」寫入備註 1，備註 2、3 留空；無財編設備仍保留。</div><input id="excelImportFiles" class="field" type="file" accept=".xlsx" multiple onchange="clearImportPreview()" ${excelImportBusy?'disabled':''}><div class="flex" style="margin-top:12px"><button class="btn primary" onclick="analyzeExcelImport()" ${excelImportBusy?'disabled':''}>分析 Excel 並預覽</button><span class="muted">讀取僅在瀏覽器進行，分析階段不寫入 Firestore。</span></div><p id="importProgress" class="muted" style="margin-top:12px"></p></section>`+
+ (excelImportRows.length?`<section class="panel"><h3>匯入預覽 · ${excelImportRows.length} 筆</h3><div class="sectionhint">${excelImportStats.map(x=>`${esc(x.name)}：${x.count} 筆`).join('　／　')}<div style="margin-top:7px">無財編：${excelImportRows.filter(x=>!x.propertyNo).length} 筆；備註有內容：${excelImportRows.filter(x=>x.notes1).length} 筆</div></div>${excelImportWarnings.length?`<details><summary>需注意的資料（${excelImportWarnings.length} 項）</summary><div style="max-height:180px;overflow:auto;font-size:12px">${excelImportWarnings.slice(0,150).map(x=>`<div>${esc(x)}</div>`).join('')}${excelImportWarnings.length>150?'<p>其餘警示未顯示</p>':''}</div></details>`:''}<div class="tablewrap"><table><thead><tr><th>來源</th><th>Excel 列</th><th>財產編號</th><th>設備名稱</th><th>型號</th><th>備註 1</th><th>備註 2</th><th>備註 3</th></tr></thead><tbody>${excelImportRows.slice(0,40).map(a=>`<tr><td>${esc(a.team)}</td><td>${a.sourceRow}</td><td>${esc(a.propertyNo||'（無）')}</td><td>${esc(a.deviceType)}</td><td>${esc(a.model)}</td><td>${esc(a.notes1||a.notes||'')}</td><td>${esc(a.notes2)}</td><td>${esc(a.notes3)}</td></tr>`).join('')}</tbody></table></div><p class="muted">表格僅顯示前 40 筆，確認匯入時會處理所有預覽筆數。原始欄位、換行及備註文字會保留。</p><div class="sectionhint">安全提醒：匯入會新增財產，不會自動刪除測試資料，也不會修改維修紀錄。財編允許重複，每一列使用不同隱藏 ID；請勿重複執行同一份清冊的正式匯入，否則仍會新增另一批財產。</div><label style="display:block;margin:12px 0"><input type="checkbox" id="importConfirm" onchange="document.getElementById('importCommitBtn').disabled=!this.checked"> 我已確認匯入來源、筆數及資料內容，確定寫入 Firestore。</label><button id="importCommitBtn" class="btn primary" onclick="commitExcelImport()" disabled>確認匯入 ${excelImportRows.length} 筆財產</button></section>`:'');
+}
+function clearImportPreview(){excelImportRows=[];excelImportWarnings=[];excelImportStats=[];const progress=$('importProgress');if(progress)progress.textContent='';}
+function importCell(row,index){const v=row[index];return v==null?'':String(v).trim()}
+function importDate(v){if(v==null||v==='')return '';if(v instanceof Date&&!isNaN(v))return [v.getFullYear(),String(v.getMonth()+1).padStart(2,'0'),String(v.getDate()).padStart(2,'0')].join('-');if(typeof v==='number'){const d=new Date(Date.UTC(1899,11,30)+Math.round(v*86400000));return Number.isFinite(d.getTime())?d.toISOString().slice(0,10):'';}const t=String(v).trim();if(/^\d{4}[-/]\d{1,2}[-/]\d{1,2}/.test(t))return t.slice(0,10).replace(/\//g,'-');return t;}
+function importMaint(v){const t=String(v??'').trim();if(['維護標的','非維護標的','非合約但我司維護'].includes(t))return t;if(t.includes('■是')||t==='是'||t==='true')return '維護標的';if(t.includes('■否')||t==='否'||t==='false')return '非維護標的';return t;}
+async function analyzeExcelImport(){
+ if(window.currentRole!=='owner'||excelImportBusy)return;
+ const files=Array.from($('excelImportFiles')?.files||[]);if(!files.length)return alert('請先選取 Client／Server Excel 檔案');
+ if(!window.XLSX)return alert('Excel 解析套件尚未載入，請檢查網路後重新整理頁面');
+ excelImportBusy=true;excelImportRows=[];excelImportWarnings=[];excelImportStats=[];
+ try{
+  const seen=new Set();let matched=0;
+  for(const file of files){if(!/\.xlsx$/i.test(file.name))throw new Error('只接受 .xlsx：'+file.name);
+   const wb=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:false,raw:true});
+   const fileType=/client端/i.test(file.name)?'client':/機房內/.test(file.name)?'server':null;
+   if(!fileType)throw new Error('請選取指定的 2026 Client／機房內資產調查表：'+file.name);
+   for(const sheetName of wb.SheetNames){
+    const type=fileType==='client'&&IMPORT_CLIENT_SHEETS.has(sheetName)?'client':fileType==='server'&&IMPORT_SERVER_SHEETS.has(sheetName)?'server':null;
+    if(!type)continue;matched++;
+    const ws=wb.Sheets[sheetName],matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true,blankrows:true});
+    const header=matrix[2]||[];
+    const normalized=x=>String(x??'').replace(/\s+/g,'').toLowerCase();
+    const findColumn=(names)=>header.findIndex(h=>names.some(n=>normalized(h)===normalized(n)));
+    const column=(row,names)=>{const i=findColumn(names);return i<0?'':importCell(row,i)};
+    const required=type==='client'?[['財產編號'],['設備名稱'],['廠牌型號']]:[['財產編號'],['序號'],['設備名稱'],['廠牌型號']];
+    if(required.some(names=>findColumn(names)<0))throw new Error(`工作表「${sheetName}」第 3 列欄位不符合 2026 資產調查表`);
+    let count=0;
+    for(let i=3;i<matrix.length;i++){
+     const row=matrix[i]||[],c=names=>column(row,names);
+     const device=c(['設備名稱']),model=c(['廠牌型號']),property=c(['財產編號']);
+     const serial=type==='server'?c(['序號']):'';
+     if(!device&&!model&&!property&&!serial)continue;
+     if(!device){excelImportWarnings.push(`${sheetName} 第 ${i+1} 列沒有設備名稱，已略過`);continue;}
+     const remark=c(['備註','備註1','備註 1']);
+     const a=type==='client'?{type,team:sheetName,propertyNo:property,serialNo:'',deviceType:device,model,ipAddress:c(['IP Address','IPAddress']),macAddress:c(['MAC Address','MACAddress']),user:c(['使用者']),custodian:c(['保管人']),location:c(['地點']),notes:remark,notes1:remark,notes2:'',notes3:'',contract:'',isMaintenance:'',lastInventory:'',lastEditor:''}:
+      {type,team:sheetName,propertyNo:property,serialNo:serial,deviceType:device,model,contract:c(['保單名稱']),ipAddress:c(['IP Address(Server) or Manage']),macAddress:c(['MAC Address(Server)']),custodian:c(['保管人']),isMaintenance:importMaint(c(['是否為本案維護標的','是否為本案大同維護標的'])),location:c(['地點']),cabinet:c(['機櫃']),uSpace:c(['U數']),direction:c(['安裝方向']),project:c(['原專案名稱']),notes:remark,notes1:remark,notes2:'',notes3:'',lastInventory:'',lastEditor:''};
+     a.sourceRow=i+1;a.sourceSheet=sheetName;a.sourceFile=file.name;a.id=crypto.randomUUID();
+     const key=[a.type,a.team,a.propertyNo].join('|');
+     if(a.propertyNo){if(seen.has(key))excelImportWarnings.push(`${sheetName} 第 ${i+1} 列財編 ${a.propertyNo} 在匯入檔內重複（允許匯入，將建立不同隱藏 ID）`);seen.add(key)}
+     excelImportRows.push(a);count++;
+    }
+    excelImportStats.push({name:sheetName,count});
+   }
+  }
+  if(!matched)throw new Error('未找到符合 Client 或 Server 正式清冊的工作表');
+  if(!excelImportRows.length)throw new Error('找不到可匯入的財產資料');
+  render();const p=$('importProgress');if(p)p.textContent='已完成分析，尚未寫入資料庫。';
+ }catch(e){excelImportRows=[];alert('Excel 分析失敗：'+e.message)}finally{excelImportBusy=false}
+}
+async function commitExcelImport(){
+ if(window.currentRole!=='owner'||excelImportBusy||!$('importConfirm')?.checked)return;
+ if(!cloudAssetsReady||!window.cloudBulkImport)return alert('Firestore 尚未準備完成');
+ if(!excelImportRows.length)return;
+ // 財產編號可重複；每筆設備由獨立隱藏 ID 識別。
+ const ids=new Set();for(const a of excelImportRows){if(!a.id||ids.has(a.id))return alert('匯入資料的隱藏 ID 缺漏或重複，請重新分析 Excel');ids.add(a.id)}
+ if(!confirm(`確定新增 ${excelImportRows.length} 筆正式財產至 Firestore？\n不會自動刪除現有測試資料。`))return;
+ excelImportBusy=true;const btn=$('importCommitBtn');if(btn)btn.disabled=true;
+ try{await window.cloudBulkImport(excelImportRows,(done,total)=>{const p=$('importProgress');if(p)p.textContent=`已寫入 ${done} / ${total} 筆，請勿關閉頁面。`});const n=excelImportRows.length;excelImportRows=[];excelImportWarnings=[];excelImportStats=[];alert(`成功匯入 ${n} 筆財產，請至財產清冊核對。`);setPage('assets')}
+ catch(e){alert('匯入中斷：'+e.message+'。可能已有部分批次寫入，請核對 Firestore 財產後再操作，勿直接重複匯入。')}
+ finally{excelImportBusy=false}
+}
+
+function openDeviceTypeMerge(){
+ if(window.currentRole!=='owner')return alert('僅 Owner 可執行');
+ const names=[...new Set(assets.map(a=>String(a.deviceType||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant'));
+ showModal('設備類型批次統一',`<div class="sectionhint">從現有財產類型選擇原名稱與統一後名稱。只修改完全相符的設備類型，跨 Client／Server 生效。</div><div class="formgrid"><div><label>原設備類型</label><select id="mergeFrom" onchange="previewDeviceTypeMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}" ${n==='個人電腦(含周邊設備)'?'selected':''}>${esc(n)}</option>`).join('')}</select></div><div><label>統一為</label><input id="mergeTo" list="mergeToOptions" value="${names.includes('個人電腦')?'個人電腦':''}" placeholder="選擇現有名稱或輸入新名稱" oninput="previewDeviceTypeMerge()" onchange="previewDeviceTypeMerge()" autocomplete="off"><datalist id="mergeToOptions">${names.map(n=>`<option value="${esc(n)}"></option>`).join('')}</datalist></div></div><div id="mergePreview" class="sectionhint" style="margin-top:12px"></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="button" class="btn primary" id="mergeExecute" onclick="executeDeviceTypeMerge()">確認批次修改</button></div>`);
+ previewDeviceTypeMerge();
+}
+function previewDeviceTypeMerge(){
+ const from=document.getElementById('mergeFrom')?.value||'',to=document.getElementById('mergeTo')?.value.trim()||'';
+ const matches=assets.filter(a=>String(a.deviceType||'').trim()===from);
+ const out=document.getElementById('mergePreview'),btn=document.getElementById('mergeExecute');
+ if(btn)btn.disabled=!from||!to||from===to||!matches.length;
+ if(out)out.textContent=!from||!to?'請先選擇原名稱與目標名稱':from===to?'兩個名稱相同，無需修改':`符合原名稱的財產共 ${matches.length} 筆（Client ${matches.filter(a=>a.type==='client').length} 筆、Server ${matches.filter(a=>a.type==='server').length} 筆）。按確認後將逐筆修改並記錄異動。`;
+}
+async function executeDeviceTypeMerge(){
+ if(window.currentRole!=='owner'||!window.cloudMergeDeviceTypes)return alert('批次修改功能尚未準備完成');
+ const from=document.getElementById('mergeFrom')?.value||'',to=document.getElementById('mergeTo')?.value.trim()||'';
+ const count=assets.filter(a=>String(a.deviceType||'').trim()===from).length;
+ if(!from||!to||from===to||!count)return;
+ if(!confirm(`確定將 ${count} 筆「${from}」統一改為「${to}」？\\n這會直接修改 Firebase 正式資料，並保留每筆異動紀錄。`))return;
+ const btn=document.getElementById('mergeExecute');if(btn)btn.disabled=true;
+ try{
+  const done=await window.cloudMergeDeviceTypes(from,to,(n,total)=>{const el=document.getElementById('mergePreview');if(el)el.textContent=`已更新 ${n} / ${total} 筆…`});
+  alert(`已完成 ${done} 筆設備類型統一修改。`);closeModal();render();
+ }catch(e){alert('批次修改未完成：'+e.message+'。部分批次可能已成功，請重新查看清冊後再執行。');if(btn)btn.disabled=false}
+}
+function openModelMerge(){
+ if(window.currentRole!=='owner')return alert('僅 Owner 可執行');
+ const names=[...new Set(assets.map(a=>String(a.model||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'zh-Hant',{numeric:true}));
+ showModal('型號批次統一',`<div class="sectionhint">選擇原型號與統一後型號，只修改完全相符的型號，跨 Client／Server 生效。</div><div class="formgrid"><div><label>原型號</label><select id="modelMergeFrom" onchange="previewModelMerge()"><option value="">請選擇</option>${names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></div><div><label>統一為</label><input id="modelMergeTo" list="modelMergeToOptions" placeholder="選擇現有型號或輸入新型號" oninput="previewModelMerge()" onchange="previewModelMerge()" autocomplete="off"><datalist id="modelMergeToOptions">${names.map(n=>`<option value="${esc(n)}"></option>`).join('')}</datalist></div></div><div id="modelMergePreview" class="sectionhint" style="margin-top:12px"></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="button" class="btn primary" id="modelMergeExecute" onclick="executeModelMerge()">確認批次修改</button></div>`);
+ previewModelMerge();
+}
+function previewModelMerge(){
+ const from=document.getElementById('modelMergeFrom')?.value||'',to=document.getElementById('modelMergeTo')?.value.trim()||'';
+ const matches=assets.filter(a=>String(a.model||'').trim()===from);
+ const out=document.getElementById('modelMergePreview'),btn=document.getElementById('modelMergeExecute');
+ if(btn)btn.disabled=!from||!to||from===to||!matches.length;
+ if(out)out.textContent=!from||!to?'請選擇原型號與目標型號':from===to?'兩個型號相同，無需修改':`符合原型號的財產共 ${matches.length} 筆（Client ${matches.filter(a=>a.type==='client').length} 筆、Server ${matches.filter(a=>a.type==='server').length} 筆）。`;
+}
+async function executeModelMerge(){
+ if(window.currentRole!=='owner'||!window.cloudMergeModels)return alert('批次修改功能尚未準備完成');
+ const from=document.getElementById('modelMergeFrom')?.value||'',to=document.getElementById('modelMergeTo')?.value.trim()||'';
+ const count=assets.filter(a=>String(a.model||'').trim()===from).length;
+ if(!from||!to||from===to||!count)return;
+ if(!confirm(`確定將 ${count} 筆型號「${from}」統一為「${to}」？\\n將修改 Firebase 正式資料，並保留每筆異動紀錄。`))return;
+ const btn=document.getElementById('modelMergeExecute');if(btn)btn.disabled=true;
+ try{
+  const done=await window.cloudMergeModels(from,to,(n,total)=>{const el=document.getElementById('modelMergePreview');if(el)el.textContent=`已更新 ${n} / ${total} 筆…`});
+  alert(`已完成 ${done} 筆型號統一修改。`);closeModal();render();
+ }catch(e){alert('批次修改未完成：'+e.message+'。部分批次可能已成功，請重新查看清冊後再執行。');if(btn)btn.disabled=false}
+}
+function exportCloudAssets(type){
+ if(window.currentRole!=='owner'||!window.accessGranted)return alert('僅 Owner 可以匯出正式財產');
+ if(!cloudAssetsReady||!Array.isArray(assets))return alert('完整財產尚未同步完成，請稍後再試');
+ if(!['client','server'].includes(type))return;
+ const rows=assets.filter(a=>a.type===type).map(a=>({...a}));
+ if(!rows.length&&!confirm(type+' 目前沒有資料，仍要下載空白匯出檔嗎？'))return;
+ const ids=new Set();
+ for(const row of rows){
+  if(!row.id||ids.has(row.id))return alert('發現財產隱藏 ID 缺漏或重複，已取消匯出，請先核對資料');
+  ids.add(row.id);
+ }
+ const payload={format:'airport-asset-firestore-export',schemaVersion:1,source:'taoyuancyd-asset-mgmt',collection:'assets',type,exportedAt:new Date().toISOString(),count:rows.length,documents:rows};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
+ const url=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=url;link.download='airport_assets_'+type+'_'+new Date().toISOString().slice(0,10)+'.json';
+ document.body.appendChild(link);link.click();link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+function adminPage(){
+ if(!cloudAssetsReady)return heading('系統管理','正在同步完整財產清冊')+'<section class="panel"><h3>正在載入完整財產資料</h3><p class="muted">等待 Client 與 Server 完成同步後再顯示批次維護工具。</p></section>';
+ if(window.currentRole!=='owner')return '<section class="panel"><h3>無權限存取</h3></section>';
+ const profiles=Object.entries(adminProfiles).sort((a,b)=>String(a[1].email||'').localeCompare(String(b[1].email||'')));
+ const rows=profiles.map(([uid,a])=>`<tr><td>${esc(a.email||uid)}<div class="muted" style="font-size:11px">${esc(uid)}</div></td><td>${esc(a.displayName||'未設定')}</td><td>${esc(a.role||'')}</td><td>${a.active===true?'啟用':'停用'}</td><td><button class="btn small" onclick="editAdminName('${esc(uid)}')">設定名稱</button> ${a.role==='owner'?'':`<button class="btn small" onclick="editMember('${esc(uid)}')">角色／狀態</button> <button class="btn small danger" onclick="deleteAuthorizedAccount('${esc(uid)}')">刪除</button>`}</td></tr>`).join('');
+ const requests=pendingRequests.filter(r=>r.status==='pending').map(r=>`<tr><td>${esc(r.email||'未提供')}<div class="muted" style="font-size:11px">${esc(r.uid)}</div></td><td>${esc(r.googleName||'—')}</td><td>${esc(r.requestedAt||'—')}</td><td><button class="btn small primary" onclick="reviewRequest('${esc(r.uid)}')">審核授權</button> <button class="btn small" onclick="rejectRequest('${esc(r.uid)}')">拒絕</button> <button class="btn small danger" onclick="deletePendingRequest('${esc(r.uid)}')">刪除</button></td></tr>`).join('');
+ return heading('系統管理','首次登入申請由 Owner 審核；未核准帳號無法讀取財產資料')+
+ `<section class="panel"><h3>待審核帳號 ${pendingReady?'（'+pendingRequests.filter(r=>r.status==='pending').length+'）':''}</h3>${pendingError?`<p class="note">${esc(pendingError)}</p>`:pendingReady?`<div class="tablewrap"><table><thead><tr><th>Google 帳號／UID</th><th>Google 名稱</th><th>申請時間</th><th>操作</th></tr></thead><tbody>${requests||'<tr><td colspan="4">目前沒有待審核申請</td></tr>'}</tbody></table></div>`:'<p class="muted">申請名單讀取中…</p>'}</section>`+
+ `<section class="panel"><h3>已授權帳號</h3>${adminProfilesError?`<p class="note">${esc(adminProfilesError)}</p>`:adminProfilesReady?`<div class="tablewrap"><table><thead><tr><th>Google 帳號／UID</th><th>顯示名稱</th><th>角色</th><th>狀態</th><th>操作</th></tr></thead><tbody>${rows||'<tr><td colspan="5">尚無授權帳號</td></tr>'}</tbody></table></div>`:'<p class="muted">帳號名單讀取中…</p>'}</section>`+
+ `<section class="panel"><h3>跨 Firebase 專案登入與資料庫驗證（V0.42）</h3><p class="muted">這是正式資料搬遷前的安全驗證。使用同一個 Google 帳號登入主專案、Client、Server，檢查三邊 UID；不會讀寫新專案的 Firestore，也不會改動目前財產清冊。請允許登入彈出視窗。</p><div class="flex"><button class="btn primary" onclick="window.verifyCrossProjectLogin()">驗證三個專案登入</button><button class="btn" onclick="window.copyCrossProjectAuthResult()">複製 UID 結果</button></div><p id="crossProjectAuthStatus" class="muted" style="margin-top:12px">尚未執行登入驗證。</p><div class="flex"><button class="btn primary" onclick="window.testSecondaryFirestore()">測試 Client／Server 資料庫讀寫及即時同步</button></div><p id="secondaryFirestoreStatus" class="muted" style="white-space:pre-wrap;margin-top:12px">尚未測試。請先完成三個專案登入驗證。</p></section><section class="panel"><h3>Firestore 財產資料匯出（跨專案搬遷）</h3><p class="muted">直接使用本頁已同步的 Firestore 財產資料，不額外發起查詢。分別下載 Client、Server 的 JSON；保留每筆文件的原始 ID、type 與所有欄位，供未來匯入新 Firebase 專案。僅 Owner 可下載。這裡不包含維修紀錄、異動歷程與帳號權限，搬遷前仍須另外規劃。</p><div class="flex"><button class="btn primary" onclick="exportCloudAssets('client')">下載 Client JSON（${assets.filter(a=>a.type==='client').length} 筆）</button><button class="btn primary" onclick="exportCloudAssets('server')">下載 Server JSON（${assets.filter(a=>a.type==='server').length} 筆）</button></div><p class="muted" style="margin-top:10px">匯出檔案包含完整財產資訊，請妥善保存；下載不會修改雲端資料。</p></section><section class="panel"><h3>展示資料備份</h3><p class="muted">僅下載本機展示資料，不包含 Firestore。</p><button class="btn" onclick="backup()">下載展示資料 JSON</button></section>`+
+ `<section class="panel"><h3>設備類型批次統一</h3><p class="muted">只修改財產清冊的「設備類型」，不變更財編、隱藏 ID、型號、維修紀錄。僅 Owner 可執行，並逐筆保留異動歷程。</p><div class="flex"><button class="btn primary" onclick="openDeviceTypeMerge()">開啟批次統一工具 →</button></div></section>`+
+ `<section class="panel"><h3>型號批次統一</h3><p class="muted">只修改財產清冊的「型號」，不變更設備類型、財編、隱藏 ID 或維修紀錄。僅 Owner 可執行，並逐筆保留異動歷程。</p><button class="btn primary" onclick="openModelMerge()">開啟型號批次統一 →</button></section>`+
+ `<section class="panel"><h3>Excel 財產匯入</h3><p class="muted">僅 Owner 可上傳正式 Client／Server 清冊，先預覽再確認寫入。</p><button class="btn primary" onclick="setPage('import')">前往 Excel 匯入 →</button></section>`;
+}
+window.reviewRequest=uid=>{
+ if(window.currentRole!=='owner')return;
+ const r=pendingRequests.find(x=>x.uid===uid&&x.status==='pending');if(!r)return;
+ showModal('核准帳號',`<form onsubmit="approveRequest(event,'${esc(uid)}')"><div class="sectionhint">Google 帳號：${esc(r.email)}<br>UID：${esc(uid)}<br>請確認申請人身分後再核准。</div><div class="formgrid"><div><label>顯示名稱</label><input name="displayName" maxlength="40" value="${esc(r.googleName||'')}" required></div><div><label>角色</label><select name="role"><option value="viewer">Viewer 檢視者</option><option value="editor">Editor 編輯者</option></select></div></div><div class="actions"><button class="btn" type="button" onclick="closeModal()">取消</button><button class="btn primary" type="submit">確認授權</button></div></form>`);
+};
+window.approveRequest=async(e,uid)=>{e.preventDefault();const f=new FormData(e.target),name=String(f.get('displayName')||'').trim(),role=String(f.get('role')||'');if(!name||name.length>40||!['viewer','editor'].includes(role))return alert('請確認名稱與角色');try{await window.cloudApprove(uid,name,role);closeModal()}catch(err){alert('授權失敗：'+err.message)}};
+window.rejectRequest=async(uid)=>{if(window.currentRole!=='owner'||!confirm('確定拒絕此帳號的申請？'))return;try{await window.cloudReject(uid)}catch(err){alert('拒絕失敗：'+err.message)}};
+window.deletePendingRequest=async uid=>{
+ if(window.currentRole!=='owner')return;
+ const r=pendingRequests.find(x=>x.uid===uid&&x.status==='pending');if(!r)return;
+ if(!confirm(`確定刪除此待審核申請？\n${r.email||uid}\n\n此操作不會刪除 Google 帳號。對方日後重新登入可再次申請。`))return;
+ try{await window.cloudDeletePending(uid);alert('待審核紀錄已刪除。')}catch(err){alert('刪除失敗：'+err.message)}
+};
+window.deleteAuthorizedAccount=async uid=>{
+ if(window.currentRole!=='owner')return;
+ const a=adminProfiles[uid];if(!a||a.role==='owner')return;
+ if(!confirm(`確定刪除此帳號的系統授權？\n${a.displayName||'未設定名稱'}\n${a.email||uid}\n\n刪除後無法存取系統；既有財產與異動紀錄保留。重新登入須再次申請授權。`))return;
+ try{await window.cloudDeleteAuthorized(uid);alert('已刪除系統授權。')}catch(err){alert('刪除失敗：'+err.message)}
+};
+window.editMember=uid=>{if(window.currentRole!=='owner')return;const a=adminProfiles[uid];if(!a||a.role==='owner')return;showModal('調整帳號權限',`<form onsubmit="saveMember(event,'${esc(uid)}')"><p>${esc(a.email||uid)}</p><div class="formgrid"><div><label>角色</label><select name="role"><option value="viewer" ${a.role==='viewer'?'selected':''}>Viewer 檢視者</option><option value="editor" ${a.role==='editor'?'selected':''}>Editor 編輯者</option></select></div><div><label>授權狀態</label><select name="active"><option value="true" ${a.active?'selected':''}>啟用</option><option value="false" ${!a.active?'selected':''}>停用</option></select></div></div><div class="actions"><button class="btn" type="button" onclick="closeModal()">取消</button><button class="btn primary" type="submit">儲存</button></div></form>`)};
+window.saveMember=async(e,uid)=>{e.preventDefault();const f=new FormData(e.target);try{await window.cloudUpdateMember(uid,String(f.get('role')),f.get('active')==='true');closeModal()}catch(err){alert('儲存失敗：'+err.message)}};
+window.editAdminName=uid=>{
+ if(window.currentRole!=='owner')return;
+ const a=adminProfiles[uid];if(!a)return;
+ showModal('設定使用者顯示名稱',`<form onsubmit="saveAdminName(event,'${esc(uid)}')"><div class="sectionhint">${esc(a.email||uid)}<br>只變更顯示名稱，不影響 Google 登入及權限。</div><label>顯示名稱<input name="displayName" maxlength="40" value="${esc(a.displayName||'')}" placeholder="例如：資訊服務科－王小明" style="width:100%;margin:10px 0" required></label><div class="flex"><button class="btn primary" type="submit">儲存名稱</button><button class="btn" type="button" onclick="closeModal()">取消</button></div></form>`);
+};
+window.saveAdminName=async(e,uid)=>{
+ e.preventDefault();const name=String(new FormData(e.target).get('displayName')||'').trim();
+ if(!name||name.length>40){alert('請輸入 1 至 40 個字元的名稱');return}
+ try{await window.cloudSaveAdminName(uid,name);closeModal();}catch(err){alert('名稱儲存失敗：'+err.message)}
+};
+function backup(){let data={demo:true,note:'此備份為本機展示資料，雲端財產與維修請勿以此還原',exportedAt:new Date().toISOString(),assets,repairs,logs,categories,handovers,supplies};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='asset_management_demo_backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+
+// V0.12: cloud-only assets. No seeded/local asset is uploaded automatically.
+let cloudAssetsReady=false, cloudBusy=false;
+window.cloudWrite=null;
+let cloudAudit=[],cloudAuditReady=false;
+let repairAuditEntries=[],repairAuditReady=false;
+let adminProfiles={},adminProfilesReady=false,adminProfilesError='';
+let pendingRequests=[],pendingReady=false,pendingError='';
+function auditActor(l){const profile=adminProfiles[l.actorUid];return l.actorDisplayName||profile?.displayName||l.actorEmail||l.actorUid||'未知人員'}
+const AUDIT_LABELS={date:'日期',status:'維修狀態',reason:'送修原因',reporter:'報修人員',shipper:'送修人員',receiver:'收件人員',shipDate:'送修日期',receiveDate:'收件日期',deviceName:'設備名稱',brandModel:'廠牌型號',terminal:'航廈',repairLocation:'報修位置',replacement:'更換設備名稱財編',serialNo:'設備序號',assetId:'關聯財產',propertyNo:'財產編號',type:'設備分類',deviceType:'設備類型',model:'型號',team:'單位',ipAddress:'IP 位址',location:'位置',lastInventory:'盤點日期',serialNo:'序號',macAddress:'MAC 位址',custodian:'保管人',user:'使用者',contract:'維護合約',isMaintenance:'維護狀態',notes:'備註'};
+const AUDIT_HIDDEN=new Set(['id','createdAt','updatedAt','createdBy','updatedBy','createdByEmail','createdByName']);
+function auditProperty(l){const r=l.after||l.before||{};const a=assets.find(x=>x.id===(r.assetId||l.assetId));return r.propertyNo||a?.propertyNo||r.deviceName||'無財編'}
+function auditTime(l){return l.timestamp?new Date(l.timestamp).toLocaleString('zh-TW',{hour12:false}):'時間未提供'}
+function auditValue(v){if(v===null||v===undefined||v==='')return '—';if(typeof v==='boolean')return v?'是':'否';if(typeof v==='object')return JSON.stringify(v);return String(v)}
+function auditChanges(l){
+ const before=l.before&&typeof l.before==='object'?l.before:{};
+ const after=l.after&&typeof l.after==='object'?l.after:{};
+ const created=!l.before;
+ const keys=[...new Set([...Object.keys(before),...Object.keys(after)])].filter(k=>!AUDIT_HIDDEN.has(k)&&k!=='assetId');
+ return keys.filter(k=>created?after[k]!==''&&after[k]!=null:JSON.stringify(before[k]??null)!==JSON.stringify(after[k]??null)).map(k=>({label:AUDIT_LABELS[k]||k,old:created?'—':auditValue(before[k]),next:auditValue(after[k])}));
+}
+function auditSummary(l){
+ if(l._auditType==='維修'&&(l.action==='刪除維修紀錄'||l.after===null)){const r=l.before||{};return '已刪除送修紀錄 · '+(r.deviceName||'設備')+' · '+(r.reason||'未填原因')+' · '+(r.date||'');}
+ if(l._auditType==='維修'&&(l.action==='新增維修紀錄'||l.before===null)){const r=l.after||{};return '新增送修 · '+(r.deviceName||'設備')+' · '+(r.reason||'未填原因');}
+ const changes=auditChanges(l);
+ if(!changes.length)return '未偵測到欄位內容差異';
+ const first=changes.slice(0,2).map(c=>`${c.label}：${c.old} → ${c.next}`).join('；');
+ return first+(changes.length>2?`；另有 ${changes.length-2} 項`:'');
+}
+function allCloudAudits(){return [...cloudAudit.map(x=>({...x,_auditType:'財產',_auditKey:'asset:'+x.auditId})),...repairAuditEntries.map(x=>({...x,_auditType:'維修',_auditKey:'repair:'+x.auditId}))].sort((a,b)=>String(b.timestamp||'').localeCompare(String(a.timestamp||'')))}
+function openAuditFromDashboard(key){setPage('history');const el=[...document.querySelectorAll('[data-history-key]')].find(x=>x.dataset.historyKey===key);if(el){const details=el.querySelector('details');if(details)details.open=true;el.scrollIntoView({block:'center',behavior:'smooth'})}}
+function auditOperation(l){
+ const action=String(l.action||'');
+ if(action.startsWith('新增')||action==='Excel 匯入新增財產'||l.before===null&&l.after!=null)return 'create';
+ if(action.startsWith('刪除')||l.after===null&&l.before!=null)return 'delete';
+ return 'update';
+}
+function auditSnapshotRows(record){
+ if(!record||typeof record!=='object')return [];
+ return Object.entries(record).filter(([k,v])=>!AUDIT_HIDDEN.has(k)&&k!=='assetId'&&v!==null&&v!==undefined&&v!=='')
+  .map(([k,v])=>({label:AUDIT_LABELS[k]||k,value:auditValue(v)}));
+}
+function cloudHistoryPage(){
+ const entries=allCloudAudits();
+ return heading('異動歷程','新增與刪除顯示紀錄內容；修改僅顯示實際變動欄位')+
+ `<div class="sectionhint">雲端財產與維修新增、修改及刪除紀錄（各顯示最近 100 筆，較早紀錄仍保留於資料庫）。${cloudAuditReady&&repairAuditReady?'':'（雲端歷程載入中）'}</div><div class="panel">`+
+ (entries.length?entries.map(l=>{
+  const operation=auditOperation(l);
+  const isSnapshot=operation!=='update';
+  const rows=isSnapshot?auditSnapshotRows(operation==='delete'?l.before:l.after):auditChanges(l);
+  const summary=operation==='create'?'查看新增紀錄內容':operation==='delete'?'查看刪除紀錄內容':'查看修改欄位（'+rows.length+' 項）';
+  const body=isSnapshot?
+   `<table><thead><tr><th>欄位</th><th>${operation==='create'?'新增內容':'刪除前內容'}</th></tr></thead><tbody>${rows.map(c=>`<tr><td><strong>${esc(c.label)}</strong></td><td style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(c.value)}</td></tr>`).join('')||'<tr><td colspan="2" class="muted">沒有可顯示的紀錄內容</td></tr>'}</tbody></table>`:
+   `<table><thead><tr><th>修改欄位</th><th>修改前</th><th>修改後</th></tr></thead><tbody>${rows.map(c=>`<tr><td><strong>${esc(c.label)}</strong></td><td style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(c.old)}</td><td style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(c.next)}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">沒有欄位內容差異</td></tr>'}</tbody></table>`;
+  return `<div class="logitem" data-history-key="${esc(l._auditKey)}"><div class="flex"><strong>${esc(l._auditType)} · ${esc(l.action||'異動')}</strong><span class="tag">${esc(auditProperty(l))}</span></div><div class="muted">${esc(auditTime(l))} · ${esc(auditActor(l))}</div><div style="margin-top:7px;font-size:13px">${esc(auditSummary(l))}</div><details style="margin-top:9px"><summary class="muted" style="cursor:pointer">${summary}</summary><div class="tablewrap" style="margin-top:12px">${body}</div></details></div>`;
+ }).join(''):(cloudAuditReady&&repairAuditReady?'<div class="empty">目前沒有雲端財產或維修異動紀錄。</div>':'<div class="empty">讀取中…</div>'))+'</div>';
+}
+
+const previousHistoryPage=historyPage;
+historyPage=cloudHistoryPage;
+
+const originalOpenEdit=openEdit;
+openEdit=function(id){if(window.currentRole==='viewer'){alert('檢視者不能修改財產');return}originalOpenEdit(id)};
+const originalOpenTransfer=openTransfer;
+openTransfer=function(id){if(window.currentRole==='viewer'){alert('檢視者不能移撥財產');return}originalOpenTransfer(id)};
+const originalOpenDetail=openDetail;
+openDetail=function(id){originalOpenDetail(id);if(window.currentRole==='viewer'){
+ document.querySelectorAll('#overlay button').forEach(b=>{if(/移撥|盤點|編輯/.test(b.textContent))b.remove()})
+}};
+async function cloudCommit(action,asset,before){
+ if(!window.accessGranted||!cloudAssetsReady||!window.cloudWrite){alert('雲端尚未準備完成，請稍後再試');return false}
+ if(!canModify()){alert('沒有修改權限');return false}
+ if(cloudBusy)return false;
+ cloudBusy=true;
+ try{await window.cloudWrite(action,asset,before);closeModal();return true}
+ catch(e){console.error('財產儲存失敗',e);alert('雲端儲存失敗：'+(e.message||e));return false}
+ finally{cloudBusy=false}
+}
+saveAsset=async function(e,id,type){
+ e.preventDefault();let old=assets.find(x=>x.id===id),before=old?{...old}:null;
+ if(id&&!old){alert('找不到原始財產，請重新整理');return}
+ const a=old?{...old}:{id:crypto.randomUUID(),type,lastInventory:''};
+ new FormData(e.target).forEach((v,k)=>a[k]=String(v));
+ if(!String(a.deviceType||'').trim()){alert('請填寫設備類型');return}
+ await cloudCommit(old?'修改財產':'新增財產',a,before)
+};
+inventory=async function(id){
+ let a=assets.find(x=>x.id===id);if(!a||!confirm('確認更新此筆財產的盤點日期？'))return;
+ let b={...a};await cloudCommit('更新盤點',{...a,lastInventory:new Date().toLocaleDateString('sv-SE')},b)
+};
+transfer=async function(id){
+ let a=assets.find(x=>x.id===id),target=$('target')?.value;
+ if(!a||!target)return;
+ if(!confirm(`確定將財產移至「${target}」？`))return;
+ await cloudCommit('財產移撥',{...a,team:target},{...a})
+};
+
+window.accessGranted=false;
+function showAuthScreen(title,description,actions=''){
+ $('sidebar').innerHTML='';$('mobileNav').innerHTML='';$('pagetitle').textContent='帳號驗證';
+ $('view').innerHTML=`<section class="panel" style="max-width:620px;margin:40px auto;padding:28px"><h2 style="margin:0 0 12px">${esc(title)}</h2><p class="muted" style="font-size:15px;line-height:1.8">${esc(description)}</p>${actions}</section>`;
+}
+function authReady(){showAuthScreen('請使用 Google 帳號登入','本系統採核准名單管理。Google 登入成功不代表已取得財產資料存取權。','<button class="btn primary" onclick="signInUser()">使用 Google 登入</button>')}
+window.signInUser=()=>alert('Firebase SDK 尚未載入，請稍候再試。');
+window.signOutUser=()=>alert('Firebase SDK 尚未載入，請稍候再試。');
+showAuthScreen('Firebase 驗證載入中','正在確認登入狀態及存取權限，請稍候。');
+</script>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+import {getAuth,GoogleAuthProvider,onAuthStateChanged,signInWithPopup,signInWithRedirect,getRedirectResult,signInWithCredential,signOut} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc,collection,query,where,orderBy,limit,onSnapshot,writeBatch,updateDoc,deleteDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+const clientFirebaseConfig={apiKey:'AIzaSyCZFxH6SzQ0GQr6P7PcypD0yxeVhkQBw8A',authDomain:'taoyuan-asset-client.firebaseapp.com',projectId:'taoyuan-asset-client',storageBucket:'taoyuan-asset-client.firebasestorage.app',messagingSenderId:'1011783062430',appId:'1:1011783062430:web:b2f56f46748373eea83c8f'};
+const serverFirebaseConfig={apiKey:'AIzaSyBoeKHXjmi6pOBhAnrnilzJeiJIJUTmrlU',authDomain:'taoyuan-asset-server.firebaseapp.com',projectId:'taoyuan-asset-server',storageBucket:'taoyuan-asset-server.firebasestorage.app',messagingSenderId:'451082390963',appId:'1:451082390963:web:a0a3efe8dcc98f77c18fc6'};
+const firebaseConfig={apiKey:'AIzaSyBngp2V_mKmPmLrgjAOHrCbL0EMfa39dx0',authDomain:'taoyuancyd-asset-mgmt.firebaseapp.com',projectId:'taoyuancyd-asset-mgmt',storageBucket:'taoyuancyd-asset-mgmt.firebasestorage.app',messagingSenderId:'144237236073',appId:'1:144237236073:web:e2a7230e8a68357e92f7f8'};
+try{
+ const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
+ provider.setCustomParameters({prompt:'select_account'});
+ // 隔離驗證：兩個新專案目前只建立 Auth，不連接其 Firestore。
+ const clientAuth=getAuth(initializeApp(clientFirebaseConfig,'asset-client'));
+ const serverAuth=getAuth(initializeApp(serverFirebaseConfig,'asset-server'));
+ const clientDb=getFirestore(clientAuth.app);
+ const serverDb=getFirestore(serverAuth.app);
+ window.crossProjectAuthResult=null;
+ window.verifyCrossProjectLogin=async()=>{
+  if(!window.accessGranted||window.currentRole!=='owner'||!auth.currentUser)return alert('請先使用 Owner 帳號登入主專案');
+  const status=document.getElementById('crossProjectAuthStatus');
+  if(status)status.textContent='正在透過 Google 驗證三個專案，請完成登入視窗…';
+  try{
+   // 從主專案重新取得 Google OAuth 憑證；不共用 Firebase ID token。
+   const login=await signInWithPopup(auth,provider);
+   const credential=GoogleAuthProvider.credentialFromResult(login);
+   if(!credential||(!credential.accessToken&&!credential.idToken))throw new Error('無法取得 Google 登入憑證');
+   const primary=auth.currentUser;
+   const [c,v]=await Promise.all([
+    signInWithCredential(clientAuth,credential),
+    signInWithCredential(serverAuth,credential)
+   ]);
+   if(!primary||!c.user||!v.user||!primary.email||primary.email.toLowerCase()!==String(c.user.email||'').toLowerCase()||primary.email.toLowerCase()!==String(v.user.email||'').toLowerCase())throw new Error('三個專案的 Google 帳號不一致，已停止驗證');
+   window.crossProjectAuthResult={main:{projectId:'taoyuancyd-asset-mgmt',uid:primary.uid,email:primary.email},client:{projectId:'taoyuan-asset-client',uid:c.user.uid,email:c.user.email},server:{projectId:'taoyuan-asset-server',uid:v.user.uid,email:v.user.email}};
+   const result=window.crossProjectAuthResult;
+   const el=document.getElementById('crossProjectAuthStatus');
+   if(el)el.textContent='登入驗證成功。主專案 UID：'+result.main.uid+'；Client UID：'+result.client.uid+'；Server UID：'+result.server.uid+'。此測試未讀取或寫入新專案 Firestore。';
+  }catch(e){
+   window.crossProjectAuthResult=null;
+   const el=document.getElementById('crossProjectAuthStatus');
+   if(el)el.textContent='驗證未完成：'+e.message+'。原始財產資料未受影響。';
+  }
+ };
+ window.testSecondaryFirestore=async()=>{
+  if(!window.accessGranted||window.currentRole!=='owner')return alert('請先以主專案 Owner 登入');
+  if(!window.crossProjectAuthResult||!clientAuth.currentUser||!serverAuth.currentUser)return alert('請先點選「驗證三個專案登入」');
+  const out=document.getElementById('secondaryFirestoreStatus');
+  const log=msg=>{if(out)out.textContent+=(out.textContent?'\n':'')+msg};
+  if(out)out.textContent='';
+  const targets=[['Client',clientDb,clientAuth],['Server',serverDb,serverAuth]];
+  for(const [name,targetDb,targetAuth] of targets){
+   const testRef=doc(targetDb,'assets','v042_connection_test');
+   let unsub=null;
+   let created=false;
+   try{
+    if(!targetAuth.currentUser)throw new Error('登入狀態已失效');
+    // 僅使用單一固定測試文件；測試完成後立即刪除。
+    const old=await getDoc(testRef);
+    if(old.exists()&&!old.data()?.v041ConnectionTest)throw new Error('測試文件 ID 已被正式資料使用，停止以避免覆寫');
+    const nonce=Date.now()+'-'+Math.random().toString(36).slice(2);
+    await setDoc(testRef,{type:name.toLowerCase(),v041ConnectionTest:true,nonce,phase:'created',createdAt:new Date().toISOString()});
+    created=true;
+    const read=await getDoc(testRef);
+    if(!read.exists()||read.data().nonce!==nonce)throw new Error('寫入後讀取驗證不一致');
+    let resolveSync,rejectSync;
+    const synced=new Promise((resolve,reject)=>{resolveSync=resolve;rejectSync=reject});
+    unsub=onSnapshot(testRef,snap=>{
+     if(snap.exists()&&snap.data().nonce===nonce&&snap.data().phase==='updated'&&!snap.metadata.hasPendingWrites)resolveSync();
+    },rejectSync);
+    await updateDoc(testRef,{phase:'updated'});
+    // 即時監聽沒有成功時不應無限等待；在完成更新後讀取一次確認資料仍存在。
+    const updated=await getDoc(testRef);
+    if(updated.data()?.phase!=='updated')throw new Error('更新後讀取驗證失敗');
+    await Promise.race([synced,new Promise((_,reject)=>setTimeout(()=>reject(new Error('即時監聽逾時（15 秒）')),15000))]);
+    log(name+'：登入、寫入、讀取、更新、即時同步均成功。');
+   }catch(e){log(name+'：驗證失敗：'+e.message)}
+   finally{
+    if(unsub)unsub();
+    if(created){try{await deleteDoc(testRef);log(name+'：測試文件已刪除。')}catch(e){log(name+'：警告！測試文件刪除失敗，請至 assets 集合手動刪除 v042_connection_test。原因：'+e.message)}}
+   }
+  }
+ };
+ window.copyCrossProjectAuthResult=()=>{
+  if(!window.crossProjectAuthResult)return alert('請先完成登入驗證');
+  const r=window.crossProjectAuthResult;
+  const message='主專案 UID：'+r.main.uid+'\nClient UID：'+r.client.uid+'\nServer UID：'+r.server.uid;
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(message).then(()=>alert('已複製三個 UID')).catch(()=>prompt('請複製驗證結果',message));
+  else prompt('請複製驗證結果',message);
+ };
+
+ let previewAuditStops=[];const assetListeners={client:null,server:null};const assetCache={client:[],server:[]};const assetLoaded={client:false,server:false};let assetDisplayMode=null;let stopAudit=null,stopRepairAudit=null,stopRepairs=null,stopAdmins=null,stopRequests=null,stopOwnRequest=null;
+ window.cloudSaveAdminName=async(uid,name)=>{
+  if(window.currentRole!=='owner')throw new Error('僅系統擁有者可以修改名稱');
+  await updateDoc(doc(db,'admins',uid),{displayName:name});
+ };
+ window.cloudApprove=async(uid,name,role)=>{
+  if(window.currentRole!=='owner'||!['editor','viewer'].includes(role))throw new Error('權限不足');
+  const requestRef=doc(db,'accessRequests',uid),r=await getDoc(requestRef);
+  if(!r.exists()||r.data().status!=='pending')throw new Error('申請不存在或已處理');
+  const batch=writeBatch(db);
+  batch.set(doc(db,'admins',uid),{email:r.data().email||'',displayName:name,role,active:true,approvedAt:new Date().toISOString(),approvedBy:auth.currentUser.uid});
+  batch.update(requestRef,{status:'approved',reviewedAt:new Date().toISOString(),reviewedBy:auth.currentUser.uid});
+  await batch.commit();
+ };
+ window.cloudReject=async(uid)=>{if(window.currentRole!=='owner')throw new Error('權限不足');await updateDoc(doc(db,'accessRequests',uid),{status:'rejected',reviewedAt:new Date().toISOString(),reviewedBy:auth.currentUser.uid})};
+ window.cloudDeletePending=async uid=>{
+  if(window.currentRole!=='owner'||!auth.currentUser)throw new Error('權限不足');
+  const ref=doc(db,'accessRequests',uid),snap=await getDoc(ref);
+  if(!snap.exists()||snap.data().status!=='pending')throw new Error('申請不存在或已處理');
+  await deleteDoc(ref);
+ };
+ window.cloudDeleteAuthorized=async uid=>{
+  if(window.currentRole!=='owner'||!auth.currentUser||uid===auth.currentUser.uid)throw new Error('無法刪除 Owner');
+  const adminRef=doc(db,'admins',uid),snap=await getDoc(adminRef);
+  if(!snap.exists()||snap.data().role==='owner')throw new Error('無法刪除 Owner 或帳號不存在');
+  // 同時清除既有審核狀態，避免刪除後再次登入卡在「已核准」舊申請。
+  const batch=writeBatch(db);
+  batch.delete(adminRef);
+  batch.delete(doc(db,'accessRequests',uid));
+  await batch.commit();
+ };
+ window.cloudUpdateMember=async(uid,role,active)=>{if(window.currentRole!=='owner'||uid===auth.currentUser.uid||!['editor','viewer'].includes(role))throw new Error('不可修改此帳號');const a=await getDoc(doc(db,'admins',uid));if(!a.exists()||a.data().role==='owner')throw new Error('無法修改 Owner');await updateDoc(doc(db,'admins',uid),{role,active})};
+ function startRequests(u){
+  if(stopRequests){stopRequests();stopRequests=null}
+  pendingReady=false;pendingError='';
+  stopRequests=onSnapshot(collection(db,'accessRequests'),snap=>{if(auth.currentUser?.uid!==u.uid)return;pendingRequests=snap.docs.map(d=>({uid:d.id,...d.data()}));pendingReady=true;pendingError='';if(page==='admin')render()},err=>{pendingReady=true;pendingError='申請名單讀取失敗：'+err.message;if(page==='admin')render()});
+ }
+ function startAdminProfiles(u,info){
+  if(stopAdmins){stopAdmins();stopAdmins=null}
+  adminProfilesError='';
+  adminProfiles={[u.uid]:{...info,email:u.email||info.email||''}};
+  adminProfilesReady=window.currentRole!=='owner';
+  if(window.currentRole==='owner'){
+   stopAdmins=onSnapshot(collection(db,'admins'),snap=>{
+    if(auth.currentUser?.uid!==u.uid)return;
+    adminProfiles=Object.fromEntries(snap.docs.map(d=>[d.id,d.data()]));
+    adminProfiles[u.uid]={...adminProfiles[u.uid],email:u.email||adminProfiles[u.uid]?.email||''};
+    adminProfilesReady=true;adminProfilesError='';
+    if(['admin','dashboard','history'].includes(page))render();
+   },err=>{console.error('管理員名單讀取失敗',err);adminProfilesReady=true;adminProfilesError='帳號名單讀取失敗：'+err.message;if(page==='admin')render()});
+  }
+ }
+ window.stopCloudAssets=()=>{previewAuditStops.forEach(fn=>fn());previewAuditStops=[];activeCloudUser=null;window.dashboardCloudEnabled=false;if(stopRepairAudit){stopRepairAudit();stopRepairAudit=null}if(stopRepairs){stopRepairs();stopRepairs=null}repairs=[];if(stopAdmins){stopAdmins();stopAdmins=null}if(stopRequests){stopRequests();stopRequests=null}if(stopOwnRequest){stopOwnRequest();stopOwnRequest=null}pendingRequests=[];pendingReady=false;adminProfiles={};adminProfilesReady=false;for(const type of ['client','server']){if(assetListeners[type]){assetListeners[type]();assetListeners[type]=null}assetCache[type]=[];assetLoaded[type]=false}assetDisplayMode=null;if(stopAudit){stopAudit();stopAudit=null}cloudAssetsReady=false;cloudAuditReady=false;cloudAudit=[];assets=[]};
+ window.cloudWrite=async(action,asset,before)=>{
+  const u=auth.currentUser;
+  if(!u||!window.accessGranted)throw new Error('尚未登入');
+  const batch=writeBatch(db);
+  const ref=doc(db,'assets',asset.id);
+  batch.set(ref,asset);
+  const auditRef=doc(collection(db,'assetAudit'));
+  batch.set(auditRef,{assetId:asset.id,action,actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp:new Date().toISOString(),before:before||null,after:asset});
+  await batch.commit();
+ };
+
+ window.cloudDeleteAsset=async(asset)=>{
+  const u=auth.currentUser;
+  if(!u||!window.accessGranted||window.currentRole!=='owner')throw new Error('只有 Owner 可以刪除財產');
+  if(repairs.some(r=>r.assetId===asset.id))throw new Error('此財產已有維修紀錄，禁止刪除');
+  const batch=writeBatch(db);
+  batch.delete(doc(db,'assets',asset.id));
+  batch.set(doc(collection(db,'assetAudit')),{assetId:asset.id,action:'刪除財產',actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp:new Date().toISOString(),before:asset,after:null});
+  await batch.commit();
+ };
+ window.cloudMergeDeviceTypes=async(from,to,onProgress)=>{
+  const u=auth.currentUser;
+  if(!u||!window.accessGranted||window.currentRole!=='owner')throw new Error('僅 Owner 可以批次修改');
+  if(!from||!to||from===to)throw new Error('設備類型選擇無效');
+  const candidates=assets.filter(a=>String(a.deviceType||'').trim()===from);
+  let done=0;
+  for(let start=0;start<candidates.length;start+=150){
+   if(auth.currentUser?.uid!==u.uid||window.currentRole!=='owner')throw new Error('登入權限已變更');
+   const slice=candidates.slice(start,start+150);
+   const batch=writeBatch(db),timestamp=new Date().toISOString();
+   for(const original of slice){
+    const ref=doc(db,'assets',original.id),snap=await getDoc(ref);
+    if(!snap.exists())throw new Error('資料已刪除，請重新整理：'+original.id);
+    const before=snap.data();
+    if(before.deviceType!==original.deviceType)throw new Error('有設備類型已被其他人修改，請重新整理再試');
+    const after={...before,deviceType:to};
+    batch.set(ref,after);
+    batch.set(doc(collection(db,'assetAudit')),{assetId:original.id,action:'修改財產',actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp,before,after});
+   }
+   await batch.commit();done+=slice.length;if(onProgress)onProgress(done,candidates.length);
+  }
+  return done;
+ };
+ window.cloudMergeModels=async(from,to,onProgress)=>{
+  const u=auth.currentUser;
+  if(!u||!window.accessGranted||window.currentRole!=='owner')throw new Error('僅 Owner 可以批次修改');
+  if(!from||!to||from===to)throw new Error('型號選擇無效');
+  const candidates=assets.filter(a=>String(a.model||'').trim()===from);
+  let done=0;
+  for(let start=0;start<candidates.length;start+=150){
+   if(auth.currentUser?.uid!==u.uid||window.currentRole!=='owner')throw new Error('登入權限已變更');
+   const slice=candidates.slice(start,start+150);
+   const batch=writeBatch(db),timestamp=new Date().toISOString();
+   for(const original of slice){
+    const ref=doc(db,'assets',original.id),snap=await getDoc(ref);
+    if(!snap.exists())throw new Error('資料已刪除，請重新整理：'+original.id);
+    const before=snap.data();
+    if(before.model!==original.model)throw new Error('有型號已被其他人修改，請重新整理再試');
+    const after={...before,model:to};
+    batch.set(ref,after);
+    batch.set(doc(collection(db,'assetAudit')),{assetId:original.id,action:'修改財產',actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp,before,after});
+   }
+   await batch.commit();done+=slice.length;if(onProgress)onProgress(done,candidates.length);
+  }
+  return done;
+ };
+ window.cloudBulkImport=async(items,onProgress)=>{
+  const u=auth.currentUser;
+  if(!u||!window.accessGranted||window.currentRole!=='owner')throw new Error('只有 Owner 可執行 Excel 匯入');
+  let done=0;
+  for(let start=0;start<items.length;start+=150){
+   if(!auth.currentUser||window.currentRole!=='owner')throw new Error('登入狀態已變更');
+   const batch=writeBatch(db),slice=items.slice(start,start+150),timestamp=new Date().toISOString();
+   for(const row of slice){const {sourceRow,sourceSheet,sourceFile,...asset}=row;
+    batch.set(doc(db,'assets',asset.id),asset);
+    batch.set(doc(collection(db,'assetAudit')),{assetId:asset.id,action:'Excel 匯入新增財產',actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp,before:null,after:asset,sourceFile,sourceSheet,sourceRow});
+   }
+   await batch.commit();done+=slice.length;if(onProgress)onProgress(done,items.length);
+  }
+ };
+
+ window.cloudSaveRepair=async(f,id='')=>{
+  const u=auth.currentUser;
+  if(!u||!window.accessGranted||!['owner','editor'].includes(window.currentRole))throw new Error('沒有維修紀錄修改權限');
+  const previous=id?repairs.find(x=>x.id===id):null;
+  if(id&&!previous)throw new Error('維修紀錄不存在');
+  const ref=id?doc(db,'repairs',id):doc(collection(db,'repairs'));
+  const timestamp=new Date().toISOString();
+  const record={...f,id:ref.id,assetId:f.assetId||'',updatedAt:timestamp,updatedBy:u.uid,...(!previous?{createdAt:timestamp,createdBy:u.uid,createdByEmail:u.email||'',createdByName:adminProfiles[u.uid]?.displayName||''}:{createdAt:previous.createdAt,createdBy:previous.createdBy,createdByEmail:previous.createdByEmail||'',createdByName:previous.createdByName||''})};
+  const batch=writeBatch(db);
+  batch.set(ref,record);
+  batch.set(doc(collection(db,'repairAudit')),{repairId:ref.id,assetId:record.assetId,action:previous?'修改維修紀錄':'新增維修紀錄',before:previous||null,after:record,actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp});
+  await batch.commit();
+ };
+ window.cloudDeleteRepair=async(id)=>{
+  const u=auth.currentUser;
+  if(!u||!window.accessGranted||window.currentRole!=='owner')throw new Error('只有 Owner 可以刪除');
+  const previous=repairs.find(x=>x.id===id);if(!previous)throw new Error('維修紀錄不存在');
+  const batch=writeBatch(db);
+  batch.delete(doc(db,'repairs',id));
+  batch.set(doc(collection(db,'repairAudit')),{repairId:id,assetId:previous.assetId||'',action:'刪除維修紀錄',before:previous,after:null,actorUid:u.uid,actorEmail:u.email||'',actorDisplayName:adminProfiles[u.uid]?.displayName||'',timestamp:new Date().toISOString()});
+  await batch.commit();
+ };
+ function startCloudRepairs(u){
+  if(stopRepairs){stopRepairs();stopRepairs=null}
+  stopRepairs=onSnapshot(collection(db,'repairs'),snap=>{
+   if(auth.currentUser?.uid!==u.uid)return;
+   repairs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+   if(['dashboard','repairs','repairOverview','assets'].includes(page))render();
+  },err=>{console.error('維修紀錄同步失敗',err);if(['repairs','repairOverview'].includes(page))$('view').innerHTML='<div class="panel"><h3>維修紀錄讀取失敗</h3><p class="muted">'+esc(err.message)+'</p></div>'});
+ }
+ function startRepairAudit(u){if(stopRepairAudit){stopRepairAudit();stopRepairAudit=null}repairAuditReady=false;stopRepairAudit=onSnapshot(query(collection(db,'repairAudit'),orderBy('timestamp','desc'),limit(100)),snap=>{if(auth.currentUser?.uid!==u.uid)return;repairAuditEntries=snap.docs.map(d=>({auditId:d.id,...d.data()}));repairAuditReady=true;if(['dashboard','history'].includes(page))render()},err=>{console.error('維修異動歷程讀取失敗',err);repairAuditReady=false;if(page==='history')render()})}
+ // V0.35: 各集合依實際頁面需求啟動；登入只驗證權限。
+ let activeCloudUser=null;
+ window.dashboardCloudEnabled=false;
+ function startAssetsOnDemand(u,mode='all'){
+  // V0.37：Client/Server 各自最多建立一個即時監聽，登入期間持續重用。
+  // 跨類型頁面直接合併兩份已訂閱資料，不再額外查詢完整 assets 集合。
+  assetDisplayMode=mode;
+  const types=mode==='all'?['client','server']:[mode];
+  for(const type of types){
+   if(assetListeners[type])continue;
+   assetLoaded[type]=false;
+   assetListeners[type]=onSnapshot(query(collection(db,'assets'),where('type','==',type)),snap=>{
+    if(auth.currentUser?.uid!==u.uid)return;
+    assetCache[type]=snap.docs.map(d=>({id:d.id,...d.data()}));
+    assetLoaded[type]=true;
+    refreshAssetView();
+   },err=>{
+    if(auth.currentUser?.uid!==u.uid)return;
+    console.error('Firestore '+type+' 財產同步失敗',err);
+    assetLoaded[type]=false;
+    if(['assets','repairOverview','admin','import'].includes(page))
+     $('view').innerHTML='<div class="panel"><h3>財產資料讀取失敗</h3><p class="muted">'+esc(err.message)+'</p></div>';
+   });
+  }
+  refreshAssetView();
+ }
+ function refreshAssetView(){
+  const mode=assetDisplayMode;
+  const ready=mode==='all'?(assetLoaded.client&&assetLoaded.server):!!assetLoaded[mode];
+  cloudAssetsReady=ready;
+  assets=ready?(mode==='all'?[...assetCache.client,...assetCache.server]:assetCache[mode].slice()):[];
+  if(['assets','repairOverview','dashboard','admin','import'].includes(page))render();
+ }
+
+ function startDashboardAuditPreview(u){
+  if(previewAuditStops.length)return;
+  const sources=[['assetAudit',items=>{cloudAudit=items;cloudAuditReady=true}],['repairAudit',items=>{repairAuditEntries=items;repairAuditReady=true}]];
+  sources.forEach(([name,assign])=>{
+   const unsub=onSnapshot(query(collection(db,name),orderBy('timestamp','desc'),limit(5)),snap=>{
+    if(auth.currentUser?.uid!==u.uid)return;
+    // 完整歷程監聽已啟用時，避免預覽覆寫其 100 筆資料。
+    if(name==='assetAudit'&&stopAudit)return;
+    if(name==='repairAudit'&&stopRepairAudit)return;
+    assign(snap.docs.map(d=>({auditId:d.id,...d.data()})));
+    if(page==='dashboard')render();
+   },err=>console.error('首頁近期異動預覽讀取失敗',name,err));
+   previewAuditStops.push(unsub);
+  });
+ }
+ function startAuditsOnDemand(u){
+  previewAuditStops.forEach(fn=>fn());previewAuditStops=[];
+  if(!stopRepairAudit)startRepairAudit(u);
+  if(stopAudit)return;
+  stopAudit=onSnapshot(query(collection(db,'assetAudit'),orderBy('timestamp','desc'),limit(100)),snap=>{
+   if(auth.currentUser?.uid!==u.uid)return;
+   cloudAudit=snap.docs.map(d=>({auditId:d.id,...d.data()}));
+   cloudAuditReady=true;
+   if(['history','dashboard'].includes(page))render();
+  },err=>{console.error('Firestore 異動歷程同步失敗',err);cloudAuditReady=false;if(page==='history')render()});
+ }
+ window.ensurePageCloudData=(p)=>{
+  const u=activeCloudUser;
+  if(!u||auth.currentUser?.uid!==u.uid||!window.accessGranted)return;
+  if(p==='assets')startAssetsOnDemand(u,tab);
+  else if(p==='repairOverview'||p==='import'||p==='admin'||(p==='dashboard'&&window.dashboardCloudEnabled))startAssetsOnDemand(u,'all');
+  if(p==='assets'||p==='repairs'||p==='repairOverview'||(p==='dashboard'&&window.dashboardCloudEnabled)){
+   if(!stopRepairs)startCloudRepairs(u);
+  }
+  if(p==='history'||(p==='dashboard'&&window.dashboardCloudEnabled))startAuditsOnDemand(u);
+  else if(p==='dashboard')startDashboardAuditPreview(u);
+ };
+ window.loadDashboardCloud=()=>{
+  window.dashboardCloudEnabled=true;
+  render();
+  window.ensurePageCloudData('dashboard');
+ };
+ window.startCloudAssets=async(db,u)=>{
+  activeCloudUser=u;
+  window.ensurePageCloudData(page);
+ };
+
+ window.signInUser=async()=>{
+  try{await signInWithPopup(auth,provider)}catch(e){
+   if(['auth/popup-blocked','auth/operation-not-supported-in-this-environment'].includes(e.code)){try{await signInWithRedirect(auth,provider)}catch(r){alert('登入失敗：'+r.message)}}
+   else if(e.code!=='auth/popup-closed-by-user')alert('登入失敗：'+e.message)
+  }
+ };
+ window.signOutUser=async()=>{window.accessGranted=false;window.stopCloudAssets?.();window.crossProjectAuthResult=null;try{await Promise.all([signOut(clientAuth),signOut(serverAuth),signOut(auth)])}catch(e){alert('登出失敗：'+e.message)}};
+ onAuthStateChanged(auth,async user=>{
+  window.accessGranted=false;window.stopCloudAssets?.();
+  document.getElementById('logoutBtn').style.display=user?'inline-block':'none';
+  document.getElementById('authUser').textContent=user?(user.email||'已登入'):'尚未登入';
+  if(!user){authReady();return}
+  showAuthScreen('正在核對授權名單','Google 帳號已登入，正在檢查 Firestore admins 授權資料。');
+  try{
+   const snap=await getDoc(doc(db,'admins',user.uid));
+   if(auth.currentUser?.uid!==user.uid)return;
+   const info=snap.exists()?snap.data():null;
+   if(!info||info.active!==true||!['owner','editor','viewer'].includes(info.role)){
+    if(info && info.active===false){showAuthScreen('帳號已停用','目前此帳號沒有存取權限，請聯絡系統管理者。','<button class="btn" onclick="signOutUser()">切換帳號</button>');return;}
+    const requestRef=doc(db,'accessRequests',user.uid);
+    const showPending=r=>showAuthScreen(r?.status==='rejected'?'申請已被拒絕':'等待管理者授權',`Google 帳號：${user.email||''}。${r?.status==='rejected'?'如需再次申請，請聯絡系統管理者。':'已送出授權申請，請等待 Owner 審核；核准後請重新整理網頁。'}`,'<button class="btn" onclick="signOutUser()">切換帳號</button>');
+    let req=await getDoc(requestRef);
+    if(!req.exists()){
+      await setDoc(requestRef,{uid:user.uid,email:user.email||'',googleName:user.displayName||'',status:'pending',requestedAt:new Date().toISOString()});
+      req=await getDoc(requestRef);
+    }
+    showPending(req.data());
+    stopOwnRequest=onSnapshot(requestRef,async snap=>{
+      if(auth.currentUser?.uid!==user.uid)return;
+      if(snap.exists()&&snap.data().status==='approved'){
+        if(stopOwnRequest){stopOwnRequest();stopOwnRequest=null}
+        // Auth listener will re-evaluate the new admins document after a page refresh.
+        showAuthScreen('帳號已核准','管理者已完成授權，請按下方按鈕載入系統。','<button class="btn primary" onclick="location.reload()">進入系統</button>');
+      }else if(snap.exists())showPending(snap.data());
+    },err=>showAuthScreen('申請狀態讀取失敗',err.message));
+    return;
+   }
+   window.accessGranted=true;
+   window.currentRole=info.role;
+   document.querySelector('.sidefoot').innerHTML='已通過 Firebase 授權核對<br>財產、維修與財產異動：Firestore<br>交接、備品：本機展示資料';
+   // 授權完成即可顯示輕量首頁，不強制讀取財產。
+   await window.startCloudAssets(db,user);
+   if(auth.currentUser?.uid!==user.uid)return;
+   render();
+   startAdminProfiles(user,info);
+   if(info.role==='owner')startRequests(user);
+  }catch(e){showAuthScreen('無法確認帳號授權','Firestore 讀取授權資料失敗。請確認已啟用 Firestore、部署安全規則，並檢查網路連線。錯誤：'+e.message,'<button class="btn" onclick="signOutUser()">登出</button>')}
+ },error=>showAuthScreen('驗證發生錯誤',error.message));
+ getRedirectResult(auth).catch(e=>console.warn('重新導向登入失敗',e));
+}catch(e){showAuthScreen('Firebase 初始化失敗','請確認網路、Firebase SDK 與專案設定。錯誤：'+e.message)}
+</script></body></html>
