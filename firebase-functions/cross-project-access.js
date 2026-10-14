@@ -39,8 +39,8 @@ async function syncTarget(projectId,mainUid,profile){
  return {projectId,status:'revoked'};
 }
 async function synchronize(mainUid,profile,previous){
- const candidates=[profile,previous].filter(Boolean);
  const results=[];
+ if(!profile?.email&&!previous?.email)return [{status:'skipped-no-email'}];
  for(const projectId of TARGETS){
   // Remove former email's authorization when main email changed.
   if(previous?.email&&normalize(previous.email)!==normalize(profile?.email)){
