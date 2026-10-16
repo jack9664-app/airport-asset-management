@@ -1016,8 +1016,8 @@ try{
  function photoBridgeInit(){
   if(photoBridgeReady)return photoBridgeReady;
   photoBridgeReady=new Promise((resolve,reject)=>{
-   const frame=document.createElement('iframe');frame.src=PHOTO_SERVICE_URL;frame.style.display='none';frame.title='照片服務';document.body.appendChild(frame);photoBridge=frame;
-   const timer=setTimeout(()=>{window.removeEventListener('message',ready);photoBridgeReady=null;reject(Error('照片服務連線逾時，請確認 Apps Script 已部署 V0.86'))},20000);
+   const frame=document.createElement('iframe');frame.src=PHOTO_SERVICE_URL;frame.style.cssText='position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0';frame.title='照片服務';document.body.appendChild(frame);photoBridge=frame;
+   const timer=setTimeout(()=>{window.removeEventListener('message',ready);frame.remove();photoBridgeReady=null;reject(Error('照片服務 90 秒內未收到 READY 訊息，請檢查 Apps Script /exec 是否能載入及版本是否一致'))},90000);
    function ready(e){if(!/^https:\/\/[^/]*googleusercontent\.com$/.test(e.origin)||e.data?.kind!=='CYD86_REAL_READY')return;clearTimeout(timer);window.removeEventListener('message',ready);resolve({frame,source:e.source,origin:e.origin})}
    window.addEventListener('message',ready);
   });return photoBridgeReady;
