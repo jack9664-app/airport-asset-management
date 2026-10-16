@@ -1045,7 +1045,7 @@ try{
  }
  async function photoService(operation,target,image,fileId){
   const bridge=await photoBridgeInit();const token=await auth.currentUser?.getIdToken();if(!token)throw Error('請先登入');
-  const nonce=crypto.randomUUID();return await new Promise((resolve,reject)=>{
+  const nonce=Array.from(crypto.getRandomValues(new Uint8Array(18)),x=>x.toString(16).padStart(2,'0')).join('');return await new Promise((resolve,reject)=>{
    const timer=setTimeout(()=>{window.removeEventListener('message',reply);reject(Error('照片服務已連線，但 '+operation+' 操作 60 秒沒有回應'))},60000);
    function reply(e){if(e.source!==bridge.source||e.origin!==bridge.origin||e.data?.kind!=='CYD86_REAL_RESULT'||e.data.nonce!==nonce)return;clearTimeout(timer);window.removeEventListener('message',reply);const r=e.data.result;if(r?.ok)resolve(r);else reject(Error(r?.error||'照片服務失敗'))}
    window.addEventListener('message',reply);
