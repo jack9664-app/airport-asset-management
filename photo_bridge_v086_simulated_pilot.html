@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CYD V0.86 Image upload diagnostic</title><style>body{font:16px/1.6 system-ui,sans-serif;max-width:780px;margin:40px auto;padding:0 18px}button{padding:10px 16px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5f9;padding:16px;border-radius:8px}iframe{width:100%;height:90px;border:1px solid #ddd}input{width:100%;box-sizing:border-box;padding:9px}</style></head><body>
 <h1>V0.86 模擬交接照片測試</h1><p>自動建立模擬交接，不使用 Firestore，也不需要任何 ID。照片上傳後請測試讀回及刪除。</p>
 <p><label>Apps Script 正式 /exec 網址<input id="url" value="https://script.google.com/macros/s/AKfycbyutGo96mBbVpp_EsMHuf1f80Pz58yoS5CvwBAee4Q5-CmeafbpxefJDoE6A-SLHh7LuQ/exec"></label></p>
-<p><button id="new" type="button">建立模擬交接</button> <span id="sessionLabel">尚未建立</span></p><p><label>測試圖片（成功上傳後需按「刪除測試圖片」清除）<input type="file" id="photo" accept="image/jpeg,image/png,image/heic,image/webp"></label></p><p><button id="test">上傳並綁定測試圖片</button> <button id="read" type="button">讀回測試圖片</button> <button id="delete" type="button">刪除測試圖片</button></p><p><label>本次測試檔案 ID<input id="fileId" readonly></label></p><img id="preview" alt="讀回的測試圖片" style="max-width:100%;max-height:320px;display:none"><pre id="status">等待測試。請先部署 photo_service_v086_simulated_pilot.gs 新版本。</pre><h3>訊息診斷紀錄（不顯示登入憑證）</h3><pre id="log">尚無紀錄</pre><div id="frame"></div>
+<p><button id="new" type="button">建立模擬交接</button> <span id="sessionLabel">尚未建立</span></p><p><label>測試圖片（成功上傳後需按「刪除測試圖片」清除）<input type="file" id="photo" accept="image/jpeg,image/png,image/heic,image/webp"></label></p><p><button id="test">上傳測試圖片</button> <button id="read" type="button">讀回測試圖片</button> <button id="delete" type="button">刪除測試圖片</button></p><input id="fileId" type="hidden"><img id="preview" alt="讀回的測試圖片" style="max-width:100%;max-height:320px;display:none"><pre id="status">等待測試。請先部署 photo_service_v086_simulated_pilot.gs 新版本。</pre><h3>訊息診斷紀錄（不顯示登入憑證）</h3><pre id="log">尚無紀錄</pre><div id="frame"></div>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup} from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
@@ -18,7 +18,7 @@ async function run(op){
  const url=$('url').value.trim();
  if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url)){status('請輸入有效 Apps Script /exec 網址');return}
  try{
-   const h=session;if(!/^sim_[a-f0-9]{32}$/.test(h)){status('請填寫有效的測試交接／進度文件 ID');return}
+   const h=session;if(!/^sim_[a-f0-9]{32}$/.test(h)){status('請先點「建立模擬交接」');return}
    if(op!=='upload'&&!$('fileId').value.trim()){status('請先成功上傳測試圖片');return}
    const file=$('photo').files[0];if(op==='upload'&&!file){status('請先選擇一張測試圖片');return}
    if(op==='upload'){status('正在壓縮圖片…');
