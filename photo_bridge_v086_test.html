@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TaoyuanCYD V0.86 Cross-Origin Diagnostic</title>
+<style>body{font:16px/1.65 system-ui,sans-serif;max-width:740px;margin:40px auto;padding:0 20px}button{padding:10px 16px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f2f5f9;padding:16px;border-radius:8px}iframe{width:100%;height:90px;border:1px solid #ddd}</style></head><body>
+<h1>V0.86 GitHub Pages → Apps Script 連線測試</h1>
+<p>只檢查跨網域通訊及 Google Drive 資料夾存取。不會上傳、讀取或刪除照片，也不會傳送 Firebase 登入憑證。</p>
+<label>Apps Script 測試部署 /dev 網址（僅供診斷）<br><input id="url" style="width:100%;padding:8px" value="https://script.google.com/macros/s/AKfycbweknUPEy2VB5Jfo7MqJAJuSakuxFH456fGdxZ7LFCV/dev"></label>
+<p><button id="start">開始測試</button></p><pre id="status">等待測試</pre><div id="frame"></div>
+<script>
+const $=id=>document.getElementById(id);
+let iframe=null,nonce='',timer=null;
+$('start').onclick=()=>{
+ if(location.origin!=='https://jack9664-app.github.io'){$('status').textContent='請先部署到指定 GitHub Pages 網域測試；file:// 或其他網域不適用。';return}
+ const url=$('url').value.trim();
+ if(!/^https:\/\/script\.google\.com\/macros\/(?:u\/\d+\/)?s\/[A-Za-z0-9_-]+\/dev(?:\?.*)?$/.test(url)){$('status').textContent='請輸入 Apps Script /dev 網址';return}
+ $('frame').replaceChildren();iframe=document.createElement('iframe');iframe.src=url;iframe.title='Apps Script bridge';$('frame').appendChild(iframe);
+ nonce=Array.from(crypto.getRandomValues(new Uint8Array(18)),x=>x.toString(16).padStart(2,'0')).join('');
+ $('status').textContent='等待 Apps Script iframe 載入與回應…';
+ clearTimeout(timer);timer=setTimeout(()=>{$('status').textContent='逾時：尚未收到有效回應。請檢查 iframe 是否出現登入畫面，並確認以開發帳號開啟。'},25000);
+};
+window.addEventListener('message',ev=>{
+ if(!iframe||ev.source!==iframe.contentWindow)return;
+ // Apps Script HTMLService iframe content is served from googleusercontent.com.
+ if(!/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(ev.origin))return;
+ if(ev.data?.kind==='CYD_V086_READY'){
+   iframe.contentWindow.postMessage({kind:'CYD_V086_PING',nonce},ev.origin);
+ }else if(ev.data?.kind==='CYD_V086_RESULT'&&ev.data.nonce===nonce){
+   clearTimeout(timer);$('status').textContent=JSON.stringify(ev.data.result,null,2);
+ }
+});
+</script></body></html>
