@@ -1023,7 +1023,7 @@ try{
   if(photoBridgeReady)return photoBridgeReady;
   photoBridgeReady=new Promise((resolve,reject)=>{
    if(photoBridge){photoBridge.remove();photoBridge=null}
-   const frame=document.createElement('iframe');frame.src=PHOTO_SERVICE_URL;frame.style.cssText='position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0';frame.title='照片服務';document.body.appendChild(frame);photoBridge=frame;
+   const frame=document.createElement('iframe');frame.src=PHOTO_SERVICE_URL;frame.style.cssText='position:fixed;right:12px;bottom:12px;width:340px;height:180px;background:white;border:2px solid #2f6dca;border-radius:10px;z-index:2147483640';frame.title='照片服務';document.body.appendChild(frame);photoBridge=frame;
    let loaded=false,seen=[],finished=false;
    frame.addEventListener('load',()=>{loaded=true},{once:true});
    frame.addEventListener('error',()=>{finish(Error('照片服務 iframe 載入失敗'))},{once:true});
