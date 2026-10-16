@@ -59,6 +59,7 @@ async function run(op){
 window.addEventListener('message',ev=>{
  if(!active||!/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(ev.origin))return;
  if(!ev.data||typeof ev.data!=='object')return;
+ if(active&&typeof ev.data.kind==='string'&&ev.data.kind.endsWith('_READY')&&ev.data.kind!=='CYD86_SIM_READY'){clearTimeout(timer);active=false;pendingToken='';pendingImage=null;trace('偵測到舊版後端：'+ev.data.kind);status('版本不一致：Apps Script 仍部署舊版（'+ev.data.kind+'）。請部署 photo_service_v086_simulated_pilot.gs 的新增版本後重試。');return;}
  if(ev.data.kind==='CYD86_SIM_READY'&&!ready){
    if(!pendingToken||(operation==='upload'&&!pendingImage)){trace('缺少登入憑證或上傳圖片，停止傳送');active=false;status('資料準備不完整，請重新測試');return}
    ready=true;child=ev.source;trace('收到 BOUND_READY，開始向已核對的 Google 來源傳送請求');
