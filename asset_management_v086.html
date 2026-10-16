@@ -159,7 +159,7 @@ function handoverPage(){
 
 function photoGalleryMarkup(target,photos,allowUpload=false){
  const active=(Array.isArray(photos)?photos:[]).filter(x=>!x.deleted);const arg=encodeURIComponent(JSON.stringify(target));
- return `<div class="photo-gallery" style="margin:10px 0"><div class="flex" style="flex-wrap:wrap;gap:8px">${active.map(p=>`<button type="button" class="btn small" onclick="viewHandoverPhoto('${arg}','${esc(p.fileId)}')">📷 ${esc(p.fileName||'查看照片')}</button>${canModify()?`<button type="button" class="btn small" onclick="removeHandoverPhoto('${arg}','${esc(p.fileId)}')">移除</button>`:''}`).join('')}</div>${allowUpload&&canModify()&&active.length<5?`<label class="btn small" style="display:inline-block;margin-top:8px;cursor:pointer">＋ 新增照片<input type="file" accept="image/*" multiple style="display:none" onchange="uploadHandoverPhoto(event,'${arg}')"></label>`:''}<div class="muted">${active.length}/5 張照片</div></div>`;
+ return `<div class="photo-gallery" style="margin:10px 0"><div class="flex" style="flex-wrap:wrap;gap:8px">${active.map(p=>`<button type="button" class="btn small" onclick="viewHandoverPhoto('${arg}','${esc(p.fileId)}')">📷 ${esc(p.fileName||'查看照片')}</button>${canModify()?`<button type="button" class="btn small" onclick="removeHandoverPhoto('${arg}','${esc(p.fileId)}')">移除</button>`:''}`).join('')}</div>${allowUpload&&canModify()&&active.length<5?`<div class="pending-photo-picker"><label class="btn small" style="display:inline-block;margin-top:8px;cursor:pointer">＋ 選擇照片<input type="file" accept="image/*" multiple style="display:none" onchange="previewPendingPhotos(this)"></label><div class="pending-photo-preview muted">按儲存後一併上傳</div></div>`:''}<div class="muted">${active.length}/5 張照片</div></div>`;
 }
 async function photoJpeg(file){if(!file.type.startsWith('image/')||file.size>8*1024*1024)throw Error('圖片必須小於 8 MB');const bitmap=await createImageBitmap(file);const scale=Math.min(1,1920/Math.max(bitmap.width,bitmap.height));const canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();let q=.85,blob;do{blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',q));q-=.1}while(blob.size>7900000&&q>=.35);if(blob.size>8000000)throw Error('圖片壓縮後仍超過 8 MB');return await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({mime:'image/jpeg',base64:String(reader.result).split(',')[1]});reader.onerror=reject;reader.readAsDataURL(blob)})}
 async function uploadHandoverPhoto(event,arg){const files=[...(event.target.files||[])];if(!files.length)return;if(files.length>5){alert('最多 5 張照片');return}const target=JSON.parse(decodeURIComponent(arg));try{event.target.disabled=true;let count=0;for(const file of files){const image=await photoJpeg(file);const uploaded=await window.photoCloudUpload(target,image);window.photoUploadedName=uploaded.fileName;await window.photoCloudUpdate(target,uploaded.fileId);count++}alert('已儲存 '+count+' 張照片');closeModal();window.reloadHandovers?.()}catch(e){alert('照片上傳失敗：'+e.message)}finally{event.target.disabled=false}}
@@ -169,10 +169,20 @@ function pendingPhotoPicker(){
  return `<div class="pending-photo-picker"><label class="btn small" style="display:inline-block;cursor:pointer">＋ 選擇照片<input type="file" accept="image/*" multiple style="display:none" onchange="previewPendingPhotos(this)"></label><div class="pending-photo-preview muted">可先選擇照片，按儲存後一併上傳（最多 5 張）。</div></div>`;
 }
 function previewPendingPhotos(input){
- const box=input.closest('.pending-photo-picker'),files=[...(input.files||[])];
+ const box=input.closest('.pending-photo-picker'),files=[...(input.files||[])],preview=box.querySelector('.pending-photo-preview');
  if(files.length>5){alert('每筆紀錄最多 5 張照片');input.value='';return}
  if(files.some(f=>!f.type.startsWith('image/')||f.size>8*1024*1024)){alert('只能選擇圖片，且每張原始圖片不得超過 8 MB');input.value='';return}
- box.querySelector('.pending-photo-preview').textContent=files.length?`已選擇 ${files.length} 張：${files.map(f=>f.name).join('、')}`:'尚未選擇照片';
+ preview.replaceChildren();
+ if(!files.length){preview.textContent='尚未選擇照片';return}
+ const count=document.createElement('div');count.textContent='已選擇 '+files.length+' 張，按「儲存」才會上傳';preview.appendChild(count);
+ const grid=document.createElement('div');grid.style.cssText='display:flex;flex-wrap:wrap;gap:10px;margin-top:10px';
+ for(const file of files){
+  const card=document.createElement('div');card.style.cssText='width:112px;overflow-wrap:anywhere;font-size:12px';
+  const img=document.createElement('img');img.alt=file.name;img.style.cssText='width:108px;height:85px;object-fit:cover;border-radius:8px';
+  const url=URL.createObjectURL(file);img.src=url;img.onload=()=>URL.revokeObjectURL(url);
+  const label=document.createElement('div');label.textContent=file.name;card.append(img,label);grid.appendChild(card);
+ }
+ preview.appendChild(grid);
 }
 async function uploadPendingPhotos(form,target){
  const files=[...(form.querySelector('.pending-photo-picker input[type=file]')?.files||[])];let done=0;
