@@ -1022,18 +1022,34 @@ try{
  function photoBridgeInit(){
   if(photoBridgeReady)return photoBridgeReady;
   photoBridgeReady=new Promise((resolve,reject)=>{
-   const frame=document.createElement('iframe');frame.src=PHOTO_SERVICE_URL;frame.style.display='none';frame.title='照片服務';document.body.appendChild(frame);photoBridge=frame;
-   const timer=setTimeout(()=>{window.removeEventListener('message',ready);reject(Error('照片服務連線逾時，請確認 Apps Script 已部署 V0.86'))},90000);
-   function ready(e){if(!/^https:\/\/[^/]*googleusercontent\.com$/.test(e.origin)||e.data?.kind!=='CYD86_REAL_READY')return;clearTimeout(timer);window.removeEventListener('message',ready);resolve({frame,source:e.source,origin:e.origin})}
+   if(photoBridge){photoBridge.remove();photoBridge=null}
+   const frame=document.createElement('iframe');frame.src=PHOTO_SERVICE_URL;frame.style.cssText='position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;border:0';frame.title='照片服務';document.body.appendChild(frame);photoBridge=frame;
+   let loaded=false,seen=[],finished=false;
+   frame.addEventListener('load',()=>{loaded=true},{once:true});
+   frame.addEventListener('error',()=>{finish(Error('照片服務 iframe 載入失敗'))},{once:true});
+   const timer=setTimeout(()=>finish(Error('照片服務 90 秒未收到 CYD86_REAL_READY（iframe '+(loaded?'已載入':'未載入')+'；收到的訊息：'+(seen.join(', ')||'無')+'）。請檢查 Apps Script /exec 部署與瀏覽器跨網站限制。')),90000);
+   function finish(error,bridge){
+    if(finished)return;finished=true;clearTimeout(timer);window.removeEventListener('message',ready);
+    if(error){if(photoBridge===frame)photoBridge=null;frame.remove();photoBridgeReady=null;reject(error)}
+    else resolve(bridge);
+   }
+   function ready(e){
+    if(!/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/i.test(e.origin))return;
+    if(e.data?.kind&&typeof e.data.kind==='string'&&seen.length<5)seen.push(e.data.kind);
+    if(e.data?.kind!=='CYD86_REAL_READY')return;
+    if(!e.source)return;
+    finish(null,{frame,source:e.source,origin:e.origin});
+   }
    window.addEventListener('message',ready);
   });return photoBridgeReady;
  }
  async function photoService(operation,target,image,fileId){
   const bridge=await photoBridgeInit();const token=await auth.currentUser?.getIdToken();if(!token)throw Error('請先登入');
   const nonce=crypto.randomUUID();return await new Promise((resolve,reject)=>{
-   const timer=setTimeout(()=>{window.removeEventListener('message',reply);reject(Error('照片服務操作逾時'))},60000);
+   const timer=setTimeout(()=>{window.removeEventListener('message',reply);reject(Error('照片服務已連線，但 '+operation+' 操作 60 秒沒有回應'))},60000);
    function reply(e){if(e.source!==bridge.source||e.origin!==bridge.origin||e.data?.kind!=='CYD86_REAL_RESULT'||e.data.nonce!==nonce)return;clearTimeout(timer);window.removeEventListener('message',reply);const r=e.data.result;if(r?.ok)resolve(r);else reject(Error(r?.error||'照片服務失敗'))}
-   window.addEventListener('message',reply);bridge.source.postMessage({kind:'CYD86_REAL_REQUEST',nonce,idToken:token,operation,target,image,fileId},bridge.origin);
+   window.addEventListener('message',reply);
+   try{bridge.source.postMessage({kind:'CYD86_REAL_REQUEST',nonce,idToken:token,operation,target,image,fileId},bridge.origin)}catch(e){clearTimeout(timer);window.removeEventListener('message',reply);reject(e)}
   });
  }
  window.photoCloudRead=async(target,fileId)=>photoService('read',target,null,fileId);
