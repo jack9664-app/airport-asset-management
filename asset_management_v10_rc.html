@@ -37,7 +37,7 @@
 'use strict';
 const CLIENT=['3851資訊服務科-桃','4900國境事務大隊','4910桃園機場一隊(T1入)','4920桃園機場二隊(T1出)','4930桃園機場三隊','4940桃園機場四隊(T2出)','4950桃園機場五隊(T2入)','4970入出國查驗監控隊','4980特殊勤務隊','4990鑑識調查隊','49B0行政業務隊','49A0國境業務隊','設備刪除暫存區'];
 const SERVER=['T2 主機房','T2 各管道間','T1 機房與各管道間','大隊部4F機房與3F協管室機櫃','T1、T2 異動、移撥&報廢','公司備品'];
-];let repairs=[];let logs=[];let categories={client:[...CLIENT],server:[...SERVER]};// V0.51: Keep the current view only within this browser tab; no Firestore reads.
+let assets=[];let repairs=[];let logs=[];let categories={client:[...CLIENT],server:[...SERVER]};// V0.51: Keep the current view only within this browser tab; no Firestore reads.
 const VIEW_STATE_KEY='airport_asset_view_v051';
 const VIEW_PAGES=new Set(['dashboard','handover','assets','repairs','repairOverview','supplies','history','admin','import']);
 let savedView={};
