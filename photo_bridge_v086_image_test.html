@@ -14,9 +14,36 @@ $('test').onclick=async()=>{
  const url=$('url').value.trim();
  if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url)){status('請輸入有效 Apps Script /exec 網址');return}
  try{
+   const file=$('photo').files[0];
+   if(!file){status('請先選擇一張測試圖片');return}
+   status('正在壓縮圖片…');
+   const bitmap=await createImageBitmap(file);
+   let maxSide=1920,quality=.85,blob=null;
+   for(let i=0;i<10;i++){
+     const scale=Math.min(1,maxSide/Math.max(bitmap.width,bitmap.height));
+     const canvas=document.createElement('canvas');
+     canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+     canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+     canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
+     blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));
+     if(!blob)throw Error('瀏覽器無法將圖片轉成 JPEG');
+     if(blob.size<=8000000)break;
+     if(quality>.62)quality-=.08;else maxSide=Math.round(maxSide*.8);
+   }
+   bitmap.close();
+   if(!blob||blob.size>8000000)throw Error('壓縮後仍超過 8MB');
+   const base64=await new Promise((resolve,reject)=>{
+     const reader=new FileReader();
+     reader.onload=()=>resolve(String(reader.result).split(',')[1]);
+     reader.onerror=()=>reject(Error('讀取圖片失敗'));
+     reader.readAsDataURL(blob);
+   });
+   pendingImage={mime:'image/jpeg',base64};
+   trace('原始 '+(file.size/1048576).toFixed(2)+' MB，壓縮後 '+(blob.size/1048576).toFixed(2)+' MB');
    status('正在登入 Firebase…');
    const result=await signInWithPopup(auth,new GoogleAuthProvider());
    pendingToken=await result.user.getIdToken(true);
+   if(typeof pendingToken!=='string'||pendingToken.length<100)throw Error('Firebase 未取得有效登入憑證');
    clearTimeout(timer);active=true;ready=false;child=null;logs.length=0;trace('Firebase 登入成功，準備載入 iframe');
    nonce=Array.from(crypto.getRandomValues(new Uint8Array(18)),x=>x.toString(16).padStart(2,'0')).join('');
    const f=document.createElement('iframe');f.src=url;f.title='Apps Script Firebase auth diagnostic';f.addEventListener('load',()=>trace('iframe load 事件（不代表後端已連線）'));$('frame').replaceChildren(f);
@@ -28,6 +55,7 @@ window.addEventListener('message',ev=>{
  if(!active||!/^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(ev.origin))return;
  if(!ev.data||typeof ev.data!=='object')return;
  if(ev.data.kind==='CYD86_IMAGE_READY'&&!ready){
+   if(!pendingToken||!pendingImage){trace('缺少登入憑證或壓縮圖片，停止傳送');active=false;status('資料準備不完整，請重新測試');return}
    ready=true;child=ev.source;trace('收到 IMAGE_READY，開始傳送 JPEG 至已核對的 Google 來源');
    child.postMessage({kind:'CYD86_IMAGE_REQUEST',nonce,idToken:pendingToken,image:pendingImage},ev.origin);
    pendingToken='';pendingImage=null;status('Apps Script 已連線，正在上傳並核對圖片…');
