@@ -617,9 +617,11 @@ async function cloudCommit(action,asset,before){
  if(cloudBusy)return false;
  if(before && action==='修改財產' && JSON.stringify(Object.fromEntries(Object.entries(asset).sort(([a],[b])=>a.localeCompare(b))))===JSON.stringify(Object.fromEntries(Object.entries(before).sort(([a],[b])=>a.localeCompare(b))))){closeModal();return true}
  cloudBusy=true;
+ const form=document.querySelector('#overlay form');
+ const finish=form&&window.beginFormBusy?window.beginFormBusy(form,'正在儲存財產與異動歷程…'):()=>{};
  try{await window.cloudWrite(action,asset,before);closeModal();return true}
  catch(e){console.error('財產儲存失敗',e);alert('雲端儲存失敗：'+(e.message||e));return false}
- finally{cloudBusy=false}
+ finally{cloudBusy=false;finish()}
 }
 saveAsset=async function(e,id,type){
  e.preventDefault();let old=assets.find(x=>x.id===id),before=old?{...old}:null;
