@@ -115,7 +115,22 @@ function repairOptions(values,selected){const arr=[...new Set([...values, ...(se
 function repairModelChanged(){const f=$('repairEntryForm');if(!f)return;const models=catalogPairs().get(f.elements.deviceName.value)||new Set();f.elements.brandModel.innerHTML=repairOptions(models,'')}
 function repairRequestNew(){if(!canModify())return;showModal('申請新增設備名稱／型號','<form onsubmit="submitRepairCatalogRequest(event)"><div class="formgrid"><div><label>設備名稱 *</label><input name="deviceName" required maxlength="120"></div><div><label>廠牌型號 *</label><input name="brandModel" required maxlength="180"></div></div><p class="muted">申請須由 Owner 核准，核准前不會加入正式選單。</p><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary" type="submit">送出審核</button></div></form>')}
 async function submitRepairCatalogRequest(e){e.preventDefault();const f=new FormData(e.target),deviceName=String(f.get('deviceName')||'').trim(),brandModel=String(f.get('brandModel')||'').trim();if(!deviceName||!brandModel)return;const finish=window.beginFormBusy(e.target,'送出申請中…');try{await window.cloudRequestRepairCatalog(deviceName,brandModel);closeModal();alert('申請已送出，待 Owner 核准後即可選用')}catch(err){alert('申請失敗：'+err.message)}finally{finish()}}
-async function reviewRepairCatalog(id,approve){if(window.currentRole!=='owner')return;const r=repairRequests.find(x=>x.id===id);if(!r||!confirm((approve?'核准':'拒絕')+'此設備名稱／型號申請？'))return;try{await window.cloudReviewRepairCatalog(id,approve);alert('審核完成')}catch(err){alert('審核失敗：'+err.message)}}
+const repairReviewBusy=new Set();
+async function reviewRepairCatalog(id,approve){
+ if(window.currentRole!=='owner'||repairReviewBusy.has(id))return;
+ const r=repairRequests.find(x=>x.id===id&&x.status==='pending');
+ if(!r||!confirm((approve?'核准':'拒絕')+'此設備名稱／型號申請？'))return;
+ repairReviewBusy.add(id);
+ const buttons=[...document.querySelectorAll('button')].filter(b=>b.getAttribute('onclick')?.includes("reviewRepairCatalog('"+id+"',"));
+ const original=buttons.map(b=>({button:b,disabled:b.disabled,text:b.textContent}));
+ buttons.forEach(b=>{b.disabled=true;b.textContent='審核中…'});
+ try{await window.cloudReviewRepairCatalog(id,approve);alert('審核完成')}
+ catch(err){alert('審核失敗：'+err.message)}
+ finally{
+  repairReviewBusy.delete(id);
+  original.forEach(({button,disabled,text})=>{if(button.isConnected){button.disabled=disabled;button.textContent=text}});
+ }
+}
 function repairPeopleOptions(value){const names=[...new Set([...Object.values(adminProfiles).filter(p=>p.active!==false&&p.displayName).map(p=>p.displayName),...Object.values(repairDirectory).filter(p=>p.active===true&&p.displayName).map(p=>p.displayName)])];if(value&&!names.includes(value))names.unshift(value);return '<datalist id="repairPeople">'+names.map(n=>'<option value="'+esc(n)+'"></option>').join('')+'</datalist>'}
 function repairClearLinkedOnInput(){const form=document.getElementById('repairEntryForm');if(form)form.elements.assetId.value=''}
 function repairSearchAssets(input){const panel=document.getElementById('repairAssetResults');if(!panel)return;if(!window.repairAssetsReady?.()){panel.innerHTML='<div class="muted" style="padding:10px">'+(window.assetLoadError||'正在載入 Client 與 Server 財產，請稍候再搜尋…')+'</div>';panel.style.display='block';return}const q=input.value.trim().toLocaleLowerCase();if(!q){panel.innerHTML='<div class="muted" style="padding:10px">輸入財產編號、設備名稱、型號、序號或單位開始搜尋</div>';panel.style.display='block';return}const found=assets.filter(a=>[a.propertyNo,a.deviceType,a.model,a.serialNo,a.team,a.id].some(v=>String(v||'').toLocaleLowerCase().includes(q))).slice(0,30);panel.innerHTML=found.map(a=>'<button type="button" class="btn" style="display:block;width:100%;text-align:left;margin:3px 0;white-space:normal" data-asset-id="'+esc(a.id)+'" onclick="repairSelectAsset(this.dataset.assetId)">'+esc(a.propertyNo||a.id)+' · '+esc(a.deviceType||'設備')+' · '+esc(a.model||'')+' · '+esc(a.team||'')+'</button>').join('')||'<div class="muted" style="padding:10px">找不到符合的財產，可申請新增設備名稱／型號</div>';panel.style.display='block'}
