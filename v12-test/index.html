@@ -546,12 +546,24 @@ window.reviewRequest=uid=>{
 };
 window.beginFormBusy=(form,message)=>{if(form.dataset.busy==='1')return ()=>{};form.dataset.busy='1';const buttons=[...form.querySelectorAll('button')];const old=buttons.map(b=>({b,disabled:b.disabled,text:b.textContent}));buttons.forEach(b=>b.disabled=true);const submit=form.querySelector('[type=submit]');if(submit)submit.textContent='處理中…';const status=document.createElement('p');status.className='muted';status.setAttribute('role','status');status.textContent=message;form.appendChild(status);return ()=>{delete form.dataset.busy;old.forEach(({b,disabled,text})=>{b.disabled=disabled;b.textContent=text});status.remove()}};
 window.approveRequest=async(e,uid)=>{e.preventDefault();if(e.target.dataset.busy==='1')return;const f=new FormData(e.target),name=String(f.get('displayName')||'').trim(),role=String(f.get('role')||'');if(!name||name.length>40||!['viewer','editor'].includes(role))return alert('請確認名稱與角色');const finish=window.beginFormBusy(e.target,'正在同步 Client／Server 授權…');try{const result=await window.cloudApprove(uid,name,role);closeModal();alert(result)}catch(err){alert('授權失敗：'+err.message)}finally{finish()}};
-window.rejectRequest=async(uid)=>{if(window.currentRole!=='owner'||!confirm('確定拒絕此帳號的申請？'))return;try{await window.cloudReject(uid)}catch(err){alert('拒絕失敗：'+err.message)}};
+const pendingRequestActionBusy=new Set();
+window.rejectRequest=async(uid)=>{
+ if(window.currentRole!=='owner'||pendingRequestActionBusy.has(uid))return;
+ if(!pendingRequests.some(r=>r.uid===uid&&r.status==='pending'))return;
+ if(!confirm('確定拒絕此帳號的申請？'))return;
+ pendingRequestActionBusy.add(uid);
+ try{await window.cloudReject(uid)}
+ catch(err){alert('拒絕失敗：'+err.message)}
+ finally{pendingRequestActionBusy.delete(uid)}
+};
 window.deletePendingRequest=async uid=>{
- if(window.currentRole!=='owner')return;
+ if(window.currentRole!=='owner'||pendingRequestActionBusy.has(uid))return;
  const r=pendingRequests.find(x=>x.uid===uid&&x.status==='pending');if(!r)return;
  if(!confirm(`確定刪除此待審核申請？\n${r.email||uid}\n\n此操作不會刪除 Google 帳號。對方日後重新登入可再次申請。`))return;
- try{await window.cloudDeletePending(uid);alert('待審核紀錄已刪除。')}catch(err){alert('刪除失敗：'+err.message)}
+ pendingRequestActionBusy.add(uid);
+ try{await window.cloudDeletePending(uid);alert('待審核紀錄已刪除。')}
+ catch(err){alert('刪除失敗：'+err.message)}
+ finally{pendingRequestActionBusy.delete(uid)}
 };
 window.deleteAuthorizedAccount=async uid=>{
  if(window.currentRole!=='owner')return;
