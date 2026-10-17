@@ -726,6 +726,10 @@ async function transfer(id){
  await cloudCommit('財產移撥',{...a,team:target},{...a})
 };
 
+// Expose cloud-backed asset operations for inline HTML handlers.
+window.saveAsset=saveAsset;
+window.inventory=inventory;
+window.transfer=transfer;
 window.accessGranted=false;
 function showAuthScreen(title,description,actions=''){
  $('sidebar').innerHTML='';$('mobileNav').innerHTML='';$('pagetitle').textContent='帳號驗證';
@@ -975,7 +979,7 @@ try{
    },err=>{console.error('管理員名單讀取失敗',err);adminProfilesReady=true;adminProfilesError='帳號名單讀取失敗：'+err.message;if(page==='admin')render()});
   }
  }
- let handoverDashStop=null,handoverCloudUser=null,handoverCloudQueryBusy=false;
+ let handoverDashStop=null,handoverCloudQueryBusy=false;
  const handoverProfile=u=>({uid:u.uid,name:adminProfiles?.[u.uid]?.displayName||u.displayName||u.email||'未命名人員'});
  const handoverChanges=(before,after)=>Object.fromEntries(Object.keys(after).filter(k=>String(before?.[k]??'')!==String(after[k]??'')).map(k=>[k,{before:String(before?.[k]??''),after:String(after[k]??'')}])) ;
  function handoverGuard(){const u=auth.currentUser;if(!u||!window.accessGranted||!canModify())throw new Error('沒有交接編輯權限');return u}
@@ -1243,7 +1247,7 @@ try{
   catch(e){return false}
  }
 
- // V1.1: audit-based delta, conservative fallback to full server refresh.
+ // V1.2 測試版: audit-based delta, conservative fallback to full server refresh.
  const DELTA_MAX_AUDITS=100,DELTA_MAX_ASSETS=50;
  const assetFullKey=(uid,type)=>'cyd-asset-full-v11:'+uid+':'+type;
  const assetCursorKey=(uid,type)=>'cyd-asset-cursor-v11:'+uid+':'+type;
