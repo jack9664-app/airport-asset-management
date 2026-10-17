@@ -1219,7 +1219,7 @@ try{
   repairsCloudReady=false;repairsCloudError='';
   stopRepairs=onSnapshot(collection(db,'repairs'),snap=>{
    if(auth.currentUser?.uid!==u.uid)return;
-   repairs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+   repairs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.updatedAt||b.createdAt||b.date||'').localeCompare(String(a.updatedAt||a.createdAt||a.date||''))||String(b.id||'').localeCompare(String(a.id||'')));
    repairsCloudReady=true;repairsCloudError='';
    if(['dashboard','repairs','repairOverview','assets'].includes(page))render();
   },err=>{if(auth.currentUser?.uid!==u.uid)return;console.error('主專案維修紀錄讀取失敗',err);repairsCloudReady=false;repairsCloudError='維修紀錄讀取失敗：'+err.message;if(page==='repairs')render()});
