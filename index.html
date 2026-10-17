@@ -206,7 +206,40 @@ async function viewHandoverPhoto(arg,fileId){
  catch(e){win.document.body.textContent='讀取照片失敗：'+e.message}
 }
 const photoRemovalInProgress=new Set();
-async function removeHandoverPhoto(arg,fileId){const key=arg+'|'+fileId;if(photoRemovalInProgress.has(key))return;if(!confirm('確定移除此照片？'))return;photoRemovalInProgress.add(key);const target=JSON.parse(decodeURIComponent(arg));try{await window.photoCloudUpdate(target,fileId,true);try{await window.photoCloudTrash(target,fileId)}catch(e){alert('照片已從紀錄移除，但 Google Drive 移至垃圾桶失敗：'+e.message)}closeModal();window.reloadHandovers?.()}catch(e){alert('移除照片失敗：'+e.message)}finally{photoRemovalInProgress.delete(key)}}
+async function removeHandoverPhoto(arg,fileId){
+ const key=arg+'|'+fileId;
+ if(photoRemovalInProgress.has(key))return;
+ if(!confirm('確定移除此照片？'))return;
+ photoRemovalInProgress.add(key);
+ const target=JSON.parse(decodeURIComponent(arg));
+ const buttons=[...document.querySelectorAll('.photo-gallery button')].filter(b=>b.getAttribute('onclick')?.includes('removeHandoverPhoto'));
+ const original=buttons.map(b=>({b,disabled:b.disabled,text:b.textContent}));
+ const status=document.createElement('div');
+ status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ status.style.cssText='margin:10px 0;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;font-size:14px';
+ const setStatus=message=>{status.textContent=message};
+ const gallery=buttons[0]?.closest('.photo-gallery');
+ if(gallery)gallery.appendChild(status);
+ buttons.forEach(b=>{b.disabled=true;b.textContent='移除中…'});
+ let firestoreRemoved=false;
+ try{
+  setStatus('正在更新照片紀錄與稽核歷程，請稍候…');
+  await window.photoCloudUpdate(target,fileId,true);
+  firestoreRemoved=true;
+  setStatus('照片紀錄已更新，正在將 Google Drive 照片移至垃圾桶…');
+  try{await window.photoCloudTrash(target,fileId)}
+  catch(e){alert('照片已從紀錄移除，但 Google Drive 移至垃圾桶失敗：'+e.message)}
+  setStatus('處理完成，正在更新畫面…');
+  closeModal();window.reloadHandovers?.();
+ }catch(e){
+  setStatus('照片移除失敗，請確認錯誤訊息。');
+  alert('移除照片失敗：'+e.message);
+ }finally{
+  photoRemovalInProgress.delete(key);
+  original.forEach(({b,disabled,text})=>{if(b.isConnected){b.disabled=disabled;b.textContent=text}});
+  if(!firestoreRemoved&&status.isConnected)status.remove();
+ }
+}
 function pendingPhotoPicker(existingCount=0){
  return `<div class="pending-photo-picker"><label class="btn small" style="display:inline-block;cursor:pointer">＋ 選擇照片<input type="file" accept="image/*" multiple style="display:none" onchange="previewPendingPhotos(this)"></label><div class="pending-photo-preview muted">可先選擇照片，按儲存後一併上傳（最多 ${5-existingCount} 張）。</div></div>`;
 }
