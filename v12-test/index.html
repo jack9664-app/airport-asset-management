@@ -205,7 +205,8 @@ async function viewHandoverPhoto(arg,fileId){
  try{const target=JSON.parse(decodeURIComponent(arg));const src=await photoPreviewGet(target,fileId);win.document.body.replaceChildren();const img=win.document.createElement('img');img.src=src;img.style.cssText='max-width:100%;height:auto;display:block;margin:auto';win.document.body.appendChild(img)}
  catch(e){win.document.body.textContent='讀取照片失敗：'+e.message}
 }
-async function removeHandoverPhoto(arg,fileId){if(!confirm('確定移除此照片？'))return;const target=JSON.parse(decodeURIComponent(arg));try{await window.photoCloudUpdate(target,fileId,true);try{await window.photoCloudTrash(target,fileId)}catch(e){alert('照片已從紀錄移除，但 Google Drive 移至垃圾桶失敗：'+e.message)}closeModal();window.reloadHandovers?.()}catch(e){alert('移除照片失敗：'+e.message)}}
+const photoRemovalInProgress=new Set();
+async function removeHandoverPhoto(arg,fileId){const key=arg+'|'+fileId;if(photoRemovalInProgress.has(key))return;if(!confirm('確定移除此照片？'))return;photoRemovalInProgress.add(key);const target=JSON.parse(decodeURIComponent(arg));try{await window.photoCloudUpdate(target,fileId,true);try{await window.photoCloudTrash(target,fileId)}catch(e){alert('照片已從紀錄移除，但 Google Drive 移至垃圾桶失敗：'+e.message)}closeModal();window.reloadHandovers?.()}catch(e){alert('移除照片失敗：'+e.message)}finally{photoRemovalInProgress.delete(key)}}
 function pendingPhotoPicker(existingCount=0){
  return `<div class="pending-photo-picker"><label class="btn small" style="display:inline-block;cursor:pointer">＋ 選擇照片<input type="file" accept="image/*" multiple style="display:none" onchange="previewPendingPhotos(this)"></label><div class="pending-photo-preview muted">可先選擇照片，按儲存後一併上傳（最多 ${5-existingCount} 張）。</div></div>`;
 }
