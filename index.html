@@ -1085,7 +1085,7 @@ try{
   const current=await getDoc(ref);
   if(before&&!current.exists())throw new Error('財產已不存在，請重新整理');
   if(!before&&current.exists())throw new Error('此財產 ID 已存在，禁止覆寫');
-  if(before&&JSON.stringify(current.data())!==JSON.stringify(Object.fromEntries(Object.entries(before).filter(([k])=>k!=='id')))) {
+  if(before&&JSON.stringify(Object.fromEntries(Object.entries(current.data()).sort(([a],[b])=>a.localeCompare(b))))!==JSON.stringify(Object.fromEntries(Object.entries(before).filter(([k])=>k!=='id').sort(([a],[b])=>a.localeCompare(b))))) {
    // The live listener is the source of truth; refuse writes from an out-of-date form.
    throw new Error('資料可能已由其他人更新，請重新開啟財產再修改');
   }
