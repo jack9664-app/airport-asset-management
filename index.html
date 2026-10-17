@@ -212,7 +212,7 @@ async function removeHandoverPhoto(arg,fileId){
  if(!confirm('確定移除此照片？'))return;
  photoRemovalInProgress.add(key);
  const target=JSON.parse(decodeURIComponent(arg));
- const buttons=[...document.querySelectorAll('.photo-gallery button')].filter(b=>b.getAttribute('onclick')?.includes('removeHandoverPhoto'));
+ const buttons=[...document.querySelectorAll('.photo-gallery button')].filter(b=>{const action=b.getAttribute('onclick')||'';return action.startsWith('removeHandoverPhoto(')&&action.includes("'"+arg+"'")});
  const original=buttons.map(b=>({b,disabled:b.disabled,text:b.textContent}));
  const status=document.createElement('div');
  status.setAttribute('role','status');status.setAttribute('aria-live','polite');
