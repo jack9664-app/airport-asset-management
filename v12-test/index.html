@@ -565,11 +565,15 @@ window.deletePendingRequest=async uid=>{
  catch(err){alert('刪除失敗：'+err.message)}
  finally{pendingRequestActionBusy.delete(uid)}
 };
+const authorizedAccountDeleteBusy=new Set();
 window.deleteAuthorizedAccount=async uid=>{
- if(window.currentRole!=='owner')return;
+ if(window.currentRole!=='owner'||authorizedAccountDeleteBusy.has(uid))return;
  const a=adminProfiles[uid];if(!a||a.role==='owner')return;
  if(!confirm(`確定刪除此帳號的系統授權？\n${a.displayName||'未設定名稱'}\n${a.email||uid}\n\n刪除後無法存取系統；既有財產與異動紀錄保留。重新登入須再次申請授權。`))return;
- try{await window.cloudDeleteAuthorized(uid);alert('已撤銷 Client／Server 授權並刪除主專案授權。')}catch(err){alert('刪除失敗：'+err.message)}
+ authorizedAccountDeleteBusy.add(uid);
+ try{await window.cloudDeleteAuthorized(uid);alert('已撤銷 Client／Server 授權並刪除主專案授權。')}
+ catch(err){alert('刪除失敗：'+err.message)}
+ finally{authorizedAccountDeleteBusy.delete(uid)}
 };
 window.editMember=uid=>{if(window.currentRole!=='owner')return;const a=adminProfiles[uid];if(!a||a.role==='owner')return;showModal('調整帳號權限',`<form onsubmit="saveMember(event,'${esc(uid)}')"><p>${esc(a.email||uid)}</p><div class="formgrid"><div><label>角色</label><select name="role"><option value="viewer" ${a.role==='viewer'?'selected':''}>Viewer 檢視者</option><option value="editor" ${a.role==='editor'?'selected':''}>Editor 編輯者</option></select></div><div><label>授權狀態</label><select name="active"><option value="true" ${a.active?'selected':''}>啟用</option><option value="false" ${!a.active?'selected':''}>停用</option></select></div></div><div class="actions"><button class="btn" type="button" onclick="closeModal()">取消</button><button class="btn primary" type="submit">儲存</button></div></form>`)};
 window.saveMember=async(e,uid)=>{e.preventDefault();if(e.target.dataset.busy==='1')return;const f=new FormData(e.target);const finish=window.beginFormBusy(e.target,'正在更新三專案權限…');try{await window.cloudUpdateMember(uid,String(f.get('role')),f.get('active')==='true');closeModal();alert('主專案與次專案權限已完成更新。')}catch(err){alert('儲存失敗：'+err.message)}finally{finish()}};
