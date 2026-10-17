@@ -618,9 +618,13 @@ function auditSummary(l){
  return first+(changes.length>2?`；另有 ${changes.length-2} 項`:'');
 }
 function handoverAuditTitle(l){
- const snapshot=l.deletedSnapshot||{};
- const title=l.changes?.title?.after||l.changes?.title?.before||snapshot.title;
- return title||handovers.find(h=>h.id===l.handoverId)?.title||('交接 '+String(l.handoverId||'').slice(0,8));
+ const titleFromAudit=x=>x.handoverTitle||x.changes?.title?.after||x.changes?.title?.before||x.deletedSnapshot?.title||'';
+ const title=titleFromAudit(l)||handovers.find(h=>h.id===l.handoverId)?.title
+  ||handoverAuditEntries.find(x=>x.handoverId===l.handoverId&&titleFromAudit(x))?.handoverTitle
+  ||'';
+ if(title)return title;
+ const related=handoverAuditEntries.find(x=>x.handoverId===l.handoverId&&(x.changes?.title?.after||x.changes?.title?.before||x.deletedSnapshot?.title));
+ return related?titleFromAudit(related):'交接紀錄';
 }
 function handoverAuditSummary(l){
  const c=l.changes||{}, parts=[];
