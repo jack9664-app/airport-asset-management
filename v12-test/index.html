@@ -567,9 +567,14 @@ window.editAdminName=uid=>{
  showModal('設定使用者顯示名稱',`<form onsubmit="saveAdminName(event,'${esc(uid)}')"><div class="sectionhint">${esc(a.email||uid)}<br>只變更顯示名稱，不影響 Google 登入及權限。</div><label>顯示名稱<input name="displayName" maxlength="40" value="${esc(a.displayName||'')}" placeholder="例如：資訊服務科－王小明" style="width:100%;margin:10px 0" required></label><div class="flex"><button class="btn primary" type="submit">儲存名稱</button><button class="btn" type="button" onclick="closeModal()">取消</button></div></form>`);
 };
 window.saveAdminName=async(e,uid)=>{
- e.preventDefault();const name=String(new FormData(e.target).get('displayName')||'').trim();
+ e.preventDefault();
+ if(e.target.dataset.busy==='1')return;
+ const name=String(new FormData(e.target).get('displayName')||'').trim();
  if(!name||name.length>40){alert('請輸入 1 至 40 個字元的名稱');return}
- try{await window.cloudSaveAdminName(uid,name);closeModal();}catch(err){alert('名稱儲存失敗：'+err.message)}
+ const finish=window.beginFormBusy(e.target,'正在儲存顯示名稱…');
+ try{await window.cloudSaveAdminName(uid,name);closeModal()}
+ catch(err){alert('名稱儲存失敗：'+err.message)}
+ finally{finish()}
 };
 
 // V0.12: cloud-only assets. No seeded/local asset is uploaded automatically.
