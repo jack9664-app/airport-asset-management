@@ -144,7 +144,16 @@ showModal(id?'編輯維修紀錄':'新增維修紀錄','<form id="repairEntryFor
 '<div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary" type="submit">儲存維修紀錄</button></div></form>')}
 function openRepairDetail(id){const r=repairs.find(x=>x.id===id);if(!r)return;const fields=[['date','日期'],['propertyNo','財產編號'],['serialNo','設備序號'],['deviceName','設備名稱'],['brandModel','廠牌型號'],['terminal','航廈'],['repairLocation','報修位置'],['reporter','報修人員'],['reason','送修原因'],['replacement','更換設備名稱財編'],['notes','備註'],['shipDate','送修日期'],['shipper','送修人員'],['receiveDate','收件日期'],['receiver','收件人員'],['status','狀態']];showModal('維修紀錄詳細資料','<div class="tablewrap"><table><tbody>'+fields.map(([k,l])=>'<tr><th>'+l+'</th><td style="white-space:pre-wrap">'+esc(r[k]||'—')+'</td></tr>').join('')+'</tbody></table></div><div class="actions"><button class="btn" onclick="closeModal()">關閉</button>'+(canModify()?'<button class="btn primary" data-repair-id="'+esc(id)+'" onclick="openRepair(this.dataset.repairId)">編輯</button>':'')+'</div>')}
 async function saveRepair(e,id=''){e.preventDefault();if(!canModify())return alert('僅 Owner / Editor 可以修改維修紀錄');const f=Object.fromEntries(new FormData(e.target));f.terminal=f.terminal==='其他'?(f.terminalOther.trim()||'其他'):f.terminal;delete f.terminalOther;if(!f.date||!f.reporter?.trim()||!f.reason?.trim()||!(f.assetId||f.propertyNo?.trim()||f.serialNo?.trim()||f.deviceName?.trim()))return alert('請填寫日期、設備識別資訊、報修人員及送修原因');if(!f.deviceName||!f.brandModel||!catalogPairs().get(f.deviceName)?.has(f.brandModel))return alert('設備名稱及廠牌型號必須選擇現有或已核准的組合');if(e.target.dataset.busy==='1')return;const finish=window.beginFormBusy(e.target,'正在儲存維修紀錄與異動歷程…');try{await window.cloudSaveRepair(f,id);closeModal();render()}catch(err){alert('維修紀錄儲存失敗：'+err.message)}finally{finish()}}
-async function deleteRepair(id){if(!canModify())return alert('只有 Owner／Editor 可以刪除');if(!confirm('確定刪除這筆維修紀錄？刪除後將影響維修次數統計，但保留稽核資料。'))return;try{await window.cloudDeleteRepair(id)}catch(e){alert('刪除失敗：'+e.message)}}
+const repairDeleteBusy=new Set();
+async function deleteRepair(id){
+ if(!canModify())return alert('只有 Owner／Editor 可以刪除');
+ if(repairDeleteBusy.has(id))return;
+ if(!confirm('確定刪除這筆維修紀錄？刪除後將影響維修次數統計，但保留稽核資料。'))return;
+ repairDeleteBusy.add(id);
+ try{await window.cloudDeleteRepair(id)}
+ catch(e){alert('刪除失敗：'+e.message)}
+ finally{repairDeleteBusy.delete(id)}
+}
 function workLog(action,item,before){logs.unshift({date:now(),actor:window.handoverCurrentName||'系統使用者',action,id:item.id,propertyNo:item.title||item.name||'',before:before?JSON.stringify(before):'',after:JSON.stringify(item)});persist()}
 // V0.86 工作交接：雲端主文件摘要 + 分頁處理進度 + 獨立稽核紀錄
 let handoverBusy=false, handoverReady=false, handoverError='', handoverMore=false, handoverCursor=null;
@@ -330,7 +339,15 @@ function supplyPage(){return heading('備品餘料','Main Firestore 雲端備品
  '<div class="panel">'+(!suppliesCloudReady?'<p class="muted">'+esc(suppliesCloudError||'正在載入備品資料…')+'</p>':'')+'<div class="muted" style="margin-bottom:12px">Client 用：'+supplies.filter(s=>s.usage==='client').length+' 種　／　Server 用：'+supplies.filter(s=>s.usage==='server').length+' 種　／　合計：'+supplies.length+' 種</div><div class="tablewrap"><table><thead><tr><th>適用類別</th><th>品項</th><th>規格／備註</th><th>目前數量</th><th>單位</th><th>操作</th></tr></thead><tbody>'+supplies.map(s=>'<tr><td>'+esc(s.usage==='server'?'Server 用':'Client 用')+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.spec||'—')+'</td><td>'+esc(s.quantity)+'</td><td>'+esc(s.unit)+'</td><td>'+(canModify()?'<button class="btn small" data-supply-id="'+esc(s.id)+'" onclick="openSupply(this.dataset.supplyId)">編輯</button> ':'')+(window.currentRole==='owner'?'<button class="btn small danger" data-supply-id="'+esc(s.id)+'" onclick="removeSupply(this.dataset.supplyId)">刪除</button>':'')+'</td></tr>').join('')+'</tbody></table>'+(!supplies.length&&suppliesCloudReady?'<div class="empty">目前沒有備品餘料資料，請新增品項。</div>':'')+'</div></div>'}
 function openSupply(id){if(denyViewer())return;const s=supplies.find(x=>x.id===id);showModal(s?'編輯備品餘料':'新增備品餘料','<form onsubmit="saveSupply(event,\''+(id||'')+'\')"><div class="formgrid"><div><label>適用類別 *</label><select name="usage" required><option value="client" '+(s?.usage!=='server'?'selected':'')+'>Client 用</option><option value="server" '+(s?.usage==='server'?'selected':'')+'>Server 用</option></select></div><div class="wide"><label>品項名稱</label><input name="name" required value="'+esc(s?.name||'')+'"></div><div class="wide"><label>規格／備註</label><input name="spec" value="'+esc(s?.spec||'')+'"></div><div><label>目前數量</label><input name="quantity" type="number" min="0" step="1" required value="'+esc(s?.quantity??0)+'"></div><div><label>單位</label><input name="unit" required value="'+esc(s?.unit||'個')+'"></div></div><div class="actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button class="btn primary" type="submit">儲存</button></div></form>')}
 async function saveSupply(e,id){e.preventDefault();if(denyViewer())return;const d=Object.fromEntries(new FormData(e.target));if(!d.name.trim()||!['client','server'].includes(d.usage)||!Number.isSafeInteger(Number(d.quantity))||Number(d.quantity)<0)return alert('請填寫正確的品項、適用類別與數量');if(suppliesBusy)return;suppliesBusy=true;const finish=window.beginFormBusy(e.target,'正在寫入 Firestore…');try{await window.cloudSaveSupply({name:d.name.trim(),spec:d.spec.trim(),quantity:Number(d.quantity),unit:d.unit.trim()||'個',usage:d.usage},id);closeModal()}catch(err){alert('備品儲存失敗：'+err.message)}finally{suppliesBusy=false;finish()}}
-async function removeSupply(id){if(window.currentRole!=='owner'||!confirm('確定刪除此備品品項？'))return;try{await window.cloudDeleteSupply(id)}catch(err){alert('刪除失敗：'+err.message)}}
+const supplyDeleteBusy=new Set();
+async function removeSupply(id){
+ if(window.currentRole!=='owner'||supplyDeleteBusy.has(id))return;
+ if(!confirm('確定刪除此備品品項？'))return;
+ supplyDeleteBusy.add(id);
+ try{await window.cloudDeleteSupply(id)}
+ catch(err){alert('刪除失敗：'+err.message)}
+ finally{supplyDeleteBusy.delete(id)}
+}
 
 let repairOverviewSortKey='rate',repairOverviewSortDirection='desc';
 function sortRepairOverview(key){
