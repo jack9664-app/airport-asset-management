@@ -8,7 +8,7 @@
 <h1>財產清冊</h1><p class="muted">整理後的版面示意：全域搜尋、依單位即時顯示各型號數量與財產明細</p><div class="notice">本頁完全不連接 Firebase，所有設備名稱、數量、辦公室與財產編號均為示範資料，不代表實際清冊。</div>
 <div class="searchBrowseGrid">
 <div class="panel searchBrowsePanel"><h3>全域財產搜尋</h3><div class="flex"><input id="search" oninput="renderAssets()" placeholder="搜尋 Client + Server：財編、型號、IP、位置…"></div><p class="muted">直接搜尋全部財產，不受分類條件限制。</p></div>
-<div class="panel searchBrowsePanel"><div class="flex spread"><h3>分類瀏覽與型號統計</h3><div class="flex"><button class="active" id="clientBtn" onclick="switchSide('Client')">Client 端</button><button id="serverBtn" onclick="switchSide('Server')">Server 端</button></div></div><div class="flex"><select id="officeFilter" onchange="renderAssets()"></select><select id="deviceFilter" onchange="renderAssets()"></select></div><p class="muted">篩選單位與設備類型，更新下方型號數量。</p></div>
+<div class="panel searchBrowsePanel"><div class="flex spread"><h3>分類瀏覽與型號統計</h3><div class="flex"><button class="active" id="clientBtn" onclick="switchSide('Client')">Client 端</button><button id="serverBtn" onclick="switchSide('Server')">Server 端</button></div></div><div class="flex"><select id="officeFilter" onchange="renderAssets()"></select><select id="deviceFilter" onchange="renderAssets()"></select></div><p class="muted">篩選單位與設備型號，更新下方型號數量。</p></div>
 </div>
 <div class="panel"><h3>各設備型號數量</h3><p class="muted" id="countScope"></p><div class="tablewrap"><table><thead><tr><th>廠牌／型號</th><th class="num">數量</th></tr></thead><tbody id="modelRows"></tbody></table></div></div>
 <div class="panel"><div class="flex spread"><h3 id="detailTitle">財產明細</h3><span class="pill">保留原有詳細／編輯等功能（此頁不連線）</span></div><div class="tablewrap"><table><thead><tr><th>財產編號</th><th>設備類型／型號</th><th>單位／機房</th><th>IP 位址</th><th>位置</th></tr></thead><tbody id="assetRows"></tbody></table></div></div>
@@ -32,11 +32,11 @@ let side='Client',mode='office';
 function list(){return rows.filter(r=>r[0]===side)}
 function uniq(a){return [...new Set(a)].sort((a,b)=>a.localeCompare(b,'zh-Hant'))}
 function option(el,values,label){el.innerHTML='<option value="">'+label+'</option>'+values.map(x=>'<option>'+x+'</option>').join('')}
-function switchSide(s){side=s;document.getElementById('clientBtn').classList.toggle('active',s==='Client');document.getElementById('serverBtn').classList.toggle('active',s==='Server');option(document.getElementById('officeFilter'),uniq(list().map(r=>r[1])),'全部單位／機房');option(document.getElementById('deviceFilter'),uniq(list().map(r=>r[2])),'全部設備類型');renderAssets()}
+function switchSide(s){side=s;document.getElementById('clientBtn').classList.toggle('active',s==='Client');document.getElementById('serverBtn').classList.toggle('active',s==='Server');option(document.getElementById('officeFilter'),uniq(list().map(r=>r[1])),'全部單位／機房');option(document.getElementById('deviceFilter'),uniq(list().map(r=>r[3])),'全部型號');renderAssets()}
 function renderAssets(){
  const all=list(),q=document.getElementById('search').value.trim().toLocaleLowerCase(),o=document.getElementById('officeFilter').value,d=document.getElementById('deviceFilter').value;
- const filtered=q?rows.filter(r=>r.slice(1).join(' ').toLocaleLowerCase().includes(q)):all.filter(r=>(!o||r[1]===o)&&(!d||r[2]===d));
- const modelBase=all.filter(r=>(!o||r[1]===o)&&(!d||r[2]===d));
+ const filtered=q?rows.filter(r=>r.slice(1).join(' ').toLocaleLowerCase().includes(q)):all.filter(r=>(!o||r[1]===o)&&(!d||r[3]===d));
+ const modelBase=all.filter(r=>(!o||r[1]===o)&&(!d||r[3]===d));
  const counts=new Map();modelBase.forEach(r=>counts.set(r[3],(counts.get(r[3])||0)+1));
  document.getElementById('countScope').textContent=(side==='Client'?'Client 端':'Server 端')+'｜'+(o||'全部單位／機房')+'｜共 '+modelBase.length+' 台（示範資料）';
  document.getElementById('modelRows').innerHTML=[...counts].sort((a,b)=>a[0].localeCompare(b[0],'zh-Hant')).map(([model,n])=>'<tr><td>'+model+'</td><td class="num"><strong>'+n+' 台</strong></td></tr>').join('')||'<tr><td colspan="2" class="empty">沒有設備</td></tr>';
