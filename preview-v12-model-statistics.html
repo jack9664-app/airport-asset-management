@@ -7,7 +7,7 @@
 <main><header><strong>財產清冊</strong><span><span class="tag">V1.2 介面預覽</span>　<span class="muted">純靜態示範</span></span></header><div class="container">
 <h1>財產清冊</h1><p class="muted">整理後的版面示意：全域搜尋、依單位即時顯示各型號數量與財產明細</p><div class="notice">本頁完全不連接 Firebase，所有設備名稱、數量、辦公室與財產編號均為示範資料，不代表實際清冊。</div>
 <div class="searchBrowseGrid">
-<div class="panel searchBrowsePanel"><h3>全域財產搜尋</h3><div class="flex"><input id="search" oninput="renderAssets()" placeholder="搜尋 Client + Server：財編、型號、IP、位置…"></div><p class="muted">直接搜尋全部財產，不受分類條件限制。</p><div id="quickResults" class="quickResults" hidden></div></div>
+<div class="panel searchBrowsePanel"><h3>全域財產搜尋</h3><div class="flex"><input id="search" oninput="renderAssets()" placeholder="搜尋 Client + Server：財編、型號、IP、位置…"></div><p class="muted">搜尋結果直接顯示於下方財產明細，不受分類條件限制。</p></div>
 <div class="panel searchBrowsePanel"><div class="flex spread"><h3>分類瀏覽與型號統計</h3><div class="flex"><button class="active" id="clientBtn" onclick="switchSide('Client')">Client 端</button><button id="serverBtn" onclick="switchSide('Server')">Server 端</button></div></div><div class="flex"><select id="officeFilter" onchange="renderAssets()"></select><select id="deviceFilter" onchange="renderAssets()"></select></div><p class="muted">篩選單位與設備型號，更新下方型號數量。</p></div>
 <div class="panel searchBrowsePanel modelCountPanel"><h3>各設備型號數量</h3><p class="muted" id="countScope"></p><div class="tablewrap"><table><thead><tr><th>廠牌／型號</th><th class="num">數量</th></tr></thead><tbody id="modelRows"></tbody></table></div></div>
 </div>
@@ -44,13 +44,7 @@ function renderAssets(){
  const counts=new Map();modelBase.forEach(r=>counts.set(r[3],(counts.get(r[3])||0)+1));
  document.getElementById('countScope').textContent=(side==='Client'?'Client 端':'Server 端')+'｜'+(o||'全部單位／機房')+'｜共 '+modelBase.length+' 台（示範資料）';
  document.getElementById('modelRows').innerHTML=[...counts].sort((a,b)=>a[0].localeCompare(b[0],'zh-Hant')).map(([model,n])=>'<tr><td>'+model+'</td><td class="num"><strong>'+n+' 台</strong></td></tr>').join('')||'<tr><td colspan="2" class="empty">沒有設備</td></tr>';
- const quick=document.getElementById('quickResults');quick.hidden=!q;
- if(q){
-  const groups=new Map();
-  filtered.forEach(r=>{if(!groups.has(r[3]))groups.set(r[3],[]);groups.get(r[3]).push(r)});
-  quick.innerHTML='<div class="quickCount">符合 '+filtered.length+' 台設備，共 '+groups.size+' 種型號；點選型號查看設備</div>'+[...groups].map(([model,items],idx)=>'<details class="modelGroup"><summary><strong>'+model+'</strong><span class="quickSource">'+items.length+' 台</span></summary><div class="quickGroupRows">'+items.slice(0,6).map(r=>'<button class="quickResult" type="button" onclick="showQuickAsset('+rows.indexOf(r)+')"><span><strong>'+(r[4]||'無財編')+'</strong><small>'+r[0]+' · '+r[1]+' · '+r[5]+'</small></span><span class="quickSource">詳細</span></button>').join('')+(items.length>6?'<button class="quickResult" type="button" onclick="this.parentNode.querySelectorAll(\'.quickHidden\').forEach(x=>x.hidden=false);this.remove()">顯示其餘 '+(items.length-6)+' 台</button>'+items.slice(6).map(r=>'<button hidden class="quickResult quickHidden" type="button" onclick="showQuickAsset('+rows.indexOf(r)+')"><span><strong>'+(r[4]||'無財編')+'</strong><small>'+r[0]+' · '+r[1]+' · '+r[5]+'</small></span><span class="quickSource">詳細</span></button>').join(''):'')+'</div></details>').join('')+(filtered.length?'':'<div class="empty">找不到符合的示範設備</div>')+'<div id="quickAssetDetails"></div>';
- }else quick.innerHTML='';
- document.getElementById('detailTitle').textContent=q?'全域搜尋結果（Client + Server）':'財產明細（分類瀏覽）';
+ document.getElementById('detailTitle').textContent=q?'全域搜尋結果（Client + Server）｜'+filtered.length+' 筆':'財產明細（分類瀏覽）';
  document.getElementById('assetRows').innerHTML=filtered.map(r=>'<tr><td>'+(q?'<strong>'+r[0]+'</strong> · ':'')+(r[4]||'無財編')+'</td><td>'+r[2]+'<br><span class="muted">'+r[3]+'</span></td><td>'+r[1]+'</td><td>'+r[5]+'</td><td>'+r[6]+'</td></tr>').join('')||'<tr><td colspan="5" class="empty">沒有符合條件的示範資料</td></tr>';
 }
 switchSide('Client');
