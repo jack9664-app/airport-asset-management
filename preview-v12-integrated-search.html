@@ -1393,7 +1393,7 @@ try{
  function refreshAssetView(){
   const mode=assetDisplayMode;
   cloudAssetsReady=mode==='all'?(assetLoaded.client&&assetLoaded.server):!!assetLoaded[mode];
-  assets=(mode==='all'||(page==='assets'&&query.trim()&&assetLoaded.client&&assetLoaded.server))?[...assetCache.client,...assetCache.server]:(assetLoaded[mode]?assetCache[mode].slice():[]);
+  assets=mode==='all'?[...assetCache.client,...assetCache.server]:(assetLoaded[mode]?assetCache[mode].slice():[]);
   if(['assets','repairOverview','dashboard','admin','import'].includes(page))render();
  }
  window.loadRepairOverviewAssetStats=()=>{window.ensureRepairOverviewAssetStats=true;window.ensurePageCloudData?.('repairOverview');render()};
