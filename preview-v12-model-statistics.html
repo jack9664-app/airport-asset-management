@@ -6,9 +6,10 @@
 <aside><h3>◈ 桃機群曜</h3><small>財產管理系統</small><div class="nav">▣ 總覽儀表板</div><div class="nav">☷ 工作交接</div><div class="nav active">▤ 財產清冊</div><div class="nav">⚒ 維修記錄</div><div class="nav">◎ 維修概況</div><div class="nav">▣ 備品餘料</div><div class="nav">◷ 異動歷程</div><div class="nav">⚙ 系統管理</div></aside>
 <main><header><strong>財產清冊</strong><span><span class="tag">V1.2 介面預覽</span>　<span class="muted">純靜態示範</span></span></header><div class="container">
 <h1>財產清冊</h1><p class="muted">整理後的版面示意：全域搜尋、依單位即時顯示各型號數量與財產明細</p><div class="notice">本頁完全不連接 Firebase，所有設備名稱、數量、辦公室與財產編號均為示範資料，不代表實際清冊。</div>
-<div class="panel"><div class="flex spread"><h3>財產查詢</h3><div class="flex"><button class="active" id="clientBtn" onclick="switchSide('Client')">Client 端</button><button id="serverBtn" onclick="switchSide('Server')">Server 端</button></div></div><div class="flex"><select id="officeFilter" onchange="renderAssets()"></select><select id="deviceFilter" onchange="renderAssets()"></select><input id="search" oninput="renderAssets()" placeholder="全域搜尋 Client + Server：財編、設備、型號、IP、位置…"></div><p class="muted">有輸入關鍵字時搜尋兩端全部示範資料；清空後依目前選擇的 Client／Server 與單位瀏覽。</p></div>
+<div class="panel"><h3>全域財產搜尋</h3><div class="flex"><input id="search" oninput="renderAssets()" placeholder="直接搜尋 Client + Server：財編、設備、型號、IP、位置…"></div><p class="muted">搜尋不受分類瀏覽條件限制；搜尋結果會標示 Client／Server。清除文字後回到原本分類瀏覽。</p></div>
+<div class="panel"><div class="flex spread"><h3>分類瀏覽與型號統計</h3><div class="flex"><button class="active" id="clientBtn" onclick="switchSide('Client')">Client 端</button><button id="serverBtn" onclick="switchSide('Server')">Server 端</button></div></div><div class="flex"><select id="officeFilter" onchange="renderAssets()"></select><select id="deviceFilter" onchange="renderAssets()"></select></div><p class="muted">這兩個選單只控制下方分類瀏覽及各型號數量，不限制全域搜尋。</p></div>
 <div class="panel"><h3>各設備型號數量</h3><p class="muted" id="countScope"></p><div class="tablewrap"><table><thead><tr><th>廠牌／型號</th><th class="num">數量</th></tr></thead><tbody id="modelRows"></tbody></table></div></div>
-<div class="panel"><div class="flex spread"><h3>財產明細</h3><span class="pill">保留原有詳細／編輯等功能（此頁不連線）</span></div><div class="tablewrap"><table><thead><tr><th>財產編號</th><th>設備類型／型號</th><th>單位／機房</th><th>IP 位址</th><th>位置</th></tr></thead><tbody id="assetRows"></tbody></table></div></div>
+<div class="panel"><div class="flex spread"><h3 id="detailTitle">財產明細</h3><span class="pill">保留原有詳細／編輯等功能（此頁不連線）</span></div><div class="tablewrap"><table><thead><tr><th>財產編號</th><th>設備類型／型號</th><th>單位／機房</th><th>IP 位址</th><th>位置</th></tr></thead><tbody id="assetRows"></tbody></table></div></div>
 <div class="panel"><div class="flex spread"><div><strong>財產資料同步</strong><p class="muted">正式版保留同步最新財產與完整校正功能；示範頁不連線</p></div><button disabled>同步最新財產（預覽停用）</button></div></div><footer>V1.2 獨立介面示意｜不寫入資料｜不消耗 Firestore 額度</footer>
 </div></main>
 <script>
@@ -37,6 +38,7 @@ function renderAssets(){
  const counts=new Map();modelBase.forEach(r=>counts.set(r[3],(counts.get(r[3])||0)+1));
  document.getElementById('countScope').textContent=(side==='Client'?'Client 端':'Server 端')+'｜'+(o||'全部單位／機房')+'｜共 '+modelBase.length+' 台（示範資料）';
  document.getElementById('modelRows').innerHTML=[...counts].sort((a,b)=>a[0].localeCompare(b[0],'zh-Hant')).map(([model,n])=>'<tr><td>'+model+'</td><td class="num"><strong>'+n+' 台</strong></td></tr>').join('')||'<tr><td colspan="2" class="empty">沒有設備</td></tr>';
+ document.getElementById('detailTitle').textContent=q?'全域搜尋結果（Client + Server）':'財產明細（分類瀏覽）';
  document.getElementById('assetRows').innerHTML=filtered.map(r=>'<tr><td>'+(q?'<strong>'+r[0]+'</strong> · ':'')+(r[4]||'無財編')+'</td><td>'+r[2]+'<br><span class="muted">'+r[3]+'</span></td><td>'+r[1]+'</td><td>'+r[5]+'</td><td>'+r[6]+'</td></tr>').join('')||'<tr><td colspan="5" class="empty">沒有符合條件的示範資料</td></tr>';
 }
 switchSide('Client');
