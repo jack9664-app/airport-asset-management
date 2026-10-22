@@ -20,7 +20,7 @@ jobs:
           workload_identity_provider: 'projects/144237236073/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions'
           service_account: 'github-firebase-manager@taoyuancyd-asset-mgmt.iam.gserviceaccount.com'
           token_format: 'access_token'
-          create_credentials_file: false
+          create_credentials_file: true
       - name: Check Google Cloud project read access
         env:
           PROJECT_ID: taoyuancyd-asset-mgmt
@@ -29,7 +29,6 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           import json, os, urllib.request, urllib.error
-          token=os.environ['CLOUDSDK_AUTH_ACCESS_TOKEN'] if 'CLOUDSDK_AUTH_ACCESS_TOKEN' in os.environ else ''
           # Credentials are supplied via ADC by google-github-actions/auth.
           import subprocess
           token=subprocess.check_output(['gcloud','auth','application-default','print-access-token'],text=True).strip()
