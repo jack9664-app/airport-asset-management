@@ -1,0 +1,53 @@
+name: Firestore usage report (read-only)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate to Google Cloud via OIDC
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/144237236073/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions'
+          service_account: 'github-firebase-manager@taoyuancyd-asset-mgmt.iam.gserviceaccount.com'
+          create_credentials_file: true
+      - name: Read Firestore document operation metrics (last 24 hours)
+        env:
+          PROJECT_ID: taoyuancyd-asset-mgmt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import datetime, json, os, subprocess, urllib.parse, urllib.request, urllib.error
+          now=datetime.datetime.now(datetime.timezone.utc)
+          start=now-datetime.timedelta(hours=24)
+          token=subprocess.check_output(['gcloud','auth','application-default','print-access-token'],text=True).strip()
+          base='https://monitoring.googleapis.com/v3/projects/'+os.environ['PROJECT_ID']+'/timeSeries'
+          headers={'Authorization':'Bearer '+token}
+          print('WINDOW_UTC: '+start.isoformat()+' to '+now.isoformat())
+          print('Note: Monitoring time series may lag and may differ from billing/free-tier counters.')
+          for name in ('read_count','write_count','delete_count'):
+              metric='firestore.googleapis.com/document/'+name
+              params={'filter':'metric.type="'+metric+'"','interval.startTime':start.isoformat().replace('+00:00','Z'),'interval.endTime':now.isoformat().replace('+00:00','Z'),'view':'FULL','pageSize':'1000'}
+              total=0.0;series_count=0;page=None
+              try:
+                  while True:
+                      p=dict(params)
+                      if page:p['pageToken']=page
+                      url=base+'?'+urllib.parse.urlencode(p)
+                      with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=30) as response: data=json.load(response)
+                      for series in data.get('timeSeries',[]):
+                          series_count+=1
+                          for point in series.get('points',[]):
+                              v=point.get('value',{})
+                              total+=float(v.get('int64Value',v.get('doubleValue',0)))
+                      page=data.get('nextPageToken')
+                      if not page:break
+                  print('FIRESTORE_'+name.upper()+': '+str(int(total) if total.is_integer() else total)+' (series='+str(series_count)+')')
+              except urllib.error.HTTPError as err:
+                  print('FIRESTORE_'+name.upper()+'_HTTP_ERROR: '+str(err.code))
+                  raise
+          PY
