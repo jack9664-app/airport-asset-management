@@ -48,6 +48,8 @@ jobs:
                       if not page:break
                   print('FIRESTORE_'+name.upper()+': '+str(int(total) if total.is_integer() else total)+' (series='+str(series_count)+')')
               except urllib.error.HTTPError as err:
+                  detail=err.read().decode('utf-8','replace')
                   print('FIRESTORE_'+name.upper()+'_HTTP_ERROR: '+str(err.code))
+                  print('MONITORING_ERROR_DETAIL: '+detail[:3000])
                   raise
           PY
