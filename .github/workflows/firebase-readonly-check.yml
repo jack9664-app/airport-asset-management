@@ -43,7 +43,29 @@ jobs:
                   print('PROJECT_READ_DENIED: service account needs a limited read-only role.')
               else:
                   print('PROJECT_QUERY_HTTP_STATUS: '+str(err.code))
-              raise SystemExit(0 if err.code==403 else 1)
+              raise SystemExit(1)
+          PY
+      - name: Probe Firestore monitoring read permissions
+        env:
+          PROJECT_ID: taoyuancyd-asset-mgmt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request, urllib.error
+          token=subprocess.check_output(['gcloud','auth','application-default','print-access-token'],text=True).strip()
+          url='https://monitoring.googleapis.com/v3/projects/'+os.environ['PROJECT_ID']+'/metricDescriptors?filter=metric.type%3Dstarts_with(%22firestore.googleapis.com%2Fdocument%2F%22)&pageSize=100'
+          req=urllib.request.Request(url,headers={'Authorization':'Bearer '+token})
+          try:
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  result=json.load(response)
+              metrics=[x.get('type','') for x in result.get('metricDescriptors',[])]
+              print('MONITORING_READ_ALLOWED')
+              print('FIRESTORE_DOCUMENT_METRICS: '+json.dumps(metrics,ensure_ascii=False))
+          except urllib.error.HTTPError as err:
+              print('MONITORING_QUERY_HTTP_STATUS: '+str(err.code))
+              print('MONITORING_READ_DENIED_OR_UNAVAILABLE' if err.code in (403,404) else 'MONITORING_QUERY_FAILED')
+              # This probe reports the permission status without granting or modifying access.
           PY
 
 # Recheck after granting the Browser role to the dedicated service account.
