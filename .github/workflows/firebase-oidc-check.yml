@@ -1,0 +1,26 @@
+name: Firebase OIDC connection check
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/firebase-oidc-check.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  verify-identity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate with Google Cloud using GitHub OIDC
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/144237236073/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions'
+          service_account: 'github-firebase-manager@taoyuancyd-asset-mgmt.iam.gserviceaccount.com'
+          token_format: 'access_token'
+          create_credentials_file: false
+          export_environment_variables: false
+      - name: Report authentication result
+        run: echo 'Google Cloud OIDC authentication succeeded. No Firebase data was accessed.'
