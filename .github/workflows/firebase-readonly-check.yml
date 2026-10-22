@@ -69,3 +69,5 @@ jobs:
           PY
 
 # Recheck after granting the Browser role to the dedicated service account.
+
+# Recheck Cloud Monitoring Viewer grant (2026-10-22).
