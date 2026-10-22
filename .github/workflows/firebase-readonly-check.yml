@@ -45,3 +45,5 @@ jobs:
                   print('PROJECT_QUERY_HTTP_STATUS: '+str(err.code))
               raise SystemExit(0 if err.code==403 else 1)
           PY
+
+# Recheck after granting the Browser role to the dedicated service account.
