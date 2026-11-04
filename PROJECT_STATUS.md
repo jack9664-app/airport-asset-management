@@ -1,13 +1,18 @@
 # 桃機群曜財產管理｜專案開發交接與狀態紀錄
 
-> 更新：2026-10-18。此文件是跨交談接續的狀態入口，不代表所有功能已完成實際端對端驗收。開發前仍應核對 GitHub 最新程式、開發規範及使用者回報。
+> 更新：2026-11-04。此文件是跨交談接續的狀態入口，不代表所有功能已完成實際端對端驗收。開發前仍應核對 GitHub 最新程式、開發規範及使用者回報。
+
+## 版本工作入口（2026-11-04 調整）
+- 現行 V1.3：公告功能、既有問題修正與待追蹤事項統一記於 [工作日誌 #5](https://github.com/jack9664-app/airport-asset-management/issues/5)。較早實際發布的修正保留原日期與版本歷史。
+- 後續 V1.4：原 V1.3 預定新增功能完整順延至 [需求 #2](https://github.com/jack9664-app/airport-asset-management/issues/2)，包含叫修記錄統計、兩份財產調查表 Excel 匯出（自動數量統計表）、班表與小幅優化；原已確認規格及待討論內容保留。
+- 未解決的 Chrome 登入與部署速度問題仍列 V1.3 待排查，不因版本重整標記完成。
 
 ## 目前正式基準（優先閱讀）
 - 專案：桃機群曜財產管理；與「桃機便當團」完全獨立。
 - GitHub：`jack9664-app/airport-asset-management`，主分支 `main`。
 - GitHub Pages 正式網址：https://jack9664-app.github.io/airport-asset-management/
-- 正式網站入口：根目錄 `index.html`。2026-10-17 正式發布 V1.2（`main:index.html`，commit `44860531`）；實際線上端對端功能仍以測試回報為準。
-- 版本顯示規格：瀏覽器標籤頁與帳號旁版本標籤都只顯示 V1.2，不加「增量同步」等功能說明；以後升版兩處同步更新。
+- 正式網站入口：根目錄 `index.html`。2026-11-03 正式發布 V1.3（`main:index.html`，commit `131f1090`）；實際線上端對端功能仍以測試回報為準。
+- 版本顯示規格：瀏覽器標籤頁與帳號旁版本標籤都只顯示 V1.3，不加「增量同步」等功能說明；以後升版兩處同步更新。
 - Firebase 專案：`taoyuancyd-asset-mgmt`。Firebase Auth／Firestore 從網頁程式連線；GitHub Pages 是網頁部署方式。
 - Firebase Functions：未啟用，維持免費方案；使用者**不使用 Firebase CLI 部署**。根目錄 `.firebaserc` 只是 CLI 預設專案對應設定，對 GitHub Pages、網頁 Firebase SDK、GAS、增量同步並非必要，**可以刪除**。2026-10-17 查無根目錄 `firebase.json`；本次僅更新文件，未代為刪除 `.firebaserc`。
 - 圖片：Google Drive + Apps Script（GAS），與 Firestore 中繼資料關聯；GAS 發布與 GitHub HTML 部署分開。
@@ -55,7 +60,7 @@
 - V0.81–V0.85：索引、首頁、維修概況、交接歷程、軟刪除與稽核等逐步開發。
 - V0.86–V0.87：Google Drive／GAS 照片功能與交接整合、預覽／刪除、上傳狀態等開發與測試；歷史詳細紀錄可從 GitHub commit 追溯。
 - V1.0 RC：曾為瀏覽器標籤頁顯示版本。
-- **V1.1（目前）**：增量同步決策與版本顯示統一；保留完整校正及失敗時保留清冊。請以目前 `index.html` 和 `PROJECT_DEVELOPMENT_GUIDELINES.md` 為準。
+- **V1.1（歷史版本）**：增量同步決策與版本顯示統一；保留完整校正及失敗時保留清冊。請以目前 `index.html` 和 `PROJECT_DEVELOPMENT_GUIDELINES.md` 為準。
 
 
 ## V1.2 正式發布（2026-10-17）
