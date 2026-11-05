@@ -53,6 +53,16 @@
 .announcement-track{display:block;padding:0;min-height:42px;line-height:1.5;font-size:14px;text-align:left}
 .announcement-track span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;overflow-wrap:anywhere;animation:none!important;padding-left:0;transform:none}
 .announcement-bar>.btn{flex:none;white-space:nowrap;min-height:40px}}
+</style><style>
+.announcement-lanes{flex:1;min-width:0;display:grid;gap:5px;overflow:hidden}
+.announcement-lane{display:block;width:100%;min-width:0;overflow:hidden;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;line-height:1.7}
+.announcement-belt{display:flex;width:max-content;min-width:200%;animation:announcement-two-lines linear infinite;will-change:transform}
+.announcement-belt>span{display:block;flex:1 0 auto;min-width:0;padding-right:60px;white-space:nowrap}
+@keyframes announcement-two-lines{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(hover:hover){.announcement-bar:hover .announcement-belt{animation-play-state:paused}}
+.announcement-bar:focus-within .announcement-belt{animation-play-state:paused}
+@media(max-width:650px){.announcement-lane{font-size:14px;line-height:1.8}.announcement-lanes{gap:4px}.announcement-bar{padding:10px 12px}}
+@media(prefers-reduced-motion:reduce){.announcement-belt{animation:none!important;width:100%;min-width:0;will-change:auto}.announcement-belt>span{white-space:normal;overflow-wrap:anywhere;padding-right:0;flex:1;min-width:0}.announcement-belt>span[aria-hidden]{display:none}}
 </style></head><body><div class="shell"><aside class="side"><div class="brand">◈ 桃機群曜</div><div class="subbrand">財產管理系統</div><div id="sidebar"></div><div class="sidefoot">Google 帳號安全登入<br>資料自動儲存與同步</div></aside><main class="main"><header class="top"><h1 id="pagetitle">總覽儀表板</h1><div class="flex"><span class="pill">● V1.3</span><span class="muted" id="authUser">驗證中</span><button class="btn small" id="logoutBtn" onclick="signOutUser()" style="display:none">登出</button></div></header><div id="announcementBanner" hidden></div><nav class="mobileNav" id="mobileNav"></nav><div class="content" id="view"><div class="panel"><h3>系統載入中</h3><p class="muted">如果此訊息持續顯示，請確認瀏覽器已允許執行 JavaScript。</p></div></div></main></div><div id="overlay"></div><script>
 'use strict';
 const CLIENT=['3851資訊服務科-桃','4900國境事務大隊','4910桃園機場一隊(T1入)','4920桃園機場二隊(T1出)','4930桃園機場三隊','4940桃園機場四隊(T2出)','4950桃園機場五隊(T2入)','4970入出國查驗監控隊','4980特殊勤務隊','4990鑑識調查隊','49B0行政業務隊','49A0國境業務隊','設備刪除暫存區'];
@@ -583,7 +593,16 @@ function canManageAnnouncements(){return window.accessGranted&&(window.currentRo
 let announcementRows=[],announcementError='',announcementLoaded=false;
 function announcementStatus(a){const n=Date.now();return !a.enabled?'停用':Date.parse(a.startsAt)>n?'未開始':a.endsAt&&Date.parse(a.endsAt)<=n?'已到期':'刊登中'}
 function announcementTime(v){return v?new Date(v).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false}):'持續刊登'}
-function renderAnnouncementBanner(){const el=$('announcementBanner');if(!el)return;const rows=window.accessGranted?announcementRows.filter(a=>announcementStatus(a)==='刊登中').sort((a,b)=>Date.parse(b.startsAt)-Date.parse(a.startsAt)):[];el.hidden=!rows.length;const signature=JSON.stringify(rows.map(a=>[a.id,a.content]));if(el.dataset.signature===signature)return;el.dataset.signature=signature;if(!rows.length){el.innerHTML='';return}el.innerHTML='<div class="announcement-bar"><strong>📢 公告</strong><button class="announcement-track" onclick="viewAnnouncements()" aria-label="查看完整公告"><span style="animation-duration:'+Math.max(18,rows.map(a=>a.content).join('').length/4)+'s">'+esc(rows.map(a=>a.content).join('　｜　'))+'</span></button><button class="btn small" onclick="viewAnnouncements()">查看</button></div>'}
+function announcementLaneGroups(rows){return [rows.filter((_,i)=>i%2===0),rows.filter((_,i)=>i%2===1)].filter(group=>group.length)}
+function renderAnnouncementBanner(){
+ const el=$('announcementBanner');if(!el)return;
+ const rows=window.accessGranted?announcementRows.filter(a=>announcementStatus(a)==='刊登中').sort((a,b)=>Date.parse(b.startsAt)-Date.parse(a.startsAt)):[];
+ el.hidden=!rows.length;const signature=JSON.stringify(rows.map(a=>[a.id,a.content]));if(el.dataset.signature===signature)return;el.dataset.signature=signature;
+ if(!rows.length){el.innerHTML='';return}
+ const lanes=announcementLaneGroups(rows).map((group,i)=>{const text=group.map(a=>a.content.replace(/\s+/g,' ')).join('　｜　');const duration=Math.max(20,Array.from(text).length/3);
+ return '<button type="button" class="announcement-lane" onclick="viewAnnouncements()" aria-label="查看第 '+(i+1)+' 行完整公告"><div class="announcement-belt" style="animation-duration:'+duration+'s"><span>'+esc(text)+'</span><span aria-hidden="true">'+esc(text)+'</span></div></button>'}).join('');
+ el.innerHTML='<div class="announcement-bar"><strong>📢 公告</strong><div class="announcement-lanes">'+lanes+'</div><button type="button" class="btn small" onclick="viewAnnouncements()">查看</button></div>';
+}
 function viewAnnouncements(){showModal('公告',announcementRows.filter(a=>announcementStatus(a)==='刊登中').sort((a,b)=>Date.parse(b.startsAt)-Date.parse(a.startsAt)).map(a=>'<div class="logitem"><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(a.content)+'</p><div class="muted">'+esc(announcementTime(a.startsAt))+'</div></div>').join(''))}
 function announcementPage(){if(!canManageAnnouncements())return '';return heading('公告管理','刊登時間使用台灣時間；公告管理權限由 Owner 指定','<button class="btn primary" onclick="editAnnouncement()">＋ 新增公告</button>')+'<section class="panel"><button class="btn" onclick="loadAnnouncements()">重新載入公告</button><p class="muted">'+esc(announcementError||(!announcementLoaded?'正在載入公告…':'點選編輯可修改內容、刊登時間及啟用狀態。'))+'</p>'+[...announcementRows].sort((a,b)=>Date.parse(b.startsAt)-Date.parse(a.startsAt)).map(a=>'<div class="logitem"><span class="tag">'+announcementStatus(a)+'</span><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(a.content)+'</p><div class="muted">'+esc(announcementTime(a.startsAt))+' ～ '+esc(announcementTime(a.endsAt))+'</div><button class="btn small" data-id="'+esc(a.id)+'" onclick="editAnnouncement(this.dataset.id)">編輯／停用</button></div>').join('')+(announcementLoaded&&!announcementRows.length?'<div class="empty">目前沒有公告</div>':'')+'</section>'}
 function announcementLocal(v){return new Date(Date.parse(v)+8*3600000).toISOString().slice(0,16)}
@@ -1661,4 +1680,5 @@ function startHandoverDashboard(u){if(handoverDashStop)return;handoverDashStop=o
  getRedirectResult(auth).then(result=>{if(result)v058LinkSecondary(result)}).catch(e=>console.warn('重新導向登入失敗',e));
 }catch(e){showAuthScreen('系統連線失敗','請檢查網路連線，稍後再試。錯誤代碼：'+e.message)}
 </script></body></html>
+
 
